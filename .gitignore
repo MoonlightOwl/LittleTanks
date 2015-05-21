@@ -1,0 +1,16 @@
+# Compiled files
+*.jar
+*.class
+out/
+
+# Resources
+References/
+resources/music/*
+scores/*
+
+# IntelliJ
+*.iml
+.idea/
+
+# Mac
+.DS_Store

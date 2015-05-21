@@ -1,0 +1,22 @@
+12
+12
+CCCCCCCCCCCC
+C          C
+C &      & C
+C          C
+C B   @  B C
+C          C
+C          C
+C &      & C
+C = =  = = C
+C          C
+C S S  S S C
+CCCCCCCCCCCC
+
+background: .
+link: 2 8 2 2
+link: 2 8 2 10
+link: 4 8 4 10
+link: 7 8 7 10
+link: 9 8 9 2
+link: 9 8 9 10

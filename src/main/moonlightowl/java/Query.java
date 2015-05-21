@@ -1,0 +1,55 @@
+package main.moonlightowl.java;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+
+import java.awt.event.KeyEvent;
+
+public class Query {
+    private String name = "";
+    Label question, nickname;
+    boolean visible = false;
+    Rectangle rect;
+
+    Query(String question, int x, int y, Font font, FontMetrics fm, Color color){
+        this.question = new Label(question, x, y, font, fm, color, true);
+        nickname = new Label("", x, y+font.getSize(), font, fm, color, true);
+        rect = new Rectangle(0, y-50, Const.WIDTH, font.getSize()*2+20);
+    }
+
+    // getters & setters
+    public void setVisible(boolean visible){ this.visible = visible; }
+	public void setText(String text){ nickname.changeText(text); }
+    public boolean isVisible(){ return visible; }
+    public String name(){ return nickname.getText(); }
+
+    public void keyPressed(KeyEvent e){
+        switch(e.getKeyCode()){
+            case KeyEvent.VK_BACK_SPACE:
+                if(nickname.lenght()>0){
+                    nickname.changeText(nickname.getText().substring(0,nickname.lenght()-1));
+                }
+                break;
+            default:
+                if(e.getKeyChar()>='0' && e.getKeyChar()<='z'){
+                    if(nickname.lenght()<Const.NICKNAME_LEN){
+                        nickname.changeText(nickname.getText()+e.getKeyChar());
+                    }
+                }
+        }
+    }
+
+    public void draw(Graphics g){
+        g.setColor(Const.OPAQUE_DARK_COLOR);
+        g.fillRect(rect.x, rect.y, rect.width, rect.height);
+        if(System.currentTimeMillis()%800<400){
+            g.setColor(Color.GREEN);
+            g.drawRect(nickname.getX()-5, nickname.getY()-nickname.height()+5, nickname.width()+5, nickname.height());
+        }
+        question.draw(g);
+        nickname.draw(g);
+    }
+}
