@@ -25,7 +25,7 @@ public class Assets {
 		ishadowr, ishadowd, imetal, igrid, isplash_text, ibarrel,
 		irocket, iconcrete, isand, ibush, ikey, ibarrelside, 
 		ishadowLS, ishadowLB, ishadowRS, ishadowRB,
-		icandy;
+		icandy, iturret_base;
 	public static BufferedImage[] iexplosion = new BufferedImage[4],
 		isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
 		itank = new BufferedImage[4], ismoke = new BufferedImage[4],
@@ -86,7 +86,8 @@ public class Assets {
 			ishadowRB = getScaledInstance(ishadowLB, -1, 1);
 			
 			icandy = ImageIO.read(new File("resources/images/candy.png"));
-			
+			iturret_base = ImageIO.read(new File("resources/images/turret_base.png"));
+
 			// sounds
 			Sound.init();
 			

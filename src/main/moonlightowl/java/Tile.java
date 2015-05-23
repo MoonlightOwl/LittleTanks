@@ -6,7 +6,7 @@ public class Tile {
 	public static final int GRASS = 0, WALL = 1, BOX = 2, 
 		HOLE = 3, SANDSTONE = 4, METAL = 5, GRID = 6, BARREL = 7,
 		CONCRETE = 8, SAND = 9, SPAWN = 10, BUSH = 11, DOOR = 12,
-		SAFE = 13, PLATE = 14;
+		SAFE = 13, PLATE = 14, TURRET = 15;
 	
 	private int type;
 	private boolean passable = false, flyable = false, castshadow = false;
@@ -39,6 +39,7 @@ public class Tile {
 			case 'D': create(DOOR); break;
 			case 'S': create(SAFE); break;
 			case '=': create(PLATE); break;
+            case 'T': create(TURRET); break;
 			case '@': case '&': case '%': case '$': create(SPAWN); break;
 			default: create(GRASS);
 		}
@@ -61,6 +62,7 @@ public class Tile {
 			case DOOR: castshadow = true; stage = 5; break;
 			case SAFE: castshadow = true; stage = 1; break;
 			case PLATE: flyable = true; passable = true; stage = 0; break;
+            case TURRET: break;
 			default: flyable = true; passable = true;
 		}
 	}

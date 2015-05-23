@@ -114,6 +114,10 @@ public class Level {
 				drawTile(g, x, y, BACK);
 				g.drawImage(Assets.ibutton[tile.getStage()], x, y, null); 
 				break;
+            case Tile.TURRET:
+                drawTile(g, x, y, BACK);
+                g.drawImage(Assets.iturret_base, x, y, null);
+                break;
 			case Tile.SPAWN:
 				drawTile(g, x, y, BACK);
 				g.drawImage(Assets.ispawn, x, y, null); 
@@ -208,6 +212,10 @@ public class Level {
 							items.add(new Item(x*TILE_SIZE+TILE_HALF, y*TILE_SIZE+TILE_HALF, Item.CANDY)); 
 							map.set(x, y, BACK); 
 							break;
+                        // entities
+                        case 'T':
+
+
 						default:
 							// set tile
 							map.set(x, y, new Tile(ch));
