@@ -21,12 +21,15 @@ public class Music {
 			}
 		};
 		filelist = new File(dir).listFiles(filter);
-		player = new Layer(filelist[rand.nextInt(filelist.length)]);
+		if(filelist.length > 0)
+		    player = new Layer(filelist[rand.nextInt(filelist.length)]);
 	}
 	
 	public void play(){
-		player = new Layer(filelist[rand.nextInt(filelist.length)]);
-		player.play();
+        if(filelist.length > 0) {
+            player = new Layer(filelist[rand.nextInt(filelist.length)]);
+            player.play();
+        }
 	}
 	public void stop(){
 		if(player != null) player.stop();
