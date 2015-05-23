@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.sound;
 
 public class SoundManager implements Runnable{
 	private final Object lock;

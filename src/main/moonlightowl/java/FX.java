@@ -1,5 +1,7 @@
 package main.moonlightowl.java;
 
+import main.moonlightowl.java.world.entity.Particle;
+
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.Point;

@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world;
 
 // Simple tiles for battle field
 

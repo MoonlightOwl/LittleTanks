@@ -1,14 +1,16 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world.entity;
+
+import main.moonlightowl.java.Assets;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-public class Mine {
+public class Bomb {
 	public int x, y;
 	private Rectangle shape;
 	
-	public Mine(int x, int y){
+	public Bomb(int x, int y){
 		this.x = x; this.y = y;
 		shape = new Rectangle(x-30, x-30, 60, 60);
 	}

@@ -1,6 +1,9 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world;
 
 // Game objects collection
+
+import main.moonlightowl.java.Assets;
+import main.moonlightowl.java.math.Point3D;
 
 import java.io.*;
 import java.awt.AlphaComposite;

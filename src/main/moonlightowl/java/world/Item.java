@@ -1,4 +1,8 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world;
+
+import main.moonlightowl.java.Assets;
+import main.moonlightowl.java.Const;
+import main.moonlightowl.java.world.Level;
 
 import java.awt.Point;
 import java.awt.Graphics2D;
@@ -22,7 +26,7 @@ public class Item {
 	// getter
 	public int getType(){ return type; }
 	public boolean contains(int x, int y){
-		if(x >= this.x-Level.TILE_HALF && x <= this.x+Level.TILE_HALF){
+		if(x >= this.x- Level.TILE_HALF && x <= this.x+Level.TILE_HALF){
 			if(y >= this.y-Level.TILE_HALF && y <= this.y+Level.TILE_HALF){
 				return true;
 			}

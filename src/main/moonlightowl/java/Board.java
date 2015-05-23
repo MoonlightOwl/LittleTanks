@@ -1,8 +1,21 @@
 package main.moonlightowl.java;
 
-/*
+/**
  * LittleTanks  ~  v0.3  ~  MoonlightOwl  ~  The main class of the Board element.
  */
+
+import main.moonlightowl.java.gui.*;
+import main.moonlightowl.java.math.Point3D;
+import main.moonlightowl.java.sound.Music;
+import main.moonlightowl.java.sound.Sound;
+import main.moonlightowl.java.sound.SoundManager;
+import main.moonlightowl.java.world.Item;
+import main.moonlightowl.java.world.Level;
+import main.moonlightowl.java.world.Tile;
+import main.moonlightowl.java.world.entity.Bomb;
+import main.moonlightowl.java.world.entity.Bonus;
+import main.moonlightowl.java.world.entity.Bullet;
+import main.moonlightowl.java.world.entity.Tank;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -64,7 +77,7 @@ public class Board extends JPanel implements ActionListener{
 	private final LinkedList<Bullet> bullets, newBullet;
 	private final ArrayList<Bonus> bonuses;
 	private final ArrayList<Tank> enemies, newEnemies;
-	private final ArrayList<Mine> mines;
+	private final ArrayList<Bomb> bombs;
 	// interface
     private Menu menu;
     private Label title, llifes, lshield, lscore, lammo, lvictory,
@@ -127,7 +140,7 @@ public class Board extends JPanel implements ActionListener{
 		enemies = new ArrayList<Tank>(); newEnemies = new ArrayList<Tank>();
 		bullets = new LinkedList<Bullet>(); newBullet = new LinkedList<Bullet>(); 
 		bonuses = new ArrayList<Bonus>();
-		mines = new ArrayList<Mine>();
+		bombs = new ArrayList<Bomb>();
 		loadLevel("levels/test1.dat");
 		
 		newCameraTarget();
@@ -142,8 +155,6 @@ public class Board extends JPanel implements ActionListener{
         Timer timer = new Timer(20, this);
 		timer.setInitialDelay(500);
 		timer.start();
-        //timer.scheduleAtFixedRate(new ScheduleTask(), 1000, 20);  // old threads model
-        //timer.scheduleAtFixedRate(new DrawShedule(), 1010, 40);
 		music = new Music("./resources/music/");
 		if(playMusic) music.play();
     }
@@ -192,7 +203,7 @@ public class Board extends JPanel implements ActionListener{
 		synchronized(bullets){ bullets.clear(); }
 		synchronized(newBullet){ newBullet.clear(); }
 		synchronized(bonuses){ bonuses.clear(); }
-		synchronized(mines){ mines.clear(); }
+		synchronized(bombs){ bombs.clear(); }
         minus_timer = 0;
 		message_timer = 0;
 		effectFreeze = 0;
@@ -202,7 +213,7 @@ public class Board extends JPanel implements ActionListener{
 		levelnum++;
 		loadLevel("levels/"+levelpackage+levelnum+".dat");
 		if(levelnum > 1) score += 10;
-		addMessage("New level! (+10 score)", 100);
+		addMessage("New level! (+10 score)", Const.MESSAGE_TIME);
 		setLifeCounter(player.getLife());
 		setShieldCounter(player.getShield());
 		setScoreCounter(score);
@@ -211,7 +222,7 @@ public class Board extends JPanel implements ActionListener{
 		synchronized(bullets){ bullets.clear(); }
 		synchronized(newBullet){ newBullet.clear(); }
 		synchronized(bonuses){ bonuses.clear(); }
-		synchronized(mines){ mines.clear(); }
+		synchronized(bombs){ bombs.clear(); }
         minus_timer = 0;
 
 		if(playMusic) music.next();
@@ -528,7 +539,7 @@ public class Board extends JPanel implements ActionListener{
 						if(player.getMines() > 0){
 							player.changeMines(-1);
 							setMinesCounter(player.getMines());
-							mines.add(new Mine(player.getX()+30, player.getY()+30));
+							bombs.add(new Bomb(player.getX()+30, player.getY()+30));
 							soundManager.play(Sound.BEEP);
 						}
 					}
@@ -588,7 +599,7 @@ public class Board extends JPanel implements ActionListener{
 				case KeyEvent.VK_E:
 					if(player.removeFromInventory(Item.CANDY)){
 						changeLife(1);
-						addMessage("+1 life", 100);
+						addMessage("+1 life", Const.MESSAGE_TIME);
 					}
 					break;
             }
@@ -746,10 +757,10 @@ public class Board extends JPanel implements ActionListener{
 							}
 						}
 						// mine collision
-						synchronized(mines){
-							Iterator<Mine> itmines = mines.iterator();
+						synchronized(bombs){
+							Iterator<Bomb> itmines = bombs.iterator();
 							while(itmines.hasNext()){
-								Mine m = itmines.next();
+								Bomb m = itmines.next();
 								if(distance(m.getX(), m.getY(), t.getX()+30, t.getY()+30) < 30){
 									// death!
                                     AffineTransform at = t.getTransform();
@@ -760,7 +771,7 @@ public class Board extends JPanel implements ActionListener{
 									// score points
 									int bonus = rand.nextInt(100);
 									changeScore(bonus);
-									addMessage("mine death!", 100);
+									addMessage("mine death!", Const.MESSAGE_TIME);
 								}
 							}
 						}
@@ -772,7 +783,7 @@ public class Board extends JPanel implements ActionListener{
 							// score points
 							int bonus = rand.nextInt(100)*t.getLevel() + 10;
 							changeScore(bonus);
-							addMessage("+"+bonus+" score", 100);
+							addMessage("+"+bonus+" score", Const.MESSAGE_TIME);
 							// game over, man, it's over
 							soundManager.play(Sound.EXPLODE);
 							itenemies.remove();
@@ -866,24 +877,24 @@ public class Board extends JPanel implements ActionListener{
 							switch(s.getType()){
 								case Bonus.LIFE:
 									changeLife(1);
-									addMessage("+1 life", 100);
+									addMessage("+1 life", Const.MESSAGE_TIME);
 									break;
 								case Bonus.AMMO:
 									player.setAmmo(player.getAmmo()+10); setAmmoCounter(player.getAmmo());
-									addMessage("+10 ammo", 100);
+									addMessage("+10 ammo", Const.MESSAGE_TIME);
 									break;
 								case Bonus.SCORE:
 									int bonus = rand.nextInt(50);
 									changeScore(bonus);
-									addMessage("+"+bonus+" score", 100);
+									addMessage("+"+bonus+" score", Const.MESSAGE_TIME);
 									break;
 								case Bonus.MINE:
 									player.changeMines(2); setMinesCounter(player.getMines());
-									addMessage("+2 mines", 100);
+									addMessage("+2 bombs", Const.MESSAGE_TIME);
 									break;
 								case Bonus.FREEZE:
 									effectFreeze += 1000;
-									addMessage("slow down", 100);
+									addMessage("slow down", Const.MESSAGE_TIME);
 									soundManager.play(Sound.FREEZE);
 									break;
 								case Bonus.POWER:
@@ -892,11 +903,11 @@ public class Board extends JPanel implements ActionListener{
 										level = rand.nextInt(Tank.MAX_LEVEL)+1;
 									} while(level == player.getLevel());
 									player.setLevel(level);
-									addMessage("random power", 100);
+									addMessage("random power", Const.MESSAGE_TIME);
 									break;
 								case Bonus.SHIELD:
 									changeShield(8);
-									addMessage("shields up", 100);
+									addMessage("shields up", Const.MESSAGE_TIME);
 									soundManager.play(Sound.SHIELD);
 									break;
 							}
@@ -946,8 +957,8 @@ public class Board extends JPanel implements ActionListener{
 
 		// draw level
         level.draw(g2, camera);
-		synchronized(mines){
-            for(Mine m: mines) {
+		synchronized(bombs){
+            for(Bomb m: bombs) {
                 m.draw(g2, camera);
             }
 		}

@@ -1,6 +1,8 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world;
 
-// Game map for Tank Destroy!
+/**
+ * Game map for Tank Destroy!
+ */
 
 public class Map {
 	private Tile[][] data;

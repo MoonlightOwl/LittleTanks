@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.sound;
 
 import javazoom.jl.player.advanced.*;
 import javazoom.jl.decoder.JavaLayerException;

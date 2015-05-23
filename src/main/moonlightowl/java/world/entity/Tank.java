@@ -1,7 +1,10 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world.entity;
+
+import main.moonlightowl.java.Assets;
+import main.moonlightowl.java.world.Item;
+import main.moonlightowl.java.world.Level;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
 import java.util.LinkedList;

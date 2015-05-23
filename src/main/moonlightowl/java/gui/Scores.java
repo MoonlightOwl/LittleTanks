@@ -1,8 +1,12 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.gui;
 
 /*
  * LineBreak  ~  v.0.2  ~  NightOwl  ~  Scoreboard code.
  */
+
+import main.moonlightowl.java.io.BinaryIO;
+import main.moonlightowl.java.Const;
+import main.moonlightowl.java.io.Crypter;
 
 import java.awt.*;
 import java.util.*;
@@ -28,7 +32,7 @@ public class Scores {
     }
 	private void initTable(){
 		table = new ArrayList<Item>();
-        while(table.size()<Const.SCOREBOARD_SIZE){
+        while(table.size() < Const.SCOREBOARD_SIZE){
             table.add(new Item("John Doe", 0));
         }
 	}

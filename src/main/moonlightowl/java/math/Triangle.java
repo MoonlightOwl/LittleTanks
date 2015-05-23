@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.math;
 
 import java.awt.Color;
 import java.awt.Point;

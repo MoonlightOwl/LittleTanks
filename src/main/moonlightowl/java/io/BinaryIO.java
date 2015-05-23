@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.io;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

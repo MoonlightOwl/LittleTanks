@@ -1,4 +1,6 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.gui;
+
+import main.moonlightowl.java.Const;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -9,15 +11,15 @@ import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 
 public class Query {
-    private String name = "";
-    Label question, nickname;
-    boolean visible = false;
-    Rectangle rect;
+    private Label question, nickname;
+    private boolean visible;
+    private Rectangle rect;
 
-    Query(String question, int x, int y, Font font, FontMetrics fm, Color color){
+    public Query(String question, int x, int y, Font font, FontMetrics fm, Color color){
         this.question = new Label(question, x, y, font, fm, color, true);
         nickname = new Label("", x, y+font.getSize(), font, fm, color, true);
         rect = new Rectangle(0, y-50, Const.WIDTH, font.getSize()*2+20);
+        visible = false;
     }
 
     // getters & setters
@@ -47,7 +49,8 @@ public class Query {
         g.fillRect(rect.x, rect.y, rect.width, rect.height);
         if(System.currentTimeMillis()%800<400){
             g.setColor(Color.GREEN);
-            g.drawRect(nickname.getX()-5, nickname.getY()-nickname.height()+5, nickname.width()+5, nickname.height());
+            g.drawRect(nickname.getX()-5, nickname.getY()-nickname.height()+5,
+                    nickname.width()+10, nickname.height());
         }
         question.draw(g);
         nickname.draw(g);

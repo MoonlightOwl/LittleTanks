@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.sound;
 
 import java.io.*;
 import java.net.URL;

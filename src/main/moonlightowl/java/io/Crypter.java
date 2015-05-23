@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.io;
 
 public class Crypter {
 	public static byte[] encrypt(String text, String keyWord) {

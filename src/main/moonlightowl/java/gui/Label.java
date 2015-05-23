@@ -1,11 +1,6 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.gui;
 
-// Just joking  =)  about OOP
-
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Color;
+import java.awt.*;
 
 public class Label{
     private String name;
@@ -15,16 +10,16 @@ public class Label{
     private Color color, shadowColor = Color.BLACK;
     boolean shadow = false, centered = false;
 
-    Label(String text, int x, int y, Font font, FontMetrics fm, Color color){
+    public Label(String text, int x, int y, Font font, FontMetrics fm, Color color){
         name = text; this.x = x; this.y = y;
         this.font = font; this.fm = fm;
         this.color = color;
     }
-	Label(String text, int x, int y, Font font, FontMetrics fm, Color color, boolean centered, Color shadowColor){
-		this(text, x, y, font, fm, color, centered);
-		this.shadowColor = shadowColor;
-	}
-    Label(String text, int x, int y, Font font, FontMetrics fm, Color color, boolean centered){
+    public Label(String text, int x, int y, Font font, FontMetrics fm, Color color, boolean centered, Color shadowColor){
+        this(text, x, y, font, fm, color, centered);
+        this.shadowColor = shadowColor;
+    }
+    public Label(String text, int x, int y, Font font, FontMetrics fm, Color color, boolean centered){
         name = text; this.y = y;
         this.font = font; this.fm = fm; this.cx = x;
         if(centered) this.x = x-fm.stringWidth(text)/2;

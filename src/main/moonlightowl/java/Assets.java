@@ -2,6 +2,8 @@ package main.moonlightowl.java;
 
 // Little Tanks resources
 
+import main.moonlightowl.java.sound.Sound;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
@@ -56,8 +58,8 @@ public class Assets {
 			igrid = ImageIO.read(new File("resources/images/grid.png"));
 			iexpldec = ImageIO.read(new File("resources/images/explosiondec.png"));
 			isplash_text = ImageIO.read(new File("resources/images/splash_text.png"));
-			imine_on = ImageIO.read(new File("resources/images/mine_on.png"));
-			imine_off = ImageIO.read(new File("resources/images/mine_off.png"));
+			imine_on = ImageIO.read(new File("resources/images/bomb_on.png"));
+			imine_off = ImageIO.read(new File("resources/images/bomb_off.png"));
 			ishadowr = ImageIO.read(new File("resources/images/shadowr.png"));
 			ishadowd = ImageIO.read(new File("resources/images/shadowd.png"));
 			

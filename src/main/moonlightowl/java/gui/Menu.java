@@ -1,13 +1,12 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.gui;
 
 /*
  * Code from LineBreak  ~  v.0.2  ~  Totoro  ~  Menu items, updating and drawing.
  */
 
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import main.moonlightowl.java.Const;
+
+import java.awt.*;
 
 import java.util.List;
 import java.util.Iterator;

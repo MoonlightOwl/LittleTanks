@@ -1,4 +1,4 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.math;
 
 public class Point3D{
 	public int x, y, z;

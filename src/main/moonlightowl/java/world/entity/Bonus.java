@@ -1,11 +1,15 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world.entity;
+
+import main.moonlightowl.java.Const;
+import main.moonlightowl.java.math.Primitive;
+import main.moonlightowl.java.math.Triangle;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
 
-public class Bonus extends Primitive{
+public class Bonus extends Primitive {
 	public static final int COUNT = 7;
 	public static final int LIFE = 0, AMMO = 1, SCORE = 2, 
 		MINE = 3, FREEZE = 4, POWER = 5, SHIELD = 6;

@@ -1,4 +1,6 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world.entity;
+
+import main.moonlightowl.java.Assets;
 
 import java.awt.Point;
 import java.awt.Graphics2D;
@@ -46,7 +48,7 @@ public class Bullet {
 	}
 	public void draw(Graphics2D g, Point camera){
 		// bullets
-		if(level < 3) g.drawImage(Assets.ibullet[level], 
+		if(level < 3) g.drawImage(Assets.ibullet[level],
 			(int)(position.x-camera.x)-30, (int)(position.y-camera.y)-30, null);
 		// rockets
 		else if(level == 3){
