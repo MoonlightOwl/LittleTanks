@@ -15,6 +15,9 @@ Key | Action
 `Arrows` | Select menu / move tank
 `Space` | Fire!
 `C` | Place bomb (if any)
+`[` | Mute sound
+`]` | Mute music
+`\` | Next music track 
 `P` | Pause game
 `Escape` | Return to menu / Exit
 
@@ -24,6 +27,8 @@ Game contains a few test levels. They form "level packs". All files can be found
 You need to click first menu item (in square brackets) to change "package".
 
 For example: "_level_", "_metal_", "_maze_" or "_test_".
+
+Score table for any level pack, can be found in `/scores/` directory. Just remove corresponding file, to clear the table. 
 
 
 ## Credits
