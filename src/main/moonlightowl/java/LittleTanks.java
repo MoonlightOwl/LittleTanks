@@ -1,6 +1,6 @@
 package main.moonlightowl.java;
 
-/*
+/**
  * Little Tanks
  * April 2015 (c) MoonlightOwl
  */

@@ -1,6 +1,6 @@
 package main.moonlightowl.java.gui;
 
-/*
+/**
  * LineBreak  ~  v.0.2  ~  NightOwl  ~  Scoreboard code.
  */
 
@@ -13,8 +13,8 @@ import java.util.*;
 import java.util.List;
 
 public class Scores {
-	public static final String key = "verysecretkey";
-	
+    public static final String key = "verysecretkey";
+
     private Iterator it;
     private List<Item> table;
     private Item pointer;
@@ -22,20 +22,20 @@ public class Scores {
     private Font font;
     private FontMetrics fm;
     private Rectangle rect;
-	private String filename;
-	private Item active;
+    private String filename;
+    private Item active;
 
     public Scores(String filename, Font font, FontMetrics fm){
         this.font = font; this.fm = fm;
         loadScores(filename);
         rect = new Rectangle(0, 220, Const.WIDTH, Const.SCOREBOARD_SIZE*font.getSize()+20);
     }
-	private void initTable(){
-		table = new ArrayList<Item>();
+    private void initTable(){
+        table = new ArrayList<Item>();
         while(table.size() < Const.SCOREBOARD_SIZE){
             table.add(new Item("John Doe", 0));
         }
-	}
+    }
 
     public void addRecord(String name, int score){
         String nickname = name.length() == 0 ? "Anonymouse" : name;
@@ -44,9 +44,9 @@ public class Scores {
         while(it.hasNext()){
             pointer = (Item)it.next();
             if(pointer.score<score){
-				Item item = new Item(nickname, score);
+                Item item = new Item(nickname, score);
                 table.add(table.indexOf(pointer), item);
-				active = item;
+                active = item;
                 break;
             }
         }
@@ -57,9 +57,9 @@ public class Scores {
 
     // getters & setters
     public void setVisible(boolean visible){
-		this.visible = visible; 
-		if(!visible) active = null;
-	}
+        this.visible = visible;
+        if(!visible) active = null;
+    }
     public boolean isVisible(){ return visible; }
     public int worst(){ return table.get(table.size()-1).score; }
 
@@ -85,36 +85,36 @@ public class Scores {
             pointer = (Item)it.next();
             g.setFont(font);
             if(pointer == active) 
-				g.setColor(Color.ORANGE);
-			else
-				g.setColor(Color.WHITE);
+                g.setColor(Color.ORANGE);
+            else
+                g.setColor(Color.WHITE);
             g.drawString(pointer.text, Const.WIDTH/2-fm.stringWidth(pointer.text)/2, 260+font.getSize()*table.indexOf(pointer));
         }
     }
 
     public void loadScores(String filename){
-		this.filename = filename;
-		initTable();
-		
-		byte[] array = Crypter.decrypt(BinaryIO.read(filename), key);
-		String[] tokens = new String(array).split("\n");
-		if(tokens.length >= 2){
-			for(int c=0; c<tokens.length; c+=2){
-				String name = tokens[c];
-				int score = Integer.parseInt(tokens[c+1]);
-	            addRecord(name, score);
-			}
-		}
-		active = null;
+        this.filename = filename;
+        initTable();
+
+        byte[] array = Crypter.decrypt(BinaryIO.read(filename), key);
+        String[] tokens = new String(array).split("\n");
+        if(tokens.length >= 2){
+            for(int c=0; c<tokens.length; c+=2){
+                String name = tokens[c];
+                int score = Integer.parseInt(tokens[c+1]);
+                addRecord(name, score);
+            }
+        }
+        active = null;
     }
 
     public void saveScores(){
-		String data = "";
-		it = table.iterator();
+        String data = "";
+        it = table.iterator();
         while(it.hasNext()){
             pointer = (Item)it.next();
-			data = data + pointer.name + "\n" + pointer.score + "\n";
+            data = data + pointer.name + "\n" + pointer.score + "\n";
         }
-		BinaryIO.write(Crypter.encrypt(data, key), filename);
+        BinaryIO.write(Crypter.encrypt(data, key), filename);
     }
 }

@@ -11,15 +11,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**  
+/**
  <P>Reads binary data into memory, and writes it back to disk.
  <P>Buffering is used when reading and writing files, to minimize the number 
  of interactions with the disk.
  (http://www.javapractices.com/topic/TopicAction.do?Id=245)
-*/
+ */
 public final class BinaryIO {
-	
-  /** Read the given binary file, and return its contents as a byte array.*/ 
+
+  /** Read the given binary file, and return its contents as a byte array.*/
   public static byte[] read(String aInputFileName){
     //log("Reading in binary file named : " + aInputFileName);
     File file = new File(aInputFileName);
@@ -33,7 +33,7 @@ public final class BinaryIO {
         while(totalBytesRead < result.length){
           int bytesRemaining = result.length - totalBytesRead;
           //input.read() returns -1, 0, or more :
-          int bytesRead = input.read(result, totalBytesRead, bytesRemaining); 
+          int bytesRead = input.read(result, totalBytesRead, bytesRemaining);
           if (bytesRead > 0){
             totalBytesRead = totalBytesRead + bytesRead;
           }
@@ -58,11 +58,11 @@ public final class BinaryIO {
     }
     return result;
   }
-  
+
   /**
    Write a byte array to the given file. 
    Writing binary data is significantly simpler than reading it. 
-  */
+   */
   public static void write(byte[] aInput, String aOutputFileName){
     //log("Writing binary file...");
     try {
@@ -82,8 +82,8 @@ public final class BinaryIO {
       log(ex);
     }
   }
-  
-  /** Read the given binary file, and return its contents as a byte array.*/ 
+
+  /** Read the given binary file, and return its contents as a byte array.*/
   public static byte[] readAlternateImpl(String aInputFileName){
     log("Reading in binary file named : " + aInputFileName);
     File file = new File(aInputFileName);
@@ -98,16 +98,16 @@ public final class BinaryIO {
     }
     return result;
   }
-  
+
   /**
    Read an input stream, and return it as a byte array.  
    Sometimes the source of bytes is an input stream instead of a file. 
    This implementation closes aInput after it's read.
-  */
+   */
   private static byte[] readAndClose(InputStream aInput){
     //carries the data from input to output :    
-    byte[] bucket = new byte[32*1024]; 
-    ByteArrayOutputStream result = null; 
+    byte[] bucket = new byte[32*1024];
+    ByteArrayOutputStream result = null;
     try  {
       try {
         //Use buffering? No. Buffering avoids costly access to disk or network;
@@ -135,7 +135,7 @@ public final class BinaryIO {
     }
     return result.toByteArray();
   }
-  
+
   private static void log(Object aThing){
     System.out.println(String.valueOf(aThing));
   }

@@ -1,7 +1,7 @@
 package main.moonlightowl.java.io;
 
 public class Crypter {
-	public static byte[] encrypt(String text, String keyWord) {
+    public static byte[] encrypt(String text, String keyWord) {
         byte[] arr = text.getBytes();
         byte[] keyarr = keyWord.getBytes();
         byte[] result = new byte[arr.length];

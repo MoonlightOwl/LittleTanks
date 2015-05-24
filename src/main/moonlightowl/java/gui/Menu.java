@@ -121,15 +121,15 @@ public class Menu {
                 }
             }
             else{
-				g.setColor(Const.MENU_SHADOW_COLOR);
-				g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval+2);
+                g.setColor(Const.MENU_SHADOW_COLOR);
+                g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval+2);
                 if(pointer.selected){
                     g.setColor(Const.MENU_SELECTED_COLOR);
                     g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval);
                 } else {
                     g.setColor(Const.MENU_COLOR);
-					g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval);
-				}
+                    g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval);
+                }
             }
             i++;
         }
@@ -154,18 +154,18 @@ public class Menu {
         }
     }
 
-	public void keyPressed(KeyEvent e){
-		switch(e.getKeyCode()){
-			case KeyEvent.VK_UP: 
-				int active1 = getSelected();
-				if(active1 != -1) items.get(active1).selected = false;
-				items.get((active1+items.size()-1)%items.size()).selected = true;
-				break;
-			case KeyEvent.VK_DOWN:
-				int active2 = getSelected();
-				if(active2 != -1) items.get(active2).selected = false;
-				items.get((active2+1)%items.size()).selected = true;
-				break;
-		}
-	}
+    public void keyPressed(KeyEvent e){
+        switch(e.getKeyCode()){
+            case KeyEvent.VK_UP:
+                int active1 = getSelected();
+                if(active1 != -1) items.get(active1).selected = false;
+                items.get((active1+items.size()-1)%items.size()).selected = true;
+                break;
+            case KeyEvent.VK_DOWN:
+                int active2 = getSelected();
+                if(active2 != -1) items.get(active2).selected = false;
+                items.get((active2+1)%items.size()).selected = true;
+                break;
+        }
+    }
 }

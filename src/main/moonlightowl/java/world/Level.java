@@ -20,22 +20,22 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Level {
-	private Tile BACK = new Tile(Tile.GRASS);
-	// level map data
+    private Tile BACK = new Tile(Tile.GRASS);
+    // level map data
     private Map map;
-	private BufferedImage imap, ishadow, irender;
+    private BufferedImage imap, ishadow, irender;
     private HashMap<Integer, HashSet<Point>> links;
     private HashSet<Point> changeList;
     private boolean[][] collisionMap;
     // level parameters
     private int width, height, pxwidth, pxheight;
-	private Point startPoint;
+    private Point startPoint;
     private Rectangle pxbounds;
     private Tile borderTile = new Tile(Tile.WALL);
 
-	public Level(){
-		this(5, 5);
-	}
+    public Level(){
+        this(5, 5);
+    }
     public Level(int width, int height){
         this.width = width; pxwidth = GMath.toPixel(width);
         this.height = height; pxheight = GMath.toPixel(height);
@@ -136,20 +136,20 @@ public class Level {
         }
         g.dispose();
     }
-	public void renderShadows(){
-		Graphics2D g = ishadow.createGraphics();
-		// clear map
-		g.setComposite(AlphaComposite.Clear);
-		g.fillRect(0, 0, ishadow.getWidth(), ishadow.getHeight());
-		g.setComposite(AlphaComposite.SrcOver);
-		// draw new map
-		for(int x=0; x<map.getWidth()-1; x++){
-			for(int y=0; y<map.getHeight()-1; y++){
-				drawShadow(g, x, y);
-			}
-		}
-		g.dispose();
-	}
+    public void renderShadows(){
+        Graphics2D g = ishadow.createGraphics();
+        // clear map
+        g.setComposite(AlphaComposite.Clear);
+        g.fillRect(0, 0, ishadow.getWidth(), ishadow.getHeight());
+        g.setComposite(AlphaComposite.SrcOver);
+        // draw new map
+        for(int x=0; x<map.getWidth()-1; x++){
+            for(int y=0; y<map.getHeight()-1; y++){
+                drawShadow(g, x, y);
+            }
+        }
+        g.dispose();
+    }
     private void renderFinal(){
         Graphics g = irender.createGraphics();
         g.drawImage(imap, 0, 0, null);
@@ -180,95 +180,95 @@ public class Level {
         renderShadows();
         renderFinal();
     }
-	public void drawSplash(BufferedImage image, AffineTransform at){
-		Graphics2D g = imap.createGraphics();
-		g.drawImage(image, at, null);
-		g.dispose();
+    public void drawSplash(BufferedImage image, AffineTransform at){
+        Graphics2D g = imap.createGraphics();
+        g.drawImage(image, at, null);
+        g.dispose();
         renderFinal();
     }
-	public void drawSplash(BufferedImage image, int x, int y){
-		Graphics g = imap.createGraphics();
-		g.drawImage(image, x, y, null);
-		g.dispose();
+    public void drawSplash(BufferedImage image, int x, int y){
+        Graphics g = imap.createGraphics();
+        g.drawImage(image, x, y, null);
+        g.dispose();
         renderFinal();
     }
-	
-	// getters
-	public boolean contains(int x, int y){
-		if(x >= 0 && x < width)
-			if(y >= 0 && y < height) return true;
-		return false;
-	}
-	public boolean containsPixel(int x, int y){ return pxbounds.contains(x, y); }
-	
-	public Tile get(int x, int y){
-		return (contains(x, y) ? map.get(x, y) : borderTile);
-	}
-	public Tile getBackground(){ return new Tile(BACK); }
-	public int getStage(int x, int y){ return get(x, y).getStage(); }
-	public Point getStartPoint(){ return startPoint; }
-	public int getPxWidth(){ return pxwidth; }
-	public int getPxHeight(){ return pxheight; }
-	public boolean isFlyable(int x, int y){ 
-		return get(x, y).isFlyable();
-	}
-	public boolean isPassable(int x, int y){
-		return get(x, y).isPassable();
-	}
-	public HashSet<Point> getLink(int x, int y){
-		if(contains(x,y)){
-			int key = x * map.getWidth() + y;
-			return links.get(key);
-		}
-		return null;
-	}
+
+    // getters
+    public boolean contains(int x, int y){
+        if(x >= 0 && x < width)
+            if(y >= 0 && y < height) return true;
+        return false;
+    }
+    public boolean containsPixel(int x, int y){ return pxbounds.contains(x, y); }
+
+    public Tile get(int x, int y){
+        return (contains(x, y) ? map.get(x, y) : borderTile);
+    }
+    public Tile getBackground(){ return new Tile(BACK); }
+    public int getStage(int x, int y){ return get(x, y).getStage(); }
+    public Point getStartPoint(){ return startPoint; }
+    public int getPxWidth(){ return pxwidth; }
+    public int getPxHeight(){ return pxheight; }
+    public boolean isFlyable(int x, int y){
+        return get(x, y).isFlyable();
+    }
+    public boolean isPassable(int x, int y){
+        return get(x, y).isPassable();
+    }
+    public HashSet<Point> getLink(int x, int y){
+        if(contains(x,y)){
+            int key = x * map.getWidth() + y;
+            return links.get(key);
+        }
+        return null;
+    }
     public boolean getCollision(int x, int y) {
         return contains(x, y) && collisionMap[x][y];
     }
-	
-	// setters
-	public void set(int x, int y, Tile tile){
-		if(contains(x, y)){
-			map.set(x, y, tile);
-			redrawTile(x, y);
-		}
-	}
+
+    // setters
+    public void set(int x, int y, Tile tile){
+        if(contains(x, y)){
+            map.set(x, y, tile);
+            redrawTile(x, y);
+        }
+    }
     public void clear(int x, int y){
         set(x, y, BACK);
     }
     public void setBackground(Tile tile){ BACK.copyFrom(tile); }
-	public void setStartPoint(int x, int y){
-		startPoint.x = x;
-		startPoint.y = y;
-	}
-	public boolean setStage(int x, int y, int stage){
-		if(contains(x, y)){
-			Tile tile = get(x,y);
-			tile.setStage(stage >= 0 ? stage : 0);
+    public void setStartPoint(int x, int y){
+        startPoint.x = x;
+        startPoint.y = y;
+    }
+    public boolean setStage(int x, int y, int stage){
+        if(contains(x, y)){
+            Tile tile = get(x,y);
+            tile.setStage(stage >= 0 ? stage : 0);
 
-			if(tile.get() == Tile.SANDSTONE || tile.get() == Tile.DOOR){
-				if(tile.castShadow() && stage <= 3) 
-					tile.setCastShadow(false);
-				if(stage <= 0){
-					tile.setPassable(true);
-					tile.setFlyable(true);
-				}
-			}
+            if(tile.get() == Tile.SANDSTONE || tile.get() == Tile.DOOR){
+                if(tile.castShadow() && stage <= 3)
+                    tile.setCastShadow(false);
+                if(stage <= 0){
+                    tile.setPassable(true);
+                    tile.setFlyable(true);
+                }
+            }
 
-			redrawTile(x, y);
-			return true;
-		} else return false;
-	}
-	public boolean addLink(int a, int b, int c, int d){
-		if(contains(a, b) && contains(c, d)){
-			Integer key = a * map.getWidth() + b;
-			Point value = new Point(c, d);
-			if(!links.containsKey(key)){ links.put(key, new HashSet<Point>()); }
-			links.get(key).add(value);
-			return true;
-		}
-		return false;
-	}
+            redrawTile(x, y);
+            return true;
+        } else return false;
+    }
+    public boolean addLink(int a, int b, int c, int d){
+        if(contains(a, b) && contains(c, d)){
+            Integer key = a * map.getWidth() + b;
+            Point value = new Point(c, d);
+            if(!links.containsKey(key)){ links.put(key, new HashSet<Point>()); }
+            links.get(key).add(value);
+            return true;
+        }
+        return false;
+    }
     public void setCollision(int x, int y, boolean collision){
         if(contains(x, y)) collisionMap[x][y] = collision;
     }

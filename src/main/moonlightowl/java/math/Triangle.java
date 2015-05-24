@@ -48,12 +48,12 @@ public class Triangle{
     }
 
     public void draw(Graphics2D g, Color color, boolean filled, Point camera){
-		// calculate new transform matrix
-		if(camera != null){
-			at.setToIdentity();
-			at.translate(x-camera.x, y-camera.y);
-			at.rotate(angle);
-		}
+        // calculate new transform matrix
+        if(camera != null){
+            at.setToIdentity();
+            at.translate(x-camera.x, y-camera.y);
+            at.rotate(angle);
+        }
         g.setColor(color);
         if(filled) g.fill(at.createTransformedShape(shape));
         else g.draw(at.createTransformedShape(shape));
