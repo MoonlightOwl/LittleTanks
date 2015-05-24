@@ -136,9 +136,9 @@ public class Level {
 		//}
 		// alternative for fun =)
 		if(map.get(x, y).castShadow()){
-			if(map.get(x+1, y).isPassable())
+			if(!map.get(x+1, y).castShadow())
 				g.drawImage(Assets.ishadowr, (x+1)*TILE_SIZE, y*TILE_SIZE, null);
-			if(map.get(x, y+1).isPassable())
+			if(!map.get(x, y+1).castShadow())
 				g.drawImage(Assets.ishadowd, x*TILE_SIZE, (y+1)*TILE_SIZE, null);
 		}
 	}

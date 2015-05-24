@@ -680,7 +680,7 @@ public class Board extends JPanel implements ActionListener{
 			if(!Sound.EXPLODE.isPlaying())
 				setCamera(player.getX()+30, player.getY()+30);
 			else
-				setCamera(player.getX()+rand.nextInt(6)-3, player.getY()+rand.nextInt(6)-3);
+				setCamera(player.getX()+27+rand.nextInt(6), player.getY()+27+rand.nextInt(6));
 		} else {
 			moveCameraToTarget();
 		}
