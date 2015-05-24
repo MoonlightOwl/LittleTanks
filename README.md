@@ -31,6 +31,13 @@ For example: "_level_", "_metal_", "_maze_" or "_test_".
 Score table for any level pack, can be found in `/scores/` directory. Just remove corresponding file, to clear the table. 
 
 
+## Sources building
+You can easily build game sources by yourself.
+
+Just create a project in your favorite IDE, and download sources from this Git.
+Launch game from `LittleTanks` class, and set root project folder as working directory.
+
+
 ## Credits
 **Programmer**: MoonlightOwl
 
