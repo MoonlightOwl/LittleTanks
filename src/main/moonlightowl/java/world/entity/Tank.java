@@ -1,6 +1,7 @@
 package main.moonlightowl.java.world.entity;
 
 import main.moonlightowl.java.Assets;
+import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.world.Item;
 import main.moonlightowl.java.world.Level;
 
@@ -18,7 +19,7 @@ public class Tank {
 	
     private Point position, targetposition, mappos;
 	private double angle, targetangle;
-	private int level, ammo, life, mines, shield;
+	private int level, ammo, life, bombs, shield;
 	private AffineTransform at;
 	
 	public LinkedList<Item> inventory = new LinkedList<Item>();
@@ -31,7 +32,7 @@ public class Tank {
 		setAngle(0.0);
 		ammo = INIT_AMMO;
 		life = INIT_LIFE;
-		mines = INIT_MINES;
+		bombs = INIT_MINES;
 		level = 1;
 		shield = 0;
 	}
@@ -49,6 +50,17 @@ public class Tank {
 		}
 	}
 
+    public void reset(){
+        setPosition(0,0);
+        setAngle(0.0);
+        setLife(INIT_LIFE);
+        setAmmo(INIT_AMMO);
+        setBombs(INIT_MINES);
+        setShield(0);
+        setLevel(1);
+        inventory.clear();
+    }
+
     // getters
     public int getX(){ return position.x; }
     public int getY(){ return position.y; }
@@ -58,7 +70,7 @@ public class Tank {
 	public boolean isIdle(){ return position.equals(targetposition) && angle == targetangle; }
 	public int getAmmo(){ return ammo; }
 	public int getLife(){ return life; }
-	public int getMines(){ return mines; }
+	public int getBombs(){ return bombs; }
 	public int getLevel(){ return level; }
 	public AffineTransform getTransform(){
 		AffineTransform a = AffineTransform.getTranslateInstance(position.x, position.y);
@@ -77,8 +89,8 @@ public class Tank {
     public void setPosition(int x, int y){ 
 		position.x = x; position.y = y;
 		targetposition.x = x; targetposition.y = y;
-		mappos.x = x / Level.TILE_SIZE;
-		mappos.y = y / Level.TILE_SIZE;
+		mappos.x = GMath.toMap(x);
+		mappos.y = GMath.toMap(y);
 	}
 	public void setAngle(double angle){
 		this.angle = angle;
@@ -88,12 +100,11 @@ public class Tank {
 	public void changeAmmo(int delta){ ammo += delta; }
 	public void setLife(int l){ life = l; }
 	public void changeLife(int delta){ life += delta; }
-	public void setMines(int m){ mines = m; }
-	public void changeMines(int delta){ mines += delta; }
+	public void setBombs(int m){ bombs = m; }
+	public void changeBombs(int delta){ bombs += delta; }
 	public void setLevel(int level){ this.level = level; }
-	public void addShield(int shield){ this.shield += shield; }
 	public void setShield(int sh){ this.shield = (sh >= 0 ? sh : 0); }
-	public void minusShield(int shield){ this.shield = (shield < this.shield ? this.shield-shield : 0); }
+	public void changeShield(int shield){ setShield(this.shield + shield); }
 	public boolean removeFromInventory(int type){
 		Iterator<Item> it = inventory.iterator();
 		while(it.hasNext()){
@@ -109,17 +120,6 @@ public class Tank {
 	}
 	public void turn(double angle){
 		targetangle = angle;
-	}
-	
-    public void reset(){ 
-		setPosition(0,0); 
-		setAngle(0.0);
-		setLife(INIT_LIFE);
-		setAmmo(INIT_AMMO);
-		setMines(INIT_MINES);
-		level = 1;
-		shield = 0;
-		inventory.clear();
 	}
 	
 	// math
@@ -162,8 +162,8 @@ public class Tank {
 				position = add(position, normalize(delta));
 			}
 		}
-		mappos.x = position.x / Level.TILE_SIZE;
-		mappos.y = position.y / Level.TILE_SIZE;
+		mappos.x = GMath.toMap(position.x);
+		mappos.y = GMath.toMap(position.y);
     }
 
     // to screen

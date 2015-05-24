@@ -25,8 +25,8 @@ public class Item {
 	// getter
 	public int getType(){ return type; }
 	public boolean contains(int x, int y){
-		if(x >= this.x- Level.TILE_HALF && x <= this.x+Level.TILE_HALF){
-			if(y >= this.y-Level.TILE_HALF && y <= this.y+Level.TILE_HALF){
+		if(x >= this.x-Const.HALF_TILE && x <= this.x+Const.HALF_TILE){
+			if(y >= this.y-Const.HALF_TILE && y <= this.y+Const.HALF_TILE){
 				return true;
 			}
 		}
@@ -42,8 +42,8 @@ public class Item {
 		g.setColor(Const.OPAQUE_COLOR);
         g.fillOval(x-camera.x-Const.BONUS_SIZE/2, 
 				   y-camera.y-Const.BONUS_SIZE/2, Const.BONUS_SIZE, Const.BONUS_SIZE);
-		g.drawImage(image[type], x-camera.x-Level.TILE_HALF, 
-								 fy-camera.y-Level.TILE_HALF, null);
+		g.drawImage(image[type], x-camera.x-Const.HALF_TILE,
+								 fy-camera.y-Const.HALF_TILE, null);
 	}
 	public void drawIcon(Graphics2D g, int x, int y){
 		g.drawImage(image[type], x, y, null);

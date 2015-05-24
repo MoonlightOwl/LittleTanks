@@ -5,54 +5,35 @@ package main.moonlightowl.java;
  */
 
 import main.moonlightowl.java.gui.*;
-import main.moonlightowl.java.math.Point3D;
+import main.moonlightowl.java.gui.Label;
+import main.moonlightowl.java.gui.Menu;
+import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.sound.Music;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
+import main.moonlightowl.java.world.FX;
 import main.moonlightowl.java.world.Item;
-import main.moonlightowl.java.world.Level;
 import main.moonlightowl.java.world.Tile;
+import main.moonlightowl.java.world.World;
 import main.moonlightowl.java.world.entity.Bomb;
 import main.moonlightowl.java.world.entity.Bonus;
 import main.moonlightowl.java.world.entity.Bullet;
 import main.moonlightowl.java.world.entity.Tank;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.Toolkit;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Iterator;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.NoSuchElementException;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
 import java.io.File;
-
-import java.lang.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Board extends JPanel implements ActionListener{
 	// gamestate constants
 	public static final int MENU = 0, GAME = 1, NICKNAME = 2, GAMEOVER = 3, PAUSE = 4;
 	// global objects
-    private Random rand = new Random(System.currentTimeMillis());
 	private Music music;
 	private FX fx;
 	private SoundManager soundManager;
@@ -66,18 +47,15 @@ public class Board extends JPanel implements ActionListener{
 	private String levelpackage = "level";
 	private int MAXLEVEL = 1;
  	// game objects
-    private Level level;
+	private World world;
     private Tank player;
-	
+
+    // camera
 	private Point camera, camtarget;
 	private Point2D.Double camposition;
 	private double camangle;
 	private static final double CAM_TURN_SPEED = 1.0, CAM_MOVE_SPEED = 0.2;
-	
-	private final LinkedList<Bullet> bullets, newBullet;
-	private final ArrayList<Bonus> bonuses;
-	private final ArrayList<Tank> enemies, newEnemies;
-	private final ArrayList<Bomb> bombs;
+
 	// interface
     private Menu menu;
     private Label title, llifes, lshield, lscore, lammo, lvictory,
@@ -90,7 +68,6 @@ public class Board extends JPanel implements ActionListener{
     public Board(){
 		// load resources
 		Assets.load(this);
-		soundManager = new SoundManager();
 	
 		// set event listeners
         addKeyListener(new KAdapter());
@@ -101,12 +78,6 @@ public class Board extends JPanel implements ActionListener{
         // init variables
         setDoubleBuffered(false);
 		System.setProperty("sun.java2d.opengl", "True");
-
-		// graphics
-		camera = new Point(0, 0);
-		camtarget = new Point(0, 0);
-		camposition = new Point2D.Double(0, 0);
-		camangle = 0.0;
 
 		// intefrace
         title = new Label("LittleTanks", Const.WIDTH/2, 140, Assets.ftitle, Assets.fmtitle, Const.TITLE_COLOR, true); title.setShadow(true);
@@ -133,30 +104,35 @@ public class Board extends JPanel implements ActionListener{
         about.addLine("20 April 2015", Const.WIDTH/2, 480, Assets.fgui, Assets.fmgui, Color.WHITE, true, true);
         about.addLine("Neverland", Const.WIDTH/2, 520, Assets.fgui, Assets.fmgui, Color.WHITE, true, true);
 
-		// game variables
-		gamestate = MENU;
-		player = new Tank();
-		// no "diamonds" for 1.6 back compatibility
-		enemies = new ArrayList<Tank>(); newEnemies = new ArrayList<Tank>();
-		bullets = new LinkedList<Bullet>(); newBullet = new LinkedList<Bullet>(); 
-		bonuses = new ArrayList<Bonus>();
-		bombs = new ArrayList<Bomb>();
-		loadLevel("levels/test1.dat");
-		
-		newCameraTarget();
-		
-		setAmmoCounter(player.getAmmo());
-        scores = new Scores("scores/scores.txt", Assets.fgui, Assets.fmgui);
         nickname = new Query("Enter your nick name:", Const.WIDTH/2, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
-		packagename = new Query("Enter package name:", Const.WIDTH/2, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
-		loadPackage("level");
+        packagename = new Query("Enter package name:", Const.WIDTH/2, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
 
-		// PLAY!
+        scores = new Scores("scores/scores.txt", Assets.fgui, Assets.fmgui);
+
+        // set camera
+        camera = new Point(0, 0);
+        camtarget = new Point(0, 0);
+        camposition = new Point2D.Double(0, 0);
+        camangle = 0.0;
+
+		// init game variables
+		gamestate = MENU;
+        player = new Tank();
+		world = new World();
+		loadLevel("levels/test1.dat");
+        loadPackage("level");
+
+		newCameraTarget();
+
+        // load sound
+        soundManager = new SoundManager();
+        music = new Music("./resources/music/");
+        if(playMusic) music.play();
+
+        // PLAY! (Starting update & draw timer thread)
         Timer timer = new Timer(20, this);
-		timer.setInitialDelay(500);
-		timer.start();
-		music = new Music("./resources/music/");
-		if(playMusic) music.play();
+        timer.setInitialDelay(500);
+        timer.start();
     }
 
     public void addNotify() {
@@ -182,49 +158,40 @@ public class Board extends JPanel implements ActionListener{
 		newCameraTarget();
 	}
     private void gameQuit(){
-		music.stop();
+        // save game data
         scores.saveScores();
-		fx.dispose();
-		soundManager.close();
+        // unload resources
+        fx.dispose();
+        music.stop();
+        soundManager.close();
         JFrame.getFrames()[0].dispose();
         System.exit(1);
     }
-	public void resetGame(){
-		resetGame("levels/test1.dat");
-	}
-    public void resetGame(String filename) {
-		loadLevel(filename);
+	public void gameReset(){
+        // load default level
+        loadLevel("levels/test1.dat");
+        // reset game parameters
         score = 0;
-        setLifeCounter(player.getLife());
-		setShieldCounter(player.getShield());
-		setScoreCounter(score);
-		setAmmoCounter(player.getAmmo());
-		setMinesCounter(player.getMines());
-		synchronized(bullets){ bullets.clear(); }
-		synchronized(newBullet){ newBullet.clear(); }
-		synchronized(bonuses){ bonuses.clear(); }
-		synchronized(bombs){ bombs.clear(); }
+        setScoreCounter(score);
+    }
+    public void interfaceReset(){
         minus_timer = 0;
-		message_timer = 0;
-		effectFreeze = 0;
+        message_timer = 0;
+        effectFreeze = 0;
+        setLifeCounter(player.getLife());
+        setShieldCounter(player.getShield());
+        setAmmoCounter(player.getAmmo());
+        setMinesCounter(player.getBombs());
+        setFreezeCounter(effectFreeze);
     }
 
 	public void nextLevel(){
-		levelnum++;
+        levelnum++;
 		loadLevel("levels/"+levelpackage+levelnum+".dat");
+        // bonus points
 		if(levelnum > 1) score += 10;
 		addMessage("New level! (+10 score)", Const.MESSAGE_TIME);
-		setLifeCounter(player.getLife());
-		setShieldCounter(player.getShield());
-		setScoreCounter(score);
-		setAmmoCounter(player.getAmmo());
-		setMinesCounter(player.getMines());
-		synchronized(bullets){ bullets.clear(); }
-		synchronized(newBullet){ newBullet.clear(); }
-		synchronized(bonuses){ bonuses.clear(); }
-		synchronized(bombs){ bombs.clear(); }
-        minus_timer = 0;
-
+        // new level - new music
 		if(playMusic) music.next();
 	}
 	
@@ -250,35 +217,33 @@ public class Board extends JPanel implements ActionListener{
 	}
 
 	public void loadLevel(String filename){
-		level = new Level(filename);
-		Point sp = level.getStartPoint();
-		player.reset();
-		int x = sp.x * Level.TILE_SIZE;
-		int y = sp.y * Level.TILE_SIZE;
+        // load world data
+        world.reset();
+		world.loadLevel(filename);
+        // place player in the world
+        player.reset();
+        Point sp = world.level.getStartPoint();
+		int x = GMath.toPixel(sp.x);
+		int y = GMath.toPixel(sp.y);
 		player.setPosition(x, y);
+        // move camera to player
 		setCamera(x, y);
-		// load enemy tanks
-		synchronized(enemies){ enemies.clear(); }
-		synchronized(newEnemies){ newEnemies.clear(); }
-
-		for(Point3D spawner: level.getSpawners()){
-			Tank enemy = new Tank(spawner.x*Level.TILE_SIZE, spawner.y*Level.TILE_SIZE, spawner.z);
-			enemy.setAmmo(1000);
-			enemies.add(enemy);
-		}
 		// create new FX map
-		fx = new FX(level.getPxWidth(), level.getPxHeight());
+        if(fx != null) fx.dispose();
+		fx = new FX(world.level.getPxWidth(), world.level.getPxHeight());
+        // update interface
+        interfaceReset();
 	}
 	
 	private void setCamera(int x, int y){
-		camera.x = x - Const.WIDTH/2;
-		camera.y = y - Const.HEIGHT/2;
+		camera.x = x - Const.HALFWIDTH;
+		camera.y = y - Const.HALFHEIGHT;
 	}
 	private void newCameraTarget(){
-		camposition.x = camera.x + Const.WIDTH/2;
-		camposition.y = camera.y + Const.HEIGHT/2;
-		camtarget.x = rand.nextInt(level.getPxWidth()-240) + 120;
-		camtarget.y = rand.nextInt(level.getPxHeight()-240) + 120;
+		camposition.x = camera.x + Const.HALFWIDTH;
+		camposition.y = camera.y + Const.HALFHEIGHT;
+		camtarget.x = GMath.rand.nextInt(world.level.getPxWidth()-240) + 120;
+		camtarget.y = GMath.rand.nextInt(world.level.getPxHeight()-240) + 120;
 	}
 	private void moveCameraToTarget(){
 		double targetangle = Math.atan2(camtarget.y - camposition.y,
@@ -376,16 +341,16 @@ public class Board extends JPanel implements ActionListener{
 	// tank operations
 	private void moveTank(Tank tank, int x, int y){
 		if(tank.isIdle()){
-			int mx = x/Level.TILE_SIZE, my = y/Level.TILE_SIZE;
+			int mx = GMath.toMap(x), my = GMath.toMap(y);
 			// move if possible
-			if(level.isPassable(mx, my) && !level.collisionMap[mx][my]){
+			if(world.level.isPassable(mx, my) && !world.level.getCollision(mx,my)){
 				tank.move(x, y);
 				// pressure plates
-				if(level.get(mx, my).get() == Tile.PLATE){
-					if(level.getStage(mx, my) == 0){
-						level.setStage(mx, my, 1);
+				if(world.level.get(mx, my).get() == Tile.PLATE){
+					if(world.level.getStage(mx, my) == 0){
+						world.level.setStage(mx, my, 1);
 						// search for links and activate them
-						HashSet<Point> dest = level.getLink(mx, my);
+						HashSet<Point> dest = world.level.getLink(mx, my);
 						if(dest != null){
 							for(Point destination: dest){
 								activateMapTile(destination.x, destination.y);
@@ -395,19 +360,19 @@ public class Board extends JPanel implements ActionListener{
 				}
 			// open if closed (for players only =))
 			} else if(tank == player) { 
-				int tile = level.get(mx, my).get();
+				int tile = world.level.get(mx, my).get();
 				if(tile == Tile.DOOR){
-					int stage = level.getStage(mx, my);
+					int stage = world.level.getStage(mx, my);
 					if(stage > 0){
 						if(player.inventoryContains(Item.KEY)){
-							level.setStage(mx, my, level.getStage(mx, my)-1);
+							world.level.setStage(mx, my, world.level.getStage(mx, my)-1);
 							if(stage == 5) soundManager.play(Sound.LOCK);
 						}
 					}
 				} else if(tile == Tile.SAFE){
-					if(level.getStage(mx, my) > 0){
+					if(world.level.getStage(mx, my) > 0){
 						if(player.inventoryContains(Item.KEY)){
-							level.setStage(mx, my, 0);
+							world.level.setStage(mx, my, 0);
 							soundManager.play(Sound.LOCK);
 						}
 					}
@@ -426,9 +391,9 @@ public class Board extends JPanel implements ActionListener{
 					case 180: dy = 1.0f; y = y + 30; break;
 					case 270: dx = -1.0f; x = x - 30; break;
 				}
-				newBullet.add(new Bullet(x, y, dx, dy, tank.getLevel()));
+				world.newBullet.add(new Bullet(x, y, dx, dy, tank.getLevel()));
 				// play sound
-				if(tank == player || rand.nextBoolean()){
+				if(tank == player || GMath.rand.nextBoolean()){
 					switch(tank.getLevel()){
 						case 1: case 2: soundManager.play(Sound.SHOOT); break;
 						case 3: soundManager.play(Sound.LAUNCH); break;
@@ -446,7 +411,7 @@ public class Board extends JPanel implements ActionListener{
 			case 0: packagename.setVisible(true); break;
             case 1: // new game
                 gamestate = GAME;
-                resetGame();
+                gameReset();
 				levelnum = 0; nextLevel();
                 break;
             case 2: scores.setVisible(true); break;
@@ -455,30 +420,32 @@ public class Board extends JPanel implements ActionListener{
         }
 	}
 	private void activateMapTile(int x, int y){
-		Tile tile = level.get(x, y);
-		int px = x*Level.TILE_SIZE, py = y*Level.TILE_SIZE;
+		Tile tile = world.level.get(x, y);
+		int px = GMath.toPixel(x), py = GMath.toPixel(y);
 		switch(tile.get()){
 			case Tile.DOOR:
 				if(tile.getStage() == 5){
-					level.setStage(x, y, 0);
+					world.level.setStage(x, y, 0);
 					soundManager.play(Sound.LOCK);
 				}
 				break;
 			case Tile.SAFE:
 			case Tile.BOX:
-				level.set(x, y, level.getBackground());
-				level.drawSplash(Assets.iexpldec, px-20, py-20);
-				synchronized(bonuses){ bonuses.add(new Bonus(px+30, py+30, rand.nextInt(Bonus.COUNT))); }
+                world.level.clear(x, y);
+                world.level.drawSplash(Assets.iexpldec, px-20, py-20);
+				synchronized(world.bonuses){
+                    world.bonuses.add(new Bonus(px+30, py+30, GMath.rand.nextInt(Bonus.COUNT)));
+                }
 				fx.add(px-20, py-20, FX.SMALLEXPLOSION);
 				break;
 			case Tile.BARREL:
-				level.set(x, y, level.getBackground());
-				level.drawSplash(Assets.iexpldec, px-20, py-20);
-				synchronized(newBullet){
-					for(int c=0; c<rand.nextInt(3)+4; c++){
-						double angle = rand.nextDouble() * Math.PI * 2.0,
-							   speed = rand.nextDouble()/5.0 + 0.8;
-						newBullet.add(new Bullet(px+30, py+30,
+                world.level.clear(x, y);
+                world.level.drawSplash(Assets.iexpldec, px-20, py-20);
+				synchronized(world.newBullet){
+					for(int c = 0; c < GMath.rand.nextInt(3)+4; c++){
+						double angle = GMath.rand.nextDouble() * Math.PI * 2.0,
+							   speed = GMath.rand.nextDouble()/5.0 + 0.8;
+                        world.newBullet.add(new Bullet(px+30, py+30,
 							(float)(Math.cos(angle)*speed), (float)(Math.sin(angle)*speed)));
 					}
 				}
@@ -486,11 +453,11 @@ public class Board extends JPanel implements ActionListener{
 				soundManager.play(Sound.EXPLODE);
 				break;
 			case Tile.SPAWN:
-				int stage = level.getStage(x, y);
+				int stage = world.level.getStage(x, y);
 				if(stage > 0){
 					Tank enemy = new Tank(px, py, stage);
 					enemy.setAmmo(1000);
-					synchronized(newEnemies) { newEnemies.add(enemy); }
+					synchronized(world.newEnemies) { world.newEnemies.add(enemy); }
 				}
 				break;
 		}
@@ -511,22 +478,22 @@ public class Board extends JPanel implements ActionListener{
 				case KeyEvent.VK_LEFT:
 					if(gamestate == GAME){
 						player.turn(270);
-						moveTank(player, player.getX() - Level.TILE_SIZE, player.getY());
+						moveTank(player, player.getX() - Const.TILE_SIZE, player.getY());
 					} break;
 				case KeyEvent.VK_RIGHT:
 					if(gamestate == GAME){ 
 						player.turn(90);
-						moveTank(player, player.getX() + Level.TILE_SIZE, player.getY());
+						moveTank(player, player.getX() + Const.TILE_SIZE, player.getY());
 					} break;
 				case KeyEvent.VK_UP:
 					if(gamestate == GAME){ 
 						player.turn(0);
-						moveTank(player, player.getX(), player.getY() - Level.TILE_SIZE);
+						moveTank(player, player.getX(), player.getY() - Const.TILE_SIZE);
 					} break;
 				case KeyEvent.VK_DOWN:
 					if(gamestate == GAME){ 
 						player.turn(180);
-						moveTank(player, player.getX(), player.getY() + Level.TILE_SIZE);
+						moveTank(player, player.getX(), player.getY() + Const.TILE_SIZE);
 					} break;
 				case KeyEvent.VK_SPACE:
 					if(gamestate == GAME){
@@ -536,10 +503,10 @@ public class Board extends JPanel implements ActionListener{
 					break;
 				case KeyEvent.VK_C:
 					if(gamestate == GAME){
-						if(player.getMines() > 0){
-							player.changeMines(-1);
-							setMinesCounter(player.getMines());
-							bombs.add(new Bomb(player.getX()+30, player.getY()+30));
+						if(player.getBombs() > 0){
+							player.changeBombs(-1);
+							setMinesCounter(player.getBombs());
+                            world.bombs.add(new Bomb(player.getX()+30, player.getY()+30));
 							soundManager.play(Sound.BEEP);
 						}
 					}
@@ -563,7 +530,7 @@ public class Board extends JPanel implements ActionListener{
 						scores.setVisible(true);
                     	nickname.setVisible(false);
                     	gamestate = MENU; 
-						//resetGame();
+						//gameReset();
 					} else if(gamestate == GAMEOVER) {
 						minus_timer = 0;
 						gamestate = MENU;
@@ -672,15 +639,16 @@ public class Board extends JPanel implements ActionListener{
 
     public void actionPerformed(ActionEvent ae){
         // update player & camera
-        level.collisionMap[player.getMapX()][player.getMapY()] = false;
+        world.level.setCollision(player.getMapX(), player.getMapY(), false);
         player.update();
-		level.collisionMap[player.getMapX()][player.getMapY()] = true;
+        world.level.setCollision(player.getMapX(), player.getMapY(), true);
 		// camera
 		if(gamestate == GAME){
 			if(!Sound.EXPLODE.isPlaying())
-				setCamera(player.getX()+30, player.getY()+30);
+				setCamera(player.getX() + 30, player.getY() + 30);
 			else
-				setCamera(player.getX()+27+rand.nextInt(6), player.getY()+27+rand.nextInt(6));
+				setCamera(player.getX() + 27 + GMath.rand.nextInt(6),
+                          player.getY() + 27 + GMath.rand.nextInt(6));
 		} else {
 			moveCameraToTarget();
 		}
@@ -691,48 +659,48 @@ public class Board extends JPanel implements ActionListener{
 				setFreezeCounter(effectFreeze);
 			}
 			// tracks =)
-			if(rand.nextInt(60) == 0){
-				level.drawSplash(Assets.itrack, player.getTransform());
+			if(GMath.rand.nextInt(60) == 0){
+                world.level.drawSplash(Assets.itrack, player.getTransform());
 			}
 			// add projectiles
-			synchronized(newBullet){
-				if(newBullet.size() > 0){
-					for(Bullet bullet: newBullet){
-						synchronized(bullets){
-							bullets.add(bullet);
+			synchronized(world.newBullet){
+				if(world.newBullet.size() > 0){
+					for(Bullet bullet: world.newBullet){
+						synchronized(world.bullets){
+                            world.bullets.add(bullet);
 						}
 					}
-					newBullet.clear();
+                    world.newBullet.clear();
 				}
 			}
 			// add new tanks
-			synchronized(newEnemies){
-				if(newEnemies.size() > 0){
-					for(Tank enemy: newEnemies){
-						synchronized(enemies){
-							enemies.add(enemy);
+			synchronized(world.newEnemies){
+				if(world.newEnemies.size() > 0){
+					for(Tank enemy: world.newEnemies){
+						synchronized(world.enemies){
+                            world.enemies.add(enemy);
 						}
 					}
-					newEnemies.clear();
+                    world.newEnemies.clear();
 				}
 			}
 		
 			try {
 				// scroll all enemies
-				synchronized(enemies){
-					Iterator<Tank> itenemies = enemies.iterator();
+				synchronized(world.enemies){
+					Iterator<Tank> itenemies = world.enemies.iterator();
 					while(itenemies.hasNext()){
 						Tank t = itenemies.next();
-						level.collisionMap[t.getMapX()][t.getMapY()] = false;
+                        world.level.setCollision(t.getMapX(), t.getMapY(), false);
 						t.update();
-						level.collisionMap[t.getMapX()][t.getMapY()] = true;
+                        world.level.setCollision(t.getMapX(), t.getMapY(), true);
 						// random movement
 						if(t.isIdle()){
-							int action = rand.nextInt(effectFreeze == 0 ? 10 : 100);
+							int action = GMath.rand.nextInt(effectFreeze == 0 ? 10 : 100);
 							if(action == 0){
 								int dx = 0, dy = 0;
-								if(rand.nextBoolean()) dx = Level.TILE_SIZE*(rand.nextBoolean()? -1:1);
-								else dy = Level.TILE_SIZE*(rand.nextBoolean()? -1:1);
+								if(GMath.rand.nextBoolean()) dx = Const.TILE_SIZE*(GMath.rand.nextBoolean()? -1:1);
+								else dy = Const.TILE_SIZE*(GMath.rand.nextBoolean()? -1:1);
 								moveTank(t, t.getX()+dx, t.getY()+dy);
 								if(dx<0) t.turn(270);
 								else if(dy<0) t.turn(0);
@@ -741,35 +709,35 @@ public class Board extends JPanel implements ActionListener{
 							} else if(action == 2) fireTank(t);
 						}
 						// bullet collision
-						synchronized(bullets){
-							Iterator<Bullet> itbullets = bullets.iterator();
+						synchronized(world.bullets){
+							Iterator<Bullet> itbullets = world.bullets.iterator();
 							while(itbullets.hasNext()){
 								Bullet b = itbullets.next();
-								if(level.collisionMap[(int)(b.getX()/Level.TILE_SIZE)][(int)(b.getY()/Level.TILE_SIZE)]){
+								if(world.level.getCollision((int)(b.getX()/Const.TILE_SIZE), (int)(b.getY()/Const.TILE_SIZE))){
 									if(distance(b.getX(), b.getY(), t.getX()+30, t.getY()+30) < 25){
 										t.changeLife(-b.getLevel()); soundManager.play(Sound.HIT);
 										itbullets.remove();
 										// score points
-										int bonus = rand.nextInt(50);
+										int bonus = GMath.rand.nextInt(50);
 										changeScore(bonus);
 									}
 								}
 							}
 						}
 						// mine collision
-						synchronized(bombs){
-							Iterator<Bomb> itmines = bombs.iterator();
+						synchronized(world.bombs){
+							Iterator<Bomb> itmines = world.bombs.iterator();
 							while(itmines.hasNext()){
 								Bomb m = itmines.next();
 								if(distance(m.getX(), m.getY(), t.getX()+30, t.getY()+30) < 30){
 									// death!
                                     AffineTransform at = t.getTransform();
-                                    at.rotate(rand.nextDouble() * Math.PI * 2.0);
-									level.drawSplash(Assets.iexpldec, at);
+                                    at.rotate(GMath.rand.nextDouble() * Math.PI * 2.0);
+                                    world.level.drawSplash(Assets.iexpldec, at);
 									t.setLife(0);
 									itmines.remove();
 									// score points
-									int bonus = rand.nextInt(100);
+									int bonus = GMath.rand.nextInt(100);
 									changeScore(bonus);
 									addMessage("mine death!", Const.MESSAGE_TIME);
 								}
@@ -777,11 +745,11 @@ public class Board extends JPanel implements ActionListener{
 						}
 						// explosion
 						if(t.getLife() <= 0){
-							level.collisionMap[t.getMapX()][t.getMapY()] = false;
-							level.drawSplash(Assets.iexpldec, t.getX()-20, t.getY()-20);
+                            world.level.setCollision(t.getMapX(), t.getMapY(), false);
+                            world.level.drawSplash(Assets.iexpldec, t.getX()-20, t.getY()-20);
 							fx.add(t.getX()-20, t.getY()-20, FX.EXPLOSION);
 							// score points
-							int bonus = rand.nextInt(100)*t.getLevel() + 10;
+							int bonus = GMath.rand.nextInt(100)*t.getLevel() + 10;
 							changeScore(bonus);
 							addMessage("+"+bonus+" score", Const.MESSAGE_TIME);
 							// game over, man, it's over
@@ -790,7 +758,7 @@ public class Board extends JPanel implements ActionListener{
 						}
 					}
 					// if all enemies were destroyed - we are champions!
-					if(enemies.size() == 0 && gamestate == GAME){
+					if(world.enemies.size() == 0 && gamestate == GAME){
 						if(levelnum >= MAXLEVEL){
 							gameOver(true);
 						} else {
@@ -799,15 +767,15 @@ public class Board extends JPanel implements ActionListener{
 					}
 				}
 				// scroll throught all the bullets
-				synchronized(bullets){
-					Iterator<Bullet> itbullets = bullets.iterator();
+				synchronized(world.bullets){
+					Iterator<Bullet> itbullets = world.bullets.iterator();
 					while(itbullets.hasNext()){
 						Bullet b = itbullets.next();
 					
 						// rocket smoke trail
-						if(b.getLevel() == Tank.LAUNCHER && rand.nextBoolean())
-							fx.add((int)b.getX()-50+rand.nextInt(40),
-								   (int)b.getY()-50+rand.nextInt(40), FX.SMOKE);
+						if(b.getLevel() == Tank.LAUNCHER && GMath.rand.nextBoolean())
+							fx.add((int)b.getX() - 50 + GMath.rand.nextInt(40),
+								   (int)b.getY() - 50 + GMath.rand.nextInt(40), FX.SMOKE);
 						
 						b.update();
 					
@@ -820,11 +788,11 @@ public class Board extends JPanel implements ActionListener{
 						}
 						// check level collision
 						else {
-							int x = (int)(b.getX()/Level.TILE_SIZE), y = (int)(b.getY()/Level.TILE_SIZE);
-							if(!level.isFlyable(x, y)){
+							int x = GMath.toMap((int)b.getX()), y = GMath.toMap((int)b.getY());
+							if(!world.level.isFlyable(x, y)){
 								// crush! destroy! swag!
-								Tile tile = level.get(x, y);
-								int px = x*Level.TILE_SIZE, py = y*Level.TILE_SIZE;
+								Tile tile = world.level.get(x, y);
+								int px = (int)b.getX(), py = (int)b.getY();
 								switch(tile.get()){
 									case Tile.BOX:
 									case Tile.BARREL:
@@ -832,21 +800,23 @@ public class Board extends JPanel implements ActionListener{
 										break;
 									case Tile.SANDSTONE:
 										if(tile.getStage() > 0){
-											if(rand.nextBoolean()){
-												level.setStage(x, y, tile.getStage()-b.getLevel());
+											if(GMath.rand.nextBoolean()){
+                                                world.level.setStage(x, y, tile.getStage()-b.getLevel());
 											}
 										}
 										break;
 									case Tile.DOOR:
 										if(tile.getStage() > 0 && tile.getStage() < 5){
-											level.setStage(x, y, tile.getStage()-b.getLevel());
+                                            world.level.setStage(x, y, tile.getStage()-b.getLevel());
 										}
 										break;
 									case Tile.SAFE:
 										if(tile.getStage() == 0){
-											level.set(x, y, level.getBackground());
-											level.drawSplash(Assets.iexpldec, px-20, py-20);
-											synchronized(bonuses){ bonuses.add(new Bonus(px+30, py+30, rand.nextInt(Bonus.COUNT))); }
+                                            world.level.clear(x, y);
+                                            world.level.drawSplash(Assets.iexpldec, px-20, py-20);
+											synchronized(world.bonuses){
+                                                world.bonuses.add(new Bonus(px+30, py+30, GMath.rand.nextInt(Bonus.COUNT)));
+                                            }
 											fx.add(px-20, py-20, FX.SMALLEXPLOSION);
 										}
 										break;
@@ -867,8 +837,8 @@ public class Board extends JPanel implements ActionListener{
 						}
 					}
 				}
-				synchronized(bonuses){
-					Iterator<Bonus> itbonuses = bonuses.iterator();
+				synchronized(world.bonuses){
+					Iterator<Bonus> itbonuses = world.bonuses.iterator();
 					while(itbonuses.hasNext()){
 						Bonus s = itbonuses.next();
 						s.update();
@@ -884,12 +854,12 @@ public class Board extends JPanel implements ActionListener{
 									addMessage("+10 ammo", Const.MESSAGE_TIME);
 									break;
 								case Bonus.SCORE:
-									int bonus = rand.nextInt(50);
+									int bonus = GMath.rand.nextInt(50);
 									changeScore(bonus);
 									addMessage("+"+bonus+" score", Const.MESSAGE_TIME);
 									break;
 								case Bonus.MINE:
-									player.changeMines(2); setMinesCounter(player.getMines());
+									player.changeBombs(2); setMinesCounter(player.getBombs());
 									addMessage("+2 bombs", Const.MESSAGE_TIME);
 									break;
 								case Bonus.FREEZE:
@@ -900,7 +870,7 @@ public class Board extends JPanel implements ActionListener{
 								case Bonus.POWER:
 									int level;
 									do {
-										level = rand.nextInt(Tank.MAX_LEVEL)+1;
+										level = GMath.rand.nextInt(Tank.MAX_LEVEL)+1;
 									} while(level == player.getLevel());
 									player.setLevel(level);
 									addMessage("random power", Const.MESSAGE_TIME);
@@ -917,9 +887,8 @@ public class Board extends JPanel implements ActionListener{
 					}
 				}
 
-                // TODO: total refactoring!!!!!
-				synchronized(level.getItems()){
-					Iterator<Item> ititems = level.getItems().iterator();
+				synchronized(world.items){
+					Iterator<Item> ititems = world.items.iterator();
 					while(ititems.hasNext()){
 						Item i = ititems.next();
 						i.update();
@@ -932,7 +901,8 @@ public class Board extends JPanel implements ActionListener{
 					}
 				}
 			} catch(NoSuchElementException e){ System.out.println("WTF! Again (shedule)..."); }
-			
+
+            world.level.renderChanges();
 			fx.update();
 		}
 
@@ -956,37 +926,35 @@ public class Board extends JPanel implements ActionListener{
         g.fillRect(0, 0, Const.WIDTH, Const.HEIGHT);
 
 		// draw level
-        level.draw(g2, camera);
-		synchronized(bombs){
-            for(Bomb m: bombs) {
+        world.level.draw(g2, camera);
+		synchronized(world.bombs){
+            for(Bomb m: world.bombs) {
                 m.draw(g2, camera);
             }
 		}
 		// player
 		player.draw(g2, camera);
-		
-		try {
-			synchronized(enemies){
-                for(Tank t: enemies) {
-                    t.draw(g2, camera);
-                }
-			}
-			synchronized(bonuses){
-                for(Bonus z: bonuses) {
-                    z.draw(g2, camera);
-                }
-			}
-			synchronized(level.getItems()){
-                for(Item i: level.getItems()) {
-                    i.draw(g2, camera);
-                }
-			}
-			synchronized(bullets){
-                for(Bullet b: bullets) {
-                    b.draw(g2, camera);
-                }
-			}
-		} catch(NoSuchElementException e){ System.out.println("WFT! Again (paint)..."); }
+
+        synchronized(world.enemies){
+            for(Tank t: world.enemies) {
+                t.draw(g2, camera);
+            }
+        }
+        synchronized(world.bonuses){
+            for(Bonus z: world.bonuses) {
+                z.draw(g2, camera);
+            }
+        }
+        synchronized(world.items){
+            for(Item i: world.items) {
+                i.draw(g2, camera);
+            }
+        }
+        synchronized(world.bullets){
+            for(Bullet b: world.bullets) {
+                b.draw(g2, camera);
+            }
+        }
 		
 		// draw effects
 		fx.draw(g2, camera);
@@ -1054,10 +1022,4 @@ public class Board extends JPanel implements ActionListener{
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
     }
-
-    /*class DrawShedule extends TimerTask{
-        public void run(){
-            repaint();
-        }
-    }*/
 }

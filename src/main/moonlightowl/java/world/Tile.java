@@ -13,11 +13,7 @@ public class Tile {
 	private int stage = 0;
 	
 	public Tile(Tile old){
-		this.type = old.type;
-		this.passable = old.passable;
-		this.flyable = old.flyable;
-		this.castshadow = old.castshadow;
-		this.stage = old.stage;
+		copyFrom(old);
 	}
 	public Tile(){ create(GRASS); }
 	public Tile(int type){
@@ -66,7 +62,14 @@ public class Tile {
 			default: flyable = true; passable = true;
 		}
 	}
-	
+	public void copyFrom(Tile tile){
+        this.type = tile.type;
+        this.passable = tile.passable;
+        this.flyable = tile.flyable;
+        this.castshadow = tile.castshadow;
+        this.stage = tile.stage;
+	}
+
 	public void set(int type){ this.type = type; }
 	public void setStage(int stage){ this.stage = stage; }
 	public void setCastShadow(boolean cast){ this.castshadow = cast; }

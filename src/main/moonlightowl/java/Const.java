@@ -9,7 +9,8 @@ package main.moonlightowl.java;
 import java.awt.Color;
 
 public final class Const {
-    public final static int WIDTH = 800, HEIGHT = 600,
+    public final static int WIDTH = 800, HEIGHT = 600, HALFWIDTH = WIDTH/2, HALFHEIGHT = HEIGHT/2,
+            TILE_SIZE = 60, HALF_TILE = TILE_SIZE/2,
             BONUS_SIZE = 50,
             MESSAGE_TIME = 120,
             SCOREBOARD_SIZE = 7, NICKNAME_LEN = 30;

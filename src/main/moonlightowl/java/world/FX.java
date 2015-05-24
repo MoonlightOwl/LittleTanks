@@ -1,5 +1,6 @@
-package main.moonlightowl.java;
+package main.moonlightowl.java.world;
 
+import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.world.entity.Particle;
 
 import java.awt.AlphaComposite;
@@ -25,7 +26,13 @@ public class FX {
 		g = (Graphics2D)imap.getGraphics();
 		particles = new LinkedList<Particle>();
 	}
-	
+
+	public void clear(){
+        g.setComposite(AlphaComposite.Clear);
+        g.fillRect(0, 0, width, height);
+        g.setComposite(AlphaComposite.SrcOver);
+    }
+
 	public void add(int x, int y, int type){
 		BufferedImage[] image = Assets.iexplosion;
 		int stage = 0;
@@ -40,10 +47,7 @@ public class FX {
 	public void update(){
 		// update & draw existing particles
 		if(particles.size() > 0){
-			// clear FX map
-			g.setComposite(AlphaComposite.Clear);
-			g.fillRect(0, 0, width, height);
-			g.setComposite(AlphaComposite.SrcOver);
+			clear();
 			// iterate over particles & draw new map
 			it = particles.iterator();
 			while(it.hasNext()){
