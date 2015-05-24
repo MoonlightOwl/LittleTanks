@@ -24,8 +24,9 @@ public class World {
     public final ArrayList<Bonus> bonuses;
     public final ArrayList<Tank> enemies, newEnemies;
     public final ArrayList<Bomb> bombs;
-    public final ArrayList<Point3D> spawners = new ArrayList<Point3D>();
-    public final ArrayList<Item> items = new ArrayList<Item>();
+    public final ArrayList<Point3D> spawners;
+    public final ArrayList<Item> items;
+    public final ArrayList<Turret> turrets;
 
     public World(){
         level = new Level();
@@ -34,6 +35,9 @@ public class World {
         bullets = new LinkedList<Bullet>(); newBullet = new LinkedList<Bullet>();
         bonuses = new ArrayList<Bonus>();
         bombs = new ArrayList<Bomb>();
+        spawners = new ArrayList<Point3D>();
+        items = new ArrayList<Item>();
+        turrets = new ArrayList<Turret>();
     }
 
     /** Loading game objects from file */
@@ -69,11 +73,11 @@ public class World {
                             break;
                         case 'c':
                             items.add(new Item(GMath.toPixel(x) + Const.HALF_TILE,
-                                    GMath.toPixel(y) + Const.HALF_TILE, Item.CANDY));
+                                               GMath.toPixel(y) + Const.HALF_TILE, Item.CANDY));
                             break;
                         // add entities
                         case 'T':
-                            // TODO: turret entity
+                            turrets.add(new Turret(GMath.toPixel(x), GMath.toPixel(y)));
                         default:
                             // set tile
                             level.set(x, y, new Tile(ch));
@@ -139,5 +143,6 @@ public class World {
         newEnemies.clear();
         spawners.clear();
         items.clear();
+        turrets.clear();
     }
 }

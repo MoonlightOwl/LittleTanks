@@ -58,7 +58,7 @@ public class Tile {
             case DOOR: castshadow = true; stage = 5; break;
             case SAFE: castshadow = true; stage = 1; break;
             case PLATE: flyable = true; passable = true; stage = 0; break;
-            case TURRET: break;
+            case TURRET: flyable = true; break;
             default: flyable = true; passable = true;
         }
     }

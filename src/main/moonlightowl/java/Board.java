@@ -15,10 +15,7 @@ import main.moonlightowl.java.world.FX;
 import main.moonlightowl.java.world.Item;
 import main.moonlightowl.java.world.Tile;
 import main.moonlightowl.java.world.World;
-import main.moonlightowl.java.world.entity.Bomb;
-import main.moonlightowl.java.world.entity.Bonus;
-import main.moonlightowl.java.world.entity.Bullet;
-import main.moonlightowl.java.world.entity.Tank;
+import main.moonlightowl.java.world.entity.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -893,10 +890,55 @@ public class Board extends JPanel implements ActionListener{
                         Item i = ititems.next();
                         i.update();
                         // collect items to player inventory
-                        if(i.contains(player.getX()+30, player.getY()+30)){
+                        if(i.contains(player.getX()+Const.HALF_TILE, player.getY()+Const.HALF_TILE)){
                             player.inventory.add(i);
                             soundManager.play(Sound.PICKUP);
                             ititems.remove();
+                        }
+                    }
+                }
+
+                synchronized(world.turrets){
+                    Iterator<Turret> itturrets = world.turrets.iterator();
+                    while(itturrets.hasNext()){
+                        Turret t = itturrets.next();
+
+                        // shoot and crush!
+                        if(distance(player.getX(), player.getY(), t.getX(), t.getY()) < Turret.DETECT_RADIUS) {
+                            t.update(true);
+                            if (GMath.rand.nextInt(4) == 1) {
+                                synchronized (world.newBullet) {
+                                    double rifle = GMath.rand.nextBoolean() ? -0.3 : 0.3,
+                                            dx = Math.cos(t.getAngle() - Math.PI / 2 + rifle) * 40,
+                                            dy = Math.sin(t.getAngle() - Math.PI / 2 + rifle) * 40;
+                                    world.newBullet.add(
+                                            new Bullet(t.getX() + Const.HALF_TILE + (int) dx,
+                                                       t.getY() + Const.HALF_TILE + (int) dy,
+                                                       (float) (dx / 20), (float) (dy / 20)));
+                                }
+                            }
+                        } else t.update(false);
+                        // bullet collision
+                        synchronized(world.bullets) {
+                            Iterator<Bullet> itbullets = world.bullets.iterator();
+                            while(itbullets.hasNext()) {
+                                Bullet b = itbullets.next();
+                                if(GMath.toMap((int)b.getX()) == t.getMapX() &&
+                                    GMath.toMap((int)b.getY()) == t.getMapY()) {
+                                    // hit!
+                                    t.changeLife(-1);
+                                    if(t.getLife() == 0){
+                                        itturrets.remove();
+                                        // explode!
+                                        fx.add((int)b.getX()-50, (int)b.getY()-50, FX.EXPLOSION);
+                                        soundManager.play(Sound.EXPLODE);
+                                    }
+                                    itbullets.remove();
+                                    // score points
+                                    int bonus = GMath.rand.nextInt(20);
+                                    changeScore(bonus);
+                                }
+                            }
                         }
                     }
                 }
@@ -937,6 +979,11 @@ public class Board extends JPanel implements ActionListener{
 
         synchronized(world.enemies){
             for(Tank t: world.enemies) {
+                t.draw(g2, camera);
+            }
+        }
+        synchronized(world.turrets){
+            for(Turret t: world.turrets) {
                 t.draw(g2, camera);
             }
         }
