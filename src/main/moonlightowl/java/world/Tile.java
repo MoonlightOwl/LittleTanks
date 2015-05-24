@@ -6,7 +6,8 @@ public class Tile {
     public static final int GRASS = 0, WALL = 1, BOX = 2,
         HOLE = 3, SANDSTONE = 4, METAL = 5, GRID = 6, BARREL = 7,
         CONCRETE = 8, SAND = 9, SPAWN = 10, BUSH = 11, DOOR = 12,
-        SAFE = 13, PLATE = 14, TURRET = 15;
+        SAFE = 13, PLATE = 14, TURRET = 15, FLOORTILES = 16,
+        COBBLESTONE = 17;
 
     private int type;
     private boolean passable = false, flyable = false, castshadow = false;
@@ -36,6 +37,8 @@ public class Tile {
             case 'S': create(SAFE); break;
             case '=': create(PLATE); break;
             case 'T': create(TURRET); break;
+            case '_': create(FLOORTILES); break;
+            case '~': create(COBBLESTONE); break;
             case '@': case '&': case '%': case '$': create(SPAWN); break;
             default: create(GRASS);
         }
@@ -43,7 +46,6 @@ public class Tile {
     private void create(int type){
         this.type = type;
         switch(type){
-            case GRASS: passable = true; flyable = true; break;
             case BOX: castshadow = true; break;
             case BARREL: break;
             case WALL: castshadow = true; break;
@@ -52,8 +54,6 @@ public class Tile {
             case HOLE: flyable = true; break;
             case GRID: flyable = true; break;
             case CONCRETE: castshadow = true; break;
-            case SAND: flyable = true; passable = true; break;
-            case SPAWN: flyable = true; passable = true; break;
             case BUSH: passable = true; break;
             case DOOR: castshadow = true; stage = 5; break;
             case SAFE: castshadow = true; stage = 1; break;

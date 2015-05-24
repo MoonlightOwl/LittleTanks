@@ -101,6 +101,8 @@ public class Level {
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.iturret_base, x, y, null);
                 break;
+            case Tile.FLOORTILES: g.drawImage(Assets.ifloor_tiles, x, y, null); break;
+            case Tile.COBBLESTONE: g.drawImage(Assets.icobblestone, x, y, null); break;
             case Tile.SPAWN:
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.ispawn, x, y, null);

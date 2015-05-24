@@ -27,7 +27,7 @@ public class Assets {
         ishadowr, ishadowd, imetal, igrid, isplash_text, ibarrel,
         irocket, iconcrete, isand, ibush, ikey, ibarrelside,
         ishadowLS, ishadowLB, ishadowRS, ishadowRB,
-        icandy, iturret_base, iturret_tower;
+        icandy, iturret_base, iturret_tower, ifloor_tiles, icobblestone;
     public static BufferedImage[] iexplosion = new BufferedImage[4],
         isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
         itank = new BufferedImage[4], ismoke = new BufferedImage[4],
@@ -90,6 +90,8 @@ public class Assets {
             icandy = ImageIO.read(new File("resources/images/candy.png"));
             iturret_base = ImageIO.read(new File("resources/images/turret_base.png"));
             iturret_tower = ImageIO.read(new File("resources/images/turret_tower.png"));
+            ifloor_tiles = ImageIO.read(new File("resources/images/plates0.png"));
+            icobblestone = ImageIO.read(new File("resources/images/stone.png"));
 
             // sounds
             Sound.init();

@@ -34,7 +34,7 @@ Score table for any level pack, can be found in `/scores/` directory. Just remov
 ## Sources building
 You can easily build game sources by yourself.
 
-Just create a project in your favorite IDE, and download sources from this Git.
+Create a project in your favorite IDE, and download sources from this Git.
 Launch game from `LittleTanks` class, and set root project folder as working directory.
 
 
