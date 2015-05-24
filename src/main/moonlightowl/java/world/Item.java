@@ -2,7 +2,6 @@ package main.moonlightowl.java.world;
 
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
-import main.moonlightowl.java.world.Level;
 
 import java.awt.Point;
 import java.awt.Graphics2D;

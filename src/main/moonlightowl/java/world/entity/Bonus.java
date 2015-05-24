@@ -59,7 +59,7 @@ public class Bonus extends Primitive {
     public void changeColor(){
         switch(this.type){
             case 0: setColor(new Color(118, 223, 54, 230)); break;    // life
-            case 1: setColor(new Color(255, 26, 2, 200)); break;      // ammo
+            case 1: setColor(new Color(255, 48, 5, 200)); break;      // ammo
             case 2: setColor(new Color(2, 67, 154, 177)); break;      // score points
             case 3: setColor(new Color(255, 224, 0, 182)); break;     // mine
             case 4: setColor(new Color(218, 239, 255, 255)); break;   // freeze

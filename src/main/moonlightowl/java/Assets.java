@@ -23,11 +23,11 @@ public class Assets {
 	public static FontMetrics fmtitle, fmmenu, fmgui, fmsmall;
 	
 	public static BufferedImage iwall, igrass, ibox, ishield,
-		ihole, ispawn, itrack, iexpldec, imine_on, imine_off,
+		ihole, ispawn, itrack, iexpldec, ibomb_on, ibomb_off,
 		ishadowr, ishadowd, imetal, igrid, isplash_text, ibarrel,
 		irocket, iconcrete, isand, ibush, ikey, ibarrelside, 
 		ishadowLS, ishadowLB, ishadowRS, ishadowRB,
-		icandy, iturret_base;
+		icandy, iturret_base, iturret_tower;
 	public static BufferedImage[] iexplosion = new BufferedImage[4],
 		isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
 		itank = new BufferedImage[4], ismoke = new BufferedImage[4],
@@ -58,8 +58,8 @@ public class Assets {
 			igrid = ImageIO.read(new File("resources/images/grid.png"));
 			iexpldec = ImageIO.read(new File("resources/images/explosiondec.png"));
 			isplash_text = ImageIO.read(new File("resources/images/splash_text.png"));
-			imine_on = ImageIO.read(new File("resources/images/bomb_on.png"));
-			imine_off = ImageIO.read(new File("resources/images/bomb_off.png"));
+			ibomb_on = ImageIO.read(new File("resources/images/bomb_on.png"));
+			ibomb_off = ImageIO.read(new File("resources/images/bomb_off.png"));
 			ishadowr = ImageIO.read(new File("resources/images/shadowr.png"));
 			ishadowd = ImageIO.read(new File("resources/images/shadowd.png"));
 			
@@ -89,6 +89,7 @@ public class Assets {
 			
 			icandy = ImageIO.read(new File("resources/images/candy.png"));
 			iturret_base = ImageIO.read(new File("resources/images/turret_base.png"));
+			iturret_tower = ImageIO.read(new File("resources/images/turret_tower.png"));
 
 			// sounds
 			Sound.init();

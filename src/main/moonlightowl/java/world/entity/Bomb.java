@@ -23,8 +23,8 @@ public class Bomb {
 	
 	public void draw(Graphics2D g, Point camera){
         if(System.currentTimeMillis()%800<400)
-			g.drawImage(Assets.imine_on, x-camera.x-30, y-camera.y-30, null);
+			g.drawImage(Assets.ibomb_on, x-camera.x-30, y-camera.y-30, null);
 		else
-			g.drawImage(Assets.imine_off, x-camera.x-30, y-camera.y-30, null);
+			g.drawImage(Assets.ibomb_off, x-camera.x-30, y-camera.y-30, null);
 	}
 }
