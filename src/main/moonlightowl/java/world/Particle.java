@@ -1,4 +1,4 @@
-package main.moonlightowl.java.world.entity;
+package main.moonlightowl.java.world;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

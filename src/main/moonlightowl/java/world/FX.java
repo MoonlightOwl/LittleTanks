@@ -1,7 +1,6 @@
 package main.moonlightowl.java.world;
 
 import main.moonlightowl.java.Assets;
-import main.moonlightowl.java.world.entity.Particle;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -46,7 +45,7 @@ public class FX {
 
     public void update(){
         // update & draw existing particles
-        if(particles.size() > 0){
+        if(!particles.isEmpty()){
             clear();
             // iterate over particles & draw new map
             it = particles.iterator();
@@ -61,9 +60,9 @@ public class FX {
         }
     }
 
-    public void draw(Graphics2D g, Point camera){
-        if(particles.size() > 0)
-            g.drawImage(imap, -camera.x, -camera.y, null);
+    public void draw(Graphics2D graphics, Point camera){
+        if(!particles.isEmpty())
+            graphics.drawImage(imap, -camera.x, -camera.y, null);
     }
 
     public void dispose(){
