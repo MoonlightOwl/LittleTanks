@@ -114,6 +114,10 @@ public class Tank {
         return false;
     }
 
+    public boolean hit(int damage){
+        if(getShield() > 0){ changeShield(-damage); return false; }
+        else{ changeLife(-damage); return true; }
+    }
     public void move(int dx, int dy){
         targetposition.x = dx;
         targetposition.y = dy;

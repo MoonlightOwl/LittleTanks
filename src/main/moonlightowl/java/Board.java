@@ -712,7 +712,7 @@ public class Board extends JPanel implements ActionListener{
                                 Bullet b = itbullets.next();
                                 if(world.level.getCollision((int)(b.getX()/Const.TILE_SIZE), (int)(b.getY()/Const.TILE_SIZE))){
                                     if(distance(b.getX(), b.getY(), t.getX()+30, t.getY()+30) < 25){
-                                        t.changeLife(-b.getLevel()); soundManager.play(Sound.HIT);
+                                        if(t.hit(b.getLevel())) soundManager.play(Sound.HIT);
                                         itbullets.remove();
                                         // score points
                                         int bonus = GMath.rand.nextInt(50);
