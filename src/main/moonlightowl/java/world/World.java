@@ -116,12 +116,9 @@ public class World {
             }
             // arrangement of the tanks
             for(Point3D spawner: spawners){
-                Tank enemy = new Tank(GMath.toPixel(spawner.x), GMath.toPixel(spawner.y), spawner.z);
-                enemy.setAmmo(1000);
-                enemies.add(enemy);
+                spawnRandomTank(GMath.toPixel(spawner.x), GMath.toPixel(spawner.y), spawner.z);
             }
         } catch(Exception e) {
-            // print error message
             System.out.println("[ERROR] Something went wrong, when loading '" + filename + "' level map...");
             e.printStackTrace();
         } finally {
@@ -131,6 +128,17 @@ public class World {
 
             level.render();
         }
+    }
+
+    /** Random tanks for your fun! */
+    public void spawnRandomTank(int x, int y, int level){
+        Tank enemy = new Tank(x, y, level);
+        // weapon and shields
+        enemy.setAmmo(GMath.rand.nextInt(1024)+10);
+        enemy.setBombs(GMath.rand.nextInt(4));
+        if(GMath.rand.nextInt(10) == 1) enemy.setShield(GMath.rand.nextInt(10));
+        // go!
+        enemies.add(enemy);
     }
 
     /** Unloading all objects, and clear lists */
