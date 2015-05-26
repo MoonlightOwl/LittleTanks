@@ -5,11 +5,13 @@ package main.moonlightowl.java.world;
  */
 
 public class Map {
+    public static final int DEFAULT_SIZE = 10;
+
     private Tile[][] data;
     private int width, height;
 
     public Map(){
-        this(10, 10);
+        this(DEFAULT_SIZE, DEFAULT_SIZE);
     }
     public Map(int width, int height){
         create(width, height);
@@ -22,7 +24,6 @@ public class Map {
     }
 
     public void set(int x, int y, Tile tile){ data[x][y] = tile; }
-    public void setStage(int x, int y, int stage){ data[x][y].setStage(stage); }
 
     public Tile get(int x, int y){ return data[x][y]; }
     public int getWidth(){ return width; }
