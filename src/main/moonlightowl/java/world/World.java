@@ -5,6 +5,7 @@ import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.world.entity.*;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -27,6 +28,7 @@ public class World {
     public final ArrayList<Point3D> spawners;
     public final ArrayList<Item> items;
     public final ArrayList<Turret> turrets;
+    public FX fx;
 
     public World(){
         level = new Level();
@@ -127,6 +129,10 @@ public class World {
             } catch(Exception e) { e.printStackTrace(); }
 
             level.render();
+
+            // create fx map for level
+            if(fx != null) fx.dispose();
+            fx = new FX(level.getPxWidth(), level.getPxHeight());
         }
     }
 
@@ -152,5 +158,46 @@ public class World {
         spawners.clear();
         items.clear();
         turrets.clear();
+    }
+
+    /** Draw the world! */
+    public void draw(Graphics2D g, Point camera){
+        level.draw(g, camera);
+
+        synchronized(bombs){
+            for(Bomb m: bombs) {
+                m.draw(g, camera);
+            }
+        }
+        synchronized(enemies){
+            for(Tank t: enemies) {
+                t.draw(g, camera);
+            }
+        }
+        synchronized(turrets){
+            for(Turret t: turrets) {
+                t.draw(g, camera);
+            }
+        }
+        synchronized(bonuses){
+            for(Bonus z: bonuses) {
+                z.draw(g, camera);
+            }
+        }
+        synchronized(items){
+            for(Item i: items) {
+                i.draw(g, camera);
+            }
+        }
+        synchronized(bullets){
+            for(Bullet b: bullets) {
+                b.draw(g, camera);
+            }
+        }
+    }
+
+    /** Dispose all disposable */
+    public void dispose(){
+        fx.dispose();
     }
 }

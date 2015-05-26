@@ -32,7 +32,6 @@ public class Board extends JPanel implements ActionListener{
     public static final int MENU = 0, GAME = 1, NICKNAME = 2, GAMEOVER = 3, PAUSE = 4;
     // global objects
     private Music music;
-    private FX fx;
     private SoundManager soundManager;
     // game vars
     private boolean playMusic = false, playSounds = true;
@@ -158,7 +157,7 @@ public class Board extends JPanel implements ActionListener{
         // save game data
         scores.saveScores();
         // unload resources
-        fx.dispose();
+        world.dispose();
         music.stop();
         soundManager.close();
         JFrame.getFrames()[0].dispose();
@@ -225,9 +224,6 @@ public class Board extends JPanel implements ActionListener{
         player.setPosition(x, y);
         // move camera to player
         setCamera(x, y);
-        // create new FX map
-        if(fx != null) fx.dispose();
-        fx = new FX(world.level.getPxWidth(), world.level.getPxHeight());
         // update interface
         interfaceReset();
     }
@@ -433,7 +429,7 @@ public class Board extends JPanel implements ActionListener{
                 synchronized(world.bonuses){
                     world.bonuses.add(new Bonus(px+30, py+30, GMath.rand.nextInt(Bonus.COUNT)));
                 }
-                fx.add(px-20, py-20, FX.SMALLEXPLOSION);
+                world.fx.add(px-20, py-20, FX.SMALLEXPLOSION);
                 break;
             case Tile.BARREL:
                 world.level.clear(x, y);
@@ -446,7 +442,7 @@ public class Board extends JPanel implements ActionListener{
                             (float)(Math.cos(angle)*speed), (float)(Math.sin(angle)*speed)));
                     }
                 }
-                fx.add(px-20, py-20, FX.EXPLOSION);
+                world.fx.add(px-20, py-20, FX.EXPLOSION);
                 soundManager.play(Sound.EXPLODE);
                 break;
             case Tile.SPAWN:
@@ -744,7 +740,7 @@ public class Board extends JPanel implements ActionListener{
                         if(t.getLife() <= 0){
                             world.level.setCollision(t.getMapX(), t.getMapY(), false);
                             world.level.drawSplash(Assets.iexpldec, t.getX()-20, t.getY()-20);
-                            fx.add(t.getX()-20, t.getY()-20, FX.EXPLOSION);
+                            world.fx.add(t.getX()-20, t.getY()-20, FX.EXPLOSION);
                             // score points
                             int bonus = GMath.rand.nextInt(100)*t.getLevel() + 10;
                             changeScore(bonus);
@@ -771,7 +767,7 @@ public class Board extends JPanel implements ActionListener{
 
                         // rocket smoke trail
                         if(b.getLevel() == Tank.LAUNCHER && GMath.rand.nextBoolean())
-                            fx.add((int)b.getX() - 50 + GMath.rand.nextInt(40),
+                            world.fx.add((int)b.getX() - 50 + GMath.rand.nextInt(40),
                                    (int)b.getY() - 50 + GMath.rand.nextInt(40), FX.SMOKE);
 
                         b.update();
@@ -781,7 +777,7 @@ public class Board extends JPanel implements ActionListener{
                             itbullets.remove();
                             if(player.getShield() > 0) changeShield(-b.getLevel());
                             else{ minusLife(b.getLevel()); soundManager.play(Sound.HIT); }
-                            if(player.getLife() <= 0) fx.add(player.getX()-20, player.getY()-20, FX.EXPLOSION);
+                            if(player.getLife() <= 0) world.fx.add(player.getX()-20, player.getY()-20, FX.EXPLOSION);
                         }
                         // check level collision
                         else {
@@ -814,18 +810,18 @@ public class Board extends JPanel implements ActionListener{
                                             synchronized(world.bonuses){
                                                 world.bonuses.add(new Bonus(px+30, py+30, GMath.rand.nextInt(Bonus.COUNT)));
                                             }
-                                            fx.add(px-20, py-20, FX.SMALLEXPLOSION);
+                                            world.fx.add(px-20, py-20, FX.SMALLEXPLOSION);
                                         }
                                         break;
                                 }
                                 // bullet/rocket gone in sparkles/explosion
                                 switch(b.getLevel()){
                                     case 1: case 2:
-                                        fx.add(px - (int)Math.sin(b.getAngle())*30,
+                                        world.fx.add(px - (int)Math.sin(b.getAngle())*30,
                                             py + (int)Math.cos(b.getAngle())*30, FX.SPARKLE);
                                         break;
                                     case 3:
-                                        fx.add((int)b.getX()-50, (int)b.getY()-50, FX.EXPLOSION);
+                                        world.fx.add((int)b.getX()-50, (int)b.getY()-50, FX.EXPLOSION);
                                         soundManager.play(Sound.EXPLODE);
                                         break;
                                 }
@@ -930,7 +926,7 @@ public class Board extends JPanel implements ActionListener{
                                     if(t.getLife() == 0){
                                         itturrets.remove();
                                         // explode!
-                                        fx.add((int)b.getX()-50, (int)b.getY()-50, FX.EXPLOSION);
+                                        world.fx.add((int)b.getX()-50, (int)b.getY()-50, FX.EXPLOSION);
                                         soundManager.play(Sound.EXPLODE);
                                     }
                                     itbullets.remove();
@@ -945,7 +941,7 @@ public class Board extends JPanel implements ActionListener{
             } catch(NoSuchElementException e){ System.out.println("WTF! Again (shedule)..."); }
 
             world.level.renderChanges();
-            fx.update();
+            world.fx.update();
         }
 
         // paint all
@@ -968,43 +964,13 @@ public class Board extends JPanel implements ActionListener{
         g.fillRect(0, 0, Const.WIDTH, Const.HEIGHT);
 
         // draw level
-        world.level.draw(g2, camera);
-        synchronized(world.bombs){
-            for(Bomb m: world.bombs) {
-                m.draw(g2, camera);
-            }
-        }
+        world.draw(g2, camera);
+
         // player
         player.draw(g2, camera);
 
-        synchronized(world.enemies){
-            for(Tank t: world.enemies) {
-                t.draw(g2, camera);
-            }
-        }
-        synchronized(world.turrets){
-            for(Turret t: world.turrets) {
-                t.draw(g2, camera);
-            }
-        }
-        synchronized(world.bonuses){
-            for(Bonus z: world.bonuses) {
-                z.draw(g2, camera);
-            }
-        }
-        synchronized(world.items){
-            for(Item i: world.items) {
-                i.draw(g2, camera);
-            }
-        }
-        synchronized(world.bullets){
-            for(Bullet b: world.bullets) {
-                b.draw(g2, camera);
-            }
-        }
-
-        // draw effects
-        fx.draw(g2, camera);
+        // special effects
+        world.fx.draw(g2, camera);
 
         // draw gui
         if(gamestate == MENU){
