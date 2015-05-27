@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
  */
 
 public abstract class Screen {
+    protected Camera camera;
     protected World world;
     protected Label title;
     protected boolean visible;
@@ -23,11 +24,13 @@ public abstract class Screen {
     }
 
     // setters
+    public void setCamera(Camera camera){ this.camera = camera; }
     public void setWorld(World world){ this.world = world; }
     public void setTitle(Label title){ this.title = title;}
     public void setVisible(boolean visible){ this.visible = visible; }
 
     // getters
+    public Camera getCamera(){ return camera; }
     public World getWorld(){ return world; }
     public boolean isVisible(){ return visible; }
 
@@ -38,11 +41,11 @@ public abstract class Screen {
 
     // screen processing
     public void update() {}
-    public void draw(Graphics2D g, Point camera) {
+    public void draw(Graphics2D g) {
         // game world
-        world.draw(g, camera);
+        world.draw(g, camera.getPosition());
         // special effects
-        world.fx.draw(g, camera);
+        world.fx.draw(g, camera.getPosition());
         // ui
         title.draw(g);
     }

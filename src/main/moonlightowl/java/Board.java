@@ -21,7 +21,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,10 +46,7 @@ public class Board extends JPanel implements ActionListener{
     private Tank player;
 
     // camera
-    private Point camera, camtarget;
-    private Point2D.Double camposition;
-    private double camangle;
-    private static final double CAM_TURN_SPEED = 1.0, CAM_MOVE_SPEED = 0.2;
+    Camera camera;
 
     // interface
     private Menu menu;
@@ -106,10 +102,7 @@ public class Board extends JPanel implements ActionListener{
         scores = new Scores(Const.defaultScoreTable, Assets.fgui, Assets.fmgui);
 
         // set camera
-        camera = new Point(0, 0);
-        camtarget = new Point(0, 0);
-        camposition = new Point2D.Double(0, 0);
-        camangle = 0.0;
+        camera = new Camera();
 
         // init game variables
         gamestate = MENU;
@@ -118,7 +111,7 @@ public class Board extends JPanel implements ActionListener{
         loadLevel("levels/test1.dat");
         loadPackage("level");
 
-        newCameraTarget();
+        camera.newTarget();
 
         // load sound
         soundManager = new SoundManager();
@@ -151,7 +144,7 @@ public class Board extends JPanel implements ActionListener{
         else soundManager.play(Sound.WINNER);
         isVictory = victory;
         // for pause and menu screens
-        newCameraTarget();
+        camera.newTarget();
     }
     private void gameQuit(){
         // save game data
@@ -223,48 +216,9 @@ public class Board extends JPanel implements ActionListener{
         int y = GMath.toPixel(sp.y);
         player.setPosition(x, y);
         // move camera to player
-        setCamera(x, y);
+        camera.setPosition(x, y);
         // update interface
         interfaceReset();
-    }
-
-    private void setCamera(int x, int y){
-        camera.x = x - Const.HALFWIDTH;
-        camera.y = y - Const.HALFHEIGHT;
-    }
-    private void newCameraTarget(){
-        camposition.x = camera.x + Const.HALFWIDTH;
-        camposition.y = camera.y + Const.HALFHEIGHT;
-        camtarget.x = GMath.rand.nextInt(world.level.getPxWidth()-240) + 120;
-        camtarget.y = GMath.rand.nextInt(world.level.getPxHeight()-240) + 120;
-    }
-    private void moveCameraToTarget(){
-        double targetangle = Math.atan2(camtarget.y - camposition.y,
-                                        camtarget.x - camposition.x);
-        if(camangle != targetangle){
-            double delta = targetangle - camangle;
-            if(delta > Math.PI) delta -= Math.PI*2;
-            if(delta < -Math.PI) delta += Math.PI*2;
-
-            if(Math.abs(delta) < CAM_TURN_SPEED){
-                camangle += delta;
-            }
-            else {
-                camangle += CAM_TURN_SPEED * Math.signum(delta);
-            }
-            if(camangle < 0.0) camangle += Math.PI*2;
-            else if(camangle >= Math.PI*2) camangle -= Math.PI*2;
-        }
-
-        double dist = distance((float)camposition.x, (float)camposition.y,
-                    camtarget.x, camtarget.y);
-        if(dist < CAM_MOVE_SPEED){
-            newCameraTarget();
-        } else {
-            camposition.x += Math.cos(camangle)*CAM_MOVE_SPEED;
-            camposition.y += Math.sin(camangle)*CAM_MOVE_SPEED;
-            setCamera((int)camposition.x, (int)camposition.y);
-        }
     }
 
     // processing GUI indicators & player parameters
@@ -325,10 +279,6 @@ public class Board extends JPanel implements ActionListener{
             gameOver(false);
         }
         else minus_timer = 100;
-    }
-
-    public double distance(float x1, float y1, float x2, float y2){
-        return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
     }
 
     // tank operations
@@ -507,7 +457,7 @@ public class Board extends JPanel implements ActionListener{
                 case KeyEvent.VK_ESCAPE:
                     if(gamestate != MENU){
                         if(nickname.isVisible()) nickname.setVisible(false);
-                        if(gamestate == GAME) newCameraTarget();
+                        if(gamestate == GAME) camera.newTarget();
                         gamestate = MENU;
                     }
                     else{
@@ -553,7 +503,7 @@ public class Board extends JPanel implements ActionListener{
                     music.next();
                     break;
                 case KeyEvent.VK_P:
-                    if(gamestate == GAME){ gamestate = PAUSE; newCameraTarget(); }
+                    if(gamestate == GAME){ gamestate = PAUSE; camera.newTarget(); }
                     else if(gamestate == PAUSE){ gamestate = GAME; }
                     break;
                 case KeyEvent.VK_E:
@@ -632,12 +582,12 @@ public class Board extends JPanel implements ActionListener{
         // update camera position
         if(gamestate == GAME){
             if(!Sound.EXPLODE.isPlaying())
-                setCamera(player.getX() + 30, player.getY() + 30);
+                camera.setPosition(player.getX() + 30, player.getY() + 30);
             else
-                setCamera(player.getX() + 27 + GMath.rand.nextInt(6),
-                          player.getY() + 27 + GMath.rand.nextInt(6));
+                camera.setPosition(player.getX() + 27 + GMath.rand.nextInt(6),
+                        player.getY() + 27 + GMath.rand.nextInt(6));
         } else {
-            moveCameraToTarget();
+            camera.moveToTarget();
         }
         // update game objects
         if(gamestate != PAUSE){
@@ -708,7 +658,7 @@ public class Board extends JPanel implements ActionListener{
                             while(itbullets.hasNext()){
                                 Bullet b = itbullets.next();
                                 if(world.level.getCollision((int)(b.getX()/Const.TILE_SIZE), (int)(b.getY()/Const.TILE_SIZE))){
-                                    if(distance(b.getX(), b.getY(), t.getX()+30, t.getY()+30) < 25){
+                                    if(GMath.distance(b.getX(), b.getY(), t.getX() + 30, t.getY() + 30) < 25){
                                         if(t.hit(b.getLevel())) soundManager.play(Sound.HIT);
                                         itbullets.remove();
                                         // score points
@@ -723,7 +673,7 @@ public class Board extends JPanel implements ActionListener{
                             Iterator<Bomb> itmines = world.bombs.iterator();
                             while(itmines.hasNext()){
                                 Bomb m = itmines.next();
-                                if(distance(m.getX(), m.getY(), t.getX()+30, t.getY()+30) < 30){
+                                if(GMath.distance(m.getX(), m.getY(), t.getX() + 30, t.getY() + 30) < 30){
                                     // death!
                                     AffineTransform at = t.getTransform();
                                     at.rotate(GMath.rand.nextDouble() * Math.PI * 2.0);
@@ -774,7 +724,7 @@ public class Board extends JPanel implements ActionListener{
                         b.update();
 
                         // check player collision
-                        if(gamestate == GAME && distance(b.getX(), b.getY(), player.getX()+30, player.getY()+30)<25){
+                        if(gamestate == GAME && GMath.distance(b.getX(), b.getY(), player.getX() + 30, player.getY() + 30)<25){
                             itbullets.remove();
                             if(player.getShield() > 0) changeShield(-b.getLevel());
                             else{ minusLife(b.getLevel()); soundManager.play(Sound.HIT); }
@@ -901,7 +851,7 @@ public class Board extends JPanel implements ActionListener{
                         Turret t = itturrets.next();
 
                         // shoot and crush!
-                        if(distance(player.getX(), player.getY(), t.getX(), t.getY()) < Turret.DETECT_RADIUS) {
+                        if(GMath.distance(player.getX(), player.getY(), t.getX(), t.getY()) < Turret.DETECT_RADIUS) {
                             t.update(true);
                             if (GMath.rand.nextInt(4) == 1) {
                                 synchronized (world.newBullet) {
@@ -965,13 +915,13 @@ public class Board extends JPanel implements ActionListener{
         g.fillRect(0, 0, Const.WIDTH, Const.HEIGHT);
 
         // draw level
-        world.draw(g2, camera);
+        world.draw(g2, camera.getPosition());
 
         // player
-        player.draw(g2, camera);
+        player.draw(g2, camera.getPosition());
 
         // special effects
-        world.fx.draw(g2, camera);
+        world.fx.draw(g2, camera.getPosition());
 
         // draw gui
         if(gamestate == MENU){
@@ -1034,6 +984,5 @@ public class Board extends JPanel implements ActionListener{
 
         //
         Toolkit.getDefaultToolkit().sync();
-        //g.dispose();
     }
 }

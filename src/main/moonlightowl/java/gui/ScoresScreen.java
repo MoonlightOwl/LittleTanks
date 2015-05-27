@@ -40,8 +40,8 @@ public class ScoresScreen extends Screen {
         setVisible(false);
     }
 
-    public void draw(Graphics2D g, Point camera){
-        super.draw(g, camera);
+    public void draw(Graphics2D g){
+        super.draw(g);
         scores.draw(g);
     }
 }
