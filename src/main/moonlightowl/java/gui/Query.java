@@ -26,7 +26,7 @@ public class Query {
     public void setVisible(boolean visible){ this.visible = visible; }
     public void setText(String text){ nickname.changeText(text); }
     public boolean isVisible(){ return visible; }
-    public String name(){ return nickname.getText(); }
+    public String getText(){ return nickname.getText(); }
 
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){

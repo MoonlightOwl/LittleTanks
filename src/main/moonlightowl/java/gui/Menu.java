@@ -16,6 +16,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 
 public class Menu {
+    public static final int INACTIVE = -1;
+
     private Font font;
     private FontMetrics metr;
     private Iterator it;
@@ -74,13 +76,13 @@ public class Menu {
         for(Item item: items){
             if(item.selected) return items.indexOf(item);
         }
-        return -1;
+        return INACTIVE;
     }
     public int getSubSelected(int num){
         for(SubItem item: items.get(num).subItems){
             if(item.selected) return items.get(num).subItems.indexOf(item);
         }
-        return -1;
+        return INACTIVE;
     }
     public boolean isExpand(int num){
         return items.get(num).expand;
@@ -135,9 +137,6 @@ public class Menu {
         }
     }
 
-    public void mouseClicked(MouseEvent e){
-        // pass
-    }
     public void mouseMoved(MouseEvent e){
         it = items.iterator();
         while(it.hasNext()){

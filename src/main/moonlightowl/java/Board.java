@@ -103,7 +103,7 @@ public class Board extends JPanel implements ActionListener{
         nickname = new Query("Enter your nick name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
         packagename = new Query("Enter package name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
 
-        scores = new Scores("scores/scores.txt", Assets.fgui, Assets.fmgui);
+        scores = new Scores(Const.defaultScoreTable, Assets.fgui, Assets.fmgui);
 
         // set camera
         camera = new Point(0, 0);
@@ -519,7 +519,7 @@ public class Board extends JPanel implements ActionListener{
                     break;
                 case KeyEvent.VK_ENTER:   // end game
                     if(gamestate == NICKNAME){
-                        scores.addRecord(nickname.name(), score);
+                        scores.addRecord(nickname.getText(), score);
                         scores.setVisible(true);
                         nickname.setVisible(false);
                         gamestate = MENU;
@@ -529,7 +529,7 @@ public class Board extends JPanel implements ActionListener{
                         gamestate = MENU;
                     } else if(gamestate == MENU){
                         if(packagename.isVisible()){
-                            loadPackage(packagename.name());
+                            loadPackage(packagename.getText());
                             packagename.setVisible(false);
                         } else {
                             if(about.isVisible()) about.setVisible(false);
@@ -582,7 +582,7 @@ public class Board extends JPanel implements ActionListener{
         }
         else{
             if(gamestate == NICKNAME){     // end game
-                scores.addRecord(nickname.name(), score);
+                scores.addRecord(nickname.getText(), score);
                 nickname.setVisible(false);
                 gamestate = MENU;
             } else if(gamestate == GAMEOVER){
@@ -595,12 +595,10 @@ public class Board extends JPanel implements ActionListener{
     private class MAdapter extends MouseAdapter{
         @Override
         public void mouseClicked(MouseEvent e) {
-            //MouseClick(e);
         }
 
         @Override
         public void mousePressed(MouseEvent e) {
-
         }
 
         @Override
@@ -631,11 +629,7 @@ public class Board extends JPanel implements ActionListener{
     }
 
     public void actionPerformed(ActionEvent ae){
-        // update player & camera
-        world.level.setCollision(player.getMapX(), player.getMapY(), false);
-        player.update();
-        world.level.setCollision(player.getMapX(), player.getMapY(), true);
-        // camera
+        // update camera position
         if(gamestate == GAME){
             if(!Sound.EXPLODE.isPlaying())
                 setCamera(player.getX() + 30, player.getY() + 30);
@@ -645,7 +639,14 @@ public class Board extends JPanel implements ActionListener{
         } else {
             moveCameraToTarget();
         }
+        // update game objects
         if(gamestate != PAUSE){
+            if(gamestate == GAME) {
+                // update player
+                world.level.setCollision(player.getMapX(), player.getMapY(), false);
+                player.update();
+                world.level.setCollision(player.getMapX(), player.getMapY(), true);
+            }
             // effects
             if(effectFreeze > 0){
                 effectFreeze--;
@@ -1033,6 +1034,6 @@ public class Board extends JPanel implements ActionListener{
 
         //
         Toolkit.getDefaultToolkit().sync();
-        g.dispose();
+        //g.dispose();
     }
 }
