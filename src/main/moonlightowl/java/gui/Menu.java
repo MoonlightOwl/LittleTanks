@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 
 public class Menu {
-    public static final int INACTIVE = -1;
+    public static final int NOTHING = -1;
 
     private Font font;
     private FontMetrics metr;
@@ -54,7 +54,7 @@ public class Menu {
         public SubItem(String name){
             init(name);
             this.rect = new Rectangle(x-metr.stringWidth(name)/2,
-                    y+items.size()*interval-font.getSize(), metr.stringWidth(name), font.getSize());
+                    y+items.size()*interval-font.getSize()+10, metr.stringWidth(name), font.getSize());
         }
         public SubItem(String name, int num, int offset){
             init(name);
@@ -76,13 +76,13 @@ public class Menu {
         for(Item item: items){
             if(item.selected) return items.indexOf(item);
         }
-        return INACTIVE;
+        return NOTHING;
     }
     public int getSubSelected(int num){
         for(SubItem item: items.get(num).subItems){
             if(item.selected) return items.get(num).subItems.indexOf(item);
         }
-        return INACTIVE;
+        return NOTHING;
     }
     public boolean isExpand(int num){
         return items.get(num).expand;
@@ -96,6 +96,11 @@ public class Menu {
     }
     public void setSubname(int num, int offset, String name){
         items.get(num).subItems.get(offset).name = name;
+    }
+    public void deselectAll(){
+        for(Item item: items){
+            item.selected = false;
+        }
     }
     // other
     public void addItem(String name){

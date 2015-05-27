@@ -23,7 +23,7 @@ public class Mission {
 
     // getters
     public boolean exists(String name){
-        File firstLevel = new File(root, name + "0.dat");
+        File firstLevel = new File(root, name + "1.dat");
         return firstLevel.exists();
     }
     public int getLength(){ return len; }
@@ -38,7 +38,7 @@ public class Mission {
             this.len = 1;
 
             File levelFile;
-            for (int c = 1; c < MAXIMAL; c++) {
+            for (int c = 2; c < MAXIMAL; c++) {
                 levelFile = new File(root, name + c + ".dat");
                 if (levelFile.exists()) len++;
                 else break;

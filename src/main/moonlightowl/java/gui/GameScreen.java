@@ -41,18 +41,20 @@ public class GameScreen extends Screen {
 
     // levels
     private Mission mission;
-    private int currentLevel = -1;
+    private int currentLevel = 0;
 
     public GameScreen(World world, Camera camera){
         super();
         setWorld(world);
         setCamera(camera);
-        // init game
-        mission = new Mission("./levels/");
-        mission.load("level");
 
+        // init game
         player = new Tank();
         score = 0;
+
+        mission = new Mission("./levels/");
+        loadMission("level");
+
         // init interface
         llifes = new Label("@@@@@", 20, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
         lshield = new Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
@@ -87,7 +89,11 @@ public class GameScreen extends Screen {
 
     /** Manage levels */
     public boolean loadMission(String name){
-        return mission.load(name);
+        if(mission.load(name)){
+            nextLevel();
+            return true;
+        }
+        else return false;
     }
     public void nextLevel(){
         currentLevel++;
@@ -106,7 +112,7 @@ public class GameScreen extends Screen {
         camera.setBounds(world.level.getPxWidth(), world.level.getPxHeight());
 
         // bonus points
-        if(currentLevel > 0) {
+        if(currentLevel > 1) {
             score += 10;
             addMessage("New level! (+10 score)", Const.MESSAGE_TIME);
         }
@@ -342,6 +348,12 @@ public class GameScreen extends Screen {
 
     // screen processing
     public void update(){
+        // move camera to player position
+        if(Sound.EXPLODE.isPlaying())
+            camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
+                               player.getY() - 3 + GMath.rand.nextInt(6));
+        else camera.setPosition(player.getX(), player.getY());
+
         // update game objects
         if(!paused) {
             // update player

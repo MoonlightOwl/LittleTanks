@@ -6,22 +6,14 @@ package main.moonlightowl.java;
 
 import main.moonlightowl.java.gui.*;
 import main.moonlightowl.java.gui.Label;
-import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.sound.Music;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
-import main.moonlightowl.java.world.FX;
-import main.moonlightowl.java.world.Item;
-import main.moonlightowl.java.world.Tile;
 import main.moonlightowl.java.world.World;
-import main.moonlightowl.java.world.entity.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 public class Board extends JPanel implements ActionListener{
     // gamestate constants
@@ -34,21 +26,18 @@ public class Board extends JPanel implements ActionListener{
     private SoundManager soundManager;
     // game objects
     private World world;
-    private Tank player;
     private Camera camera;
     // game vars
     private int gamestate = MENU;
-    private boolean playMusic = false, playSounds = true;
+    private boolean playMusic = false;
 
     // interface
-    private Label title;
     private Screen currentScreen;
     private MenuScreen menuScreen;
     private AboutScreen aboutScreen;
     private ScoresScreen scoresScreen;
     private TextboxScreen gameoverScreen, packageScreen;
     private GameScreen gameScreen;
-    private Query nickname, packagename;
 
     public Board(){
         // load resources
@@ -64,20 +53,22 @@ public class Board extends JPanel implements ActionListener{
         setDoubleBuffered(false);
         System.setProperty("sun.java2d.opengl", "True");
 
-        RenderingHints rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+        rh = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
         rh.put(RenderingHints.KEY_RENDERING,
                 RenderingHints.VALUE_RENDER_QUALITY);
 
+        // load sound
+        soundManager = new SoundManager();
+        music = new Music("./resources/music/");
+        if(playMusic) music.play();
+
         // global game objects
         camera = new Camera();
-        player = new Tank();
         world = new World();
 
-        camera.newTarget();
-
         // game screens
-        title = new Label("LittleTanks", Const.HALFWIDTH, 140, Assets.ftitle, Assets.fmtitle, Const.TITLE_COLOR, true);
+        Label title = new Label("LittleTanks", Const.HALFWIDTH, 140, Assets.ftitle, Assets.fmtitle, Const.TITLE_COLOR, true);
         title.setShadow(true);
         aboutScreen = new AboutScreen(world, camera, title);
         scoresScreen = new ScoresScreen(world, camera, title);
@@ -85,19 +76,17 @@ public class Board extends JPanel implements ActionListener{
         gameScreen = new GameScreen(world, camera);
         gameScreen.setSoundManager(soundManager);
 
-        nickname = new Query("Enter your nick name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
+        Query nickname = new Query("Enter your nick name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
         gameoverScreen = new TextboxScreen(world, camera, title, nickname);
 
-        packagename = new Query("Enter package name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
+        Query packagename = new Query("Enter package name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
         packageScreen = new TextboxScreen(world, camera, title, packagename);
 
-        // set game state
-        setGameState(MENU);
+        camera.newTarget();
 
-        // load sound
-        soundManager = new SoundManager();
-        music = new Music("./resources/music/");
-        if(playMusic) music.play();
+        // set game state
+        currentScreen = menuScreen;
+        setGameState(MENU);
 
         // PLAY! (Starting update & draw timer thread)
         Timer timer = new Timer(20, this);
@@ -123,14 +112,19 @@ public class Board extends JPanel implements ActionListener{
         System.exit(1);
     }
 
+    private void setScreen(Screen screen){
+        currentScreen.setVisible(false);
+        currentScreen = screen;
+        currentScreen.setVisible(true);
+    }
     private void setGameState(int state){
         switch(state){
-            case MENU: currentScreen = menuScreen; break;
-            case ABOUT: currentScreen = menuScreen; break;
-            case SCORES: currentScreen = scoresScreen; break;
-            case GAME: currentScreen = gameScreen; break;
-            case PACKAGE: currentScreen = packageScreen; break;
-            case GAMEOVER: currentScreen = gameoverScreen; break;
+            case MENU: setScreen(menuScreen); break;
+            case ABOUT: setScreen(aboutScreen); break;
+            case SCORES: setScreen(scoresScreen); break;
+            case GAME: setScreen(gameScreen); break;
+            case PACKAGE: setScreen(packageScreen); break;
+            case GAMEOVER: setScreen(gameoverScreen); break;
         }
         gamestate = state;
     }
@@ -191,8 +185,17 @@ public class Board extends JPanel implements ActionListener{
         if(!currentScreen.isVisible()){
             switch(gamestate){
                 case MENU:
-                    quitGame();
+                    switch(menuScreen.getSelected()){
+                        case MenuScreen.PACKAGE: setGameState(PACKAGE); break;
+                        case MenuScreen.NEWGAME: setGameState(GAME); break;
+                        case MenuScreen.SCORES: setGameState(SCORES); break;
+                        case MenuScreen.ABOUT: setGameState(ABOUT); break;
+                        case MenuScreen.EXIT: quitGame(); break;
+                        default: quitGame();
+                    }
                     break;
+                default:
+                    setGameState(MENU);
             }
 
             // let the camera wandering around
