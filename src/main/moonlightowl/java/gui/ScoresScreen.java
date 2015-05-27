@@ -2,6 +2,7 @@ package main.moonlightowl.java.gui;
 
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
+import main.moonlightowl.java.world.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,10 +18,13 @@ import java.awt.event.MouseEvent;
 public class ScoresScreen extends Screen {
     private Scores scores;
 
-    public ScoresScreen(){
-        super();
+    public ScoresScreen(World world, Camera camera, Label title){
+        super(world, camera, title);
         scores = new Scores(Const.defaultScoreTable, Assets.fgui, Assets.fmgui);
     }
+
+    // getters
+    public int worst(){ return scores.worst(); }
 
     public void load(String filename){
         save();

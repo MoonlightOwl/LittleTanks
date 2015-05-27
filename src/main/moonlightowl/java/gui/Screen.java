@@ -22,6 +22,12 @@ public abstract class Screen {
     public Screen(){
         visible = false;
     }
+    public Screen(World world, Camera camera, Label title){
+        this();
+        setWorld(world);
+        setCamera(camera);
+        setTitle(title);
+    }
 
     // setters
     public void setCamera(Camera camera){ this.camera = camera; }

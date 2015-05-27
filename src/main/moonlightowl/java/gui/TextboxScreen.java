@@ -17,8 +17,8 @@ public class TextboxScreen extends Screen {
     protected Query query;
     protected Label title;
 
-    public TextboxScreen(Query query){
-        super();
+    public TextboxScreen(World world, Camera camera, Label title, Query query){
+        super(world, camera, title);
         this.query = query;
     }
 
@@ -41,8 +41,8 @@ public class TextboxScreen extends Screen {
     }
 
     // screen processing
-    public void draw(Graphics2D g, Point camera){
-        super.draw(g, camera);
+    public void draw(Graphics2D g){
+        super.draw(g);
         query.draw(g);
     }
 }

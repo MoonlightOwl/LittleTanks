@@ -2,6 +2,7 @@ package main.moonlightowl.java.gui;
 
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
+import main.moonlightowl.java.world.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,8 +18,8 @@ import java.awt.event.MouseEvent;
 public class AboutScreen extends Screen {
     private About about;
 
-    public AboutScreen(){
-        super();
+    public AboutScreen(World world, Camera camera, Label title){
+        super(world, camera, title);
         about = new About();
         about.addLine("Experimental project (Java, Swing)", Const.HALFWIDTH, 250, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, true);
         about.addLine("Programmer: MoonlightOwl", Const.HALFWIDTH, 290, Assets.fgui, Assets.fmgui, Color.WHITE, true, true);

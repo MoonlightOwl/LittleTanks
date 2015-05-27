@@ -3,8 +3,10 @@ package main.moonlightowl.java.sound;
 public class SoundManager implements Runnable{
     private final Object lock;
     private Sound toPlay;
+    private boolean mute;
 
     public SoundManager(){
+        mute = false;
         lock = new Object();
         new Thread(this, "Sound Thread").start();
     }
@@ -13,10 +15,17 @@ public class SoundManager implements Runnable{
         play(null);
     }
 
+    public void mute(){
+        mute = !mute;
+    }
+    public boolean muted(){ return mute; }
+
     public void play(Sound sound){
-        synchronized(lock){
-            toPlay = sound;
-            lock.notify();
+        if(!mute || sound == null) {
+            synchronized (lock) {
+                toPlay = sound;
+                lock.notify();
+            }
         }
     }
 

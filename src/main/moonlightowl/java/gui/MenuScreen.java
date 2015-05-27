@@ -2,6 +2,7 @@ package main.moonlightowl.java.gui;
 
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
+import main.moonlightowl.java.world.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,8 +18,8 @@ import java.awt.event.MouseEvent;
 public class MenuScreen extends Screen {
     private Menu menu;
 
-    public MenuScreen() {
-        super();
+    public MenuScreen(World world, Camera camera, Label title) {
+        super(world, camera, title);
         menu = new Menu(Assets.fmenu, Assets.fmmenu, Const.HALFWIDTH, Const.HALFHEIGHT-60, 70);
         menu.addItem("< level >");
         menu.addItem("Fight!");
