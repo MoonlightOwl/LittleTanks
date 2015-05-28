@@ -218,7 +218,10 @@ public class Board extends JPanel implements ActionListener{
                     }
                     break;
                 case GAME:
-                    gameOver(); break;
+                    if(gameScreen.isGameOver())
+                        gameOver();
+                    else setGameState(MENU);
+                    break;
                 case GAMEOVER:
                     if(gameoverScreen.inputReceived()){
                         scoresScreen.addRecord(gameoverScreen.getText(), gameScreen.getScore());

@@ -74,6 +74,9 @@ public class GameScreen extends Screen {
     public int getScore(){ return score; }
     public Mission getMission(){ return mission; }
     public boolean isVictory(){ return world.enemies.isEmpty(); }
+    public boolean isGameOver(){
+        return isVictory() || player.getLife() <= 0;
+    }
 
     // setters
     public void setPaused(boolean paused){ this.paused = paused; }
