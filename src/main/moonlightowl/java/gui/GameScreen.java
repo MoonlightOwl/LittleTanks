@@ -61,7 +61,7 @@ public class GameScreen extends Screen {
         lshield = new Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
         lscore = new Label("0", 20, 50, Assets.fgui, Assets.fmgui, Color.WHITE); lscore.setShadow(true);
         lammo = new Label(">> 10", Const.WIDTH-140, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
-        lmines = new Label("oo 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lmines.setShadow(true);
+        lmines = new Label("== 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lmines.setShadow(true);
         lfreeze = new Label("", Const.HALFWIDTH, 50, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, Color.BLUE); lfreeze.setShadow(true);
         lcrash = new Label("Game OVER", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.RED, true); lcrash.setShadow(true);
         lvictory = new Label("Victory!", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.GREEN, true, new Color(0, 50, 10)); lvictory.setShadow(true);
@@ -158,7 +158,7 @@ public class GameScreen extends Screen {
         lammo.changeText(">> "+Integer.toString(ammo));
     }
     private void setMinesCounter(int mines){
-        lmines.changeText("@@ "+Integer.toString(mines));
+        lmines.changeText("== "+Integer.toString(mines));
     }
 
     private void setScoreCounter(int score){
@@ -354,6 +354,10 @@ public class GameScreen extends Screen {
             camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
                                player.getY() - 3 + GMath.rand.nextInt(6));
         else camera.setPosition(player.getX(), player.getY());
+
+        // messages
+        if(message_timer > 0)
+            message_timer--;
 
         // update game objects
         if(!paused) {
@@ -685,6 +689,9 @@ public class GameScreen extends Screen {
         lammo.draw(g);
         lmines.draw(g);
         lfreeze.draw(g);
+        // message
+        if(message_timer > 0)
+            lmessage.draw(g);
         // inventory
         Iterator<Item> ititems = player.inventory.iterator();
         int x = Const.WIDTH - 80;
@@ -694,6 +701,7 @@ public class GameScreen extends Screen {
             x-=30;
         }
 
+        // "game paused" bar
         if(paused){
             g.setColor(Const.OPAQUE_DARK_COLOR);
             g.fillRect(0, Const.HALFHEIGHT-120, Const.WIDTH, 120);

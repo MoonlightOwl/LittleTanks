@@ -198,6 +198,9 @@ public class Board extends JPanel implements ActionListener{
                         default: menuScreen.setVisible(true);
                     }
                     break;
+                case PACKAGE:
+                    setGameState(GAME);
+                    gameScreen.loadMission(packageScreen.getText());
                 default:
                     setGameState(MENU);
             }
