@@ -24,7 +24,7 @@ public class MenuScreen extends Screen {
     public MenuScreen(World world, Camera camera, Label title) {
         super(world, camera, title);
         menu = new Menu(Assets.fmenu, Assets.fmmenu, Const.HALFWIDTH, Const.HALFHEIGHT-60, 70);
-        menu.addItem("< level >");
+        menu.addItem("[ level ]");
         menu.addItem("Fight!");
         menu.addItem("Scores");
         menu.addItem("About");
@@ -34,6 +34,11 @@ public class MenuScreen extends Screen {
     // getters
     public int getSelected(){
         return menu.getSelected();
+    }
+
+    // setters
+    public void setPackageName(String name, int length){
+        menu.setName(0, "[ " + name + "-" + Integer.toString(length) + " ]");
     }
 
     public void mouseMoved(MouseEvent e) {
@@ -59,7 +64,14 @@ public class MenuScreen extends Screen {
     }
 
     public void draw(Graphics2D g){
-        super.draw(g);
+        // world
+        world.draw(g, camera.getPosition());
+        world.fx.draw(g, camera.getPosition());
+        // shadow
+        g.setColor(Const.OPAQUE_DARK_COLOR);
+        g.fillRect(0, 40, Const.WIDTH, 120);
+        // interface
+        title.draw(g);
         menu.draw(g);
     }
 }

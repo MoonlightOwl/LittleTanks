@@ -49,13 +49,6 @@ public class GameScreen extends Screen {
         setWorld(world);
         setCamera(camera);
 
-        // init game
-        player = new Tank();
-        score = 0;
-
-        mission = new Mission("./levels/");
-        loadMission("level");
-
         // init interface
         llifes = new Label("@@@@@", 20, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
         lshield = new Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
@@ -68,6 +61,13 @@ public class GameScreen extends Screen {
         lpause = new Label("Pause...", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.YELLOW, true, Color.BLACK); lpause.setShadow(true);
         lminus = new Label(":(", 40, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.RED, true); lminus.setShadow(true);
         lmessage = new Label("", Const.HALFWIDTH, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
+
+        // init game
+        player = new Tank();
+        score = 0;
+
+        mission = new Mission("./levels/");
+        loadMission("level");
     }
 
 
@@ -91,7 +91,7 @@ public class GameScreen extends Screen {
     /** Manage levels */
     public boolean loadMission(String name){
         if(mission.load(name)){
-            nextLevel();
+            restartMission();
             return true;
         }
         else return false;
@@ -109,14 +109,22 @@ public class GameScreen extends Screen {
         player.setPosition(x, y);
 
         // move camera to player
-        camera.setPosition(x, y);
-        camera.setBounds(world.level.getPxWidth(), world.level.getPxHeight());
+        int width = world.level.getPxWidth(), height = world.level.getPxHeight();
+        camera.setBounds(width, height);
+        camera.setPosition(width/2, height/2);
 
         // bonus points
         if(currentLevel > 1) {
             score += 10;
             addMessage("New level! (+10 score)", Const.MESSAGE_TIME);
         }
+
+        //
+        interfaceReset();
+    }
+    public void restartMission(){
+        currentLevel = 0;
+        nextLevel();
     }
 
 

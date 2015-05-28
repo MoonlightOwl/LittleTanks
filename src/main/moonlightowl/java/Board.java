@@ -89,6 +89,10 @@ public class Board extends JPanel implements ActionListener{
         currentScreen = menuScreen;
         setGameState(MENU);
 
+        // update menu
+        Mission mission = gameScreen.getMission();
+        menuScreen.setPackageName(mission.getName(), mission.getLength());
+
         // PLAY! (Starting update & draw timer thread)
         Timer timer = new Timer(20, this);
         timer.setInitialDelay(500);
@@ -191,7 +195,10 @@ public class Board extends JPanel implements ActionListener{
                 case MENU:
                     switch(menuScreen.getSelected()){
                         case MenuScreen.PACKAGE: setGameState(PACKAGE); break;
-                        case MenuScreen.NEWGAME: setGameState(GAME); break;
+                        case MenuScreen.NEWGAME:
+                            setGameState(GAME);
+                            gameScreen.restartMission();
+                            break;
                         case MenuScreen.SCORES: setGameState(SCORES); break;
                         case MenuScreen.ABOUT: setGameState(ABOUT); break;
                         case MenuScreen.EXIT: quitGame(); break;
@@ -200,7 +207,10 @@ public class Board extends JPanel implements ActionListener{
                     break;
                 case PACKAGE:
                     setGameState(GAME);
-                    gameScreen.loadMission(packageScreen.getText());
+                    if(gameScreen.loadMission(packageScreen.getText())){
+                        Mission mission = gameScreen.getMission();
+                        menuScreen.setPackageName(mission.getName(), mission.getLength());
+                    }
                 default:
                     setGameState(MENU);
             }
