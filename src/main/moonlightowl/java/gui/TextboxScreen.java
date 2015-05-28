@@ -17,7 +17,6 @@ import java.awt.event.KeyEvent;
 public class TextboxScreen extends Screen {
     protected World world;
     protected Query query;
-    protected Label title;
 
     public TextboxScreen(World world, Camera camera, Label title, Query query){
         super(world, camera, title);

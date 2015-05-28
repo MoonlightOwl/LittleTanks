@@ -37,7 +37,8 @@ public class Board extends JPanel implements ActionListener{
     private MenuScreen menuScreen;
     private AboutScreen aboutScreen;
     private ScoresScreen scoresScreen;
-    private TextboxScreen gameoverScreen, packageScreen;
+    private TextboxScreen packageScreen;
+    private GameoverScreen gameoverScreen;
     private GameScreen gameScreen;
 
     public Board(){
@@ -78,7 +79,7 @@ public class Board extends JPanel implements ActionListener{
         gameScreen.setSoundManager(soundManager);
 
         Query nickname = new Query("Enter your nick name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
-        gameoverScreen = new TextboxScreen(world, camera, title, nickname);
+        gameoverScreen = new GameoverScreen(world, camera, nickname);
 
         Query packagename = new Query("Enter package name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
         packageScreen = new TextboxScreen(world, camera, title, packagename);
@@ -133,11 +134,14 @@ public class Board extends JPanel implements ActionListener{
         }
         gamestate = state;
     }
-    private void gameOver(boolean victory){
-        setGameState(GAMEOVER);
+    private void gameOver(){
         // play corresponding sound
-        if(!victory) soundManager.play(Sound.GAMEOVER);
-        else soundManager.play(Sound.WINNER);
+        if(gameScreen.isVictory()) soundManager.play(Sound.WINNER);
+        else soundManager.play(Sound.GAMEOVER);
+        //
+        gameoverScreen.show(gameScreen.isVictory(),
+                gameScreen.getScore() > scoresScreen.worst());
+        setGameState(GAMEOVER);
         // camera begins to wandering around
         camera.newTarget();
     }
@@ -206,11 +210,21 @@ public class Board extends JPanel implements ActionListener{
                     }
                     break;
                 case PACKAGE:
-                    setGameState(GAME);
+                    setGameState(MENU);
                     if(gameScreen.loadMission(packageScreen.getText())){
                         Mission mission = gameScreen.getMission();
                         menuScreen.setPackageName(mission.getName(), mission.getLength());
+                        scoresScreen.load("./scores/"+mission.getName()+".scr");
                     }
+                    break;
+                case GAME:
+                    gameOver(); break;
+                case GAMEOVER:
+                    if(gameoverScreen.inputReceived()){
+                        scoresScreen.addRecord(gameoverScreen.getText(), gameScreen.getScore());
+                        setGameState(SCORES);
+                    } else setGameState(MENU);
+                    break;
                 default:
                     setGameState(MENU);
             }

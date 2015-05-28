@@ -20,7 +20,7 @@ public class Query {
         this.question = new Label(question, x, y, font, fm, color, true);
         nickname = new Label("", x, y+font.getSize(), font, fm, color, true);
         rect = new Rectangle(0, y-50, Const.WIDTH, font.getSize()*2+20);
-        visible = false;
+        visible = true;
     }
 
     // getters & setters
@@ -46,14 +46,16 @@ public class Query {
     }
 
     public void draw(Graphics g){
-        g.setColor(Const.OPAQUE_DARK_COLOR);
-        g.fillRect(rect.x, rect.y, rect.width, rect.height);
-        if(System.currentTimeMillis()%800<400){
-            g.setColor(Color.GREEN);
-            g.drawRect(nickname.getX()-5, nickname.getY()-nickname.height()+5,
-                    nickname.width()+10, nickname.height());
+        if(isVisible()) {
+            g.setColor(Const.OPAQUE_DARK_COLOR);
+            g.fillRect(rect.x, rect.y, rect.width, rect.height);
+            if (System.currentTimeMillis() % 800 < 400) {
+                g.setColor(Color.GREEN);
+                g.drawRect(nickname.getX() - 5, nickname.getY() - nickname.height() + 5,
+                        nickname.width() + 10, nickname.height());
+            }
+            question.draw(g);
+            nickname.draw(g);
         }
-        question.draw(g);
-        nickname.draw(g);
     }
 }

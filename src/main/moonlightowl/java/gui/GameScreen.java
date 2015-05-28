@@ -32,8 +32,8 @@ public class GameScreen extends Screen {
     // game
     private Tank player;
     // interface
-    private Label llifes, lshield, lscore, lammo, lvictory,
-    lmines, lcrash, lminus, lmessage, lfreeze, lpause;
+    private Label llifes, lshield, lscore, lammo,
+    lmines, lminus, lmessage, lfreeze, lpause;
     // variables
     private int score;
     private int effectFreeze = 0;
@@ -56,8 +56,6 @@ public class GameScreen extends Screen {
         lammo = new Label(">> 10", Const.WIDTH-140, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
         lmines = new Label("== 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lmines.setShadow(true);
         lfreeze = new Label("", Const.HALFWIDTH, 50, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, Color.BLUE); lfreeze.setShadow(true);
-        lcrash = new Label("Game OVER", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.RED, true); lcrash.setShadow(true);
-        lvictory = new Label("Victory!", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.GREEN, true, new Color(0, 50, 10)); lvictory.setShadow(true);
         lpause = new Label("Pause...", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.YELLOW, true, Color.BLACK); lpause.setShadow(true);
         lminus = new Label(":(", 40, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.RED, true); lminus.setShadow(true);
         lmessage = new Label("", Const.HALFWIDTH, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
@@ -67,7 +65,7 @@ public class GameScreen extends Screen {
         score = 0;
 
         mission = new Mission("./levels/");
-        loadMission("level");
+        loadMission("test");
     }
 
 
@@ -75,6 +73,7 @@ public class GameScreen extends Screen {
     public boolean isPaused(){ return paused; }
     public int getScore(){ return score; }
     public Mission getMission(){ return mission; }
+    public boolean isVictory(){ return world.enemies.isEmpty(); }
 
     // setters
     public void setPaused(boolean paused){ this.paused = paused; }
