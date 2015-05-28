@@ -16,13 +16,14 @@ import java.awt.event.MouseEvent;
 public abstract class Screen {
     protected Camera camera;
     protected World world;
-    protected Label title;
-    protected boolean visible;
+    protected main.moonlightowl.java.gui.component.Label title;
+    protected boolean visible, closed;
 
     public Screen(){
         visible = false;
+        closed = false;
     }
-    public Screen(World world, Camera camera, Label title){
+    public Screen(World world, Camera camera, main.moonlightowl.java.gui.component.Label title){
         this();
         setWorld(world);
         setCamera(camera);
@@ -32,13 +33,15 @@ public abstract class Screen {
     // setters
     public void setCamera(Camera camera){ this.camera = camera; }
     public void setWorld(World world){ this.world = world; }
-    public void setTitle(Label title){ this.title = title;}
+    public void setTitle(main.moonlightowl.java.gui.component.Label title){ this.title = title;}
     public void setVisible(boolean visible){ this.visible = visible; }
+    public void setClosed(boolean closed){ this.closed = closed; }
 
     // getters
     public Camera getCamera(){ return camera; }
     public World getWorld(){ return world; }
     public boolean isVisible(){ return visible; }
+    public boolean isClosed(){ return closed; }
 
     // event handling
     public void mouseClicked(MouseEvent e) {}

@@ -1,4 +1,4 @@
-package main.moonlightowl.java.gui;
+package main.moonlightowl.java.gui.component;
 
 /**
  * LineBreak  ~  v.0.2  ~  NightOwl  ~  Scoreboard code.

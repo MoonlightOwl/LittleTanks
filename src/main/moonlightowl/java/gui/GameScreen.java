@@ -31,7 +31,7 @@ public class GameScreen extends Screen {
     // game
     private Tank player;
     // interface
-    private Label llifes, lshield, lscore, lammo, lvictory,
+    private main.moonlightowl.java.gui.component.Label llifes, lshield, lscore, lammo, lvictory,
     lmines, lcrash, lminus, lmessage, lfreeze, lpause;
     // variables
     private int score;
@@ -56,17 +56,17 @@ public class GameScreen extends Screen {
         loadMission("level");
 
         // init interface
-        llifes = new Label("@@@@@", 20, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
-        lshield = new Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
-        lscore = new Label("0", 20, 50, Assets.fgui, Assets.fmgui, Color.WHITE); lscore.setShadow(true);
-        lammo = new Label(">> 10", Const.WIDTH-140, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
-        lmines = new Label("oo 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lmines.setShadow(true);
-        lfreeze = new Label("", Const.HALFWIDTH, 50, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, Color.BLUE); lfreeze.setShadow(true);
-        lcrash = new Label("Game OVER", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.RED, true); lcrash.setShadow(true);
-        lvictory = new Label("Victory!", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.GREEN, true, new Color(0, 50, 10)); lvictory.setShadow(true);
-        lpause = new Label("Pause...", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.YELLOW, true, Color.BLACK); lpause.setShadow(true);
-        lminus = new Label(":(", 40, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.RED, true); lminus.setShadow(true);
-        lmessage = new Label("", Const.HALFWIDTH, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
+        llifes = new main.moonlightowl.java.gui.component.Label("@@@@@", 20, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
+        lshield = new main.moonlightowl.java.gui.component.Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
+        lscore = new main.moonlightowl.java.gui.component.Label("0", 20, 50, Assets.fgui, Assets.fmgui, Color.WHITE); lscore.setShadow(true);
+        lammo = new main.moonlightowl.java.gui.component.Label(">> 10", Const.WIDTH-140, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
+        lmines = new main.moonlightowl.java.gui.component.Label("oo 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lmines.setShadow(true);
+        lfreeze = new main.moonlightowl.java.gui.component.Label("", Const.HALFWIDTH, 50, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, Color.BLUE); lfreeze.setShadow(true);
+        lcrash = new main.moonlightowl.java.gui.component.Label("Game OVER", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.RED, true); lcrash.setShadow(true);
+        lvictory = new main.moonlightowl.java.gui.component.Label("Victory!", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.GREEN, true, new Color(0, 50, 10)); lvictory.setShadow(true);
+        lpause = new main.moonlightowl.java.gui.component.Label("Pause...", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.YELLOW, true, Color.BLACK); lpause.setShadow(true);
+        lminus = new main.moonlightowl.java.gui.component.Label(":(", 40, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.RED, true); lminus.setShadow(true);
+        lmessage = new main.moonlightowl.java.gui.component.Label("", Const.HALFWIDTH, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
     }
 
 

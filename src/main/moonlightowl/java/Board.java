@@ -5,7 +5,8 @@ package main.moonlightowl.java;
  */
 
 import main.moonlightowl.java.gui.*;
-import main.moonlightowl.java.gui.Label;
+import main.moonlightowl.java.gui.component.Label;
+import main.moonlightowl.java.gui.component.Query;
 import main.moonlightowl.java.sound.Music;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
@@ -182,7 +183,10 @@ public class Board extends JPanel implements ActionListener{
         currentScreen.update();
 
         // change screen, if needed
-        if(!currentScreen.isVisible()){
+        if(currentScreen.isClosed()) {
+            if (gamestate == MENU) quitGame();
+        }
+        else if(!currentScreen.isVisible()){
             switch(gamestate){
                 case MENU:
                     switch(menuScreen.getSelected()){
@@ -191,7 +195,7 @@ public class Board extends JPanel implements ActionListener{
                         case MenuScreen.SCORES: setGameState(SCORES); break;
                         case MenuScreen.ABOUT: setGameState(ABOUT); break;
                         case MenuScreen.EXIT: quitGame(); break;
-                        default: quitGame();
+                        default: menuScreen.setVisible(true);
                     }
                     break;
                 default:

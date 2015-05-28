@@ -1,4 +1,4 @@
-package main.moonlightowl.java.gui;
+package main.moonlightowl.java.gui.component;
 
 /*
  * Code from LineBreak  ~  v.0.2  ~  Totoro  ~  Menu items, updating and drawing.

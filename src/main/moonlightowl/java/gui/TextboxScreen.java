@@ -1,5 +1,6 @@
 package main.moonlightowl.java.gui;
 
+import main.moonlightowl.java.gui.component.Query;
 import main.moonlightowl.java.world.World;
 
 import java.awt.*;
@@ -15,9 +16,9 @@ import java.awt.event.KeyEvent;
 public class TextboxScreen extends Screen {
     protected World world;
     protected Query query;
-    protected Label title;
+    protected main.moonlightowl.java.gui.component.Label title;
 
-    public TextboxScreen(World world, Camera camera, Label title, Query query){
+    public TextboxScreen(World world, Camera camera, main.moonlightowl.java.gui.component.Label title, Query query){
         super(world, camera, title);
         this.query = query;
     }

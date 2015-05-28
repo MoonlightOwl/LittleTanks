@@ -17,11 +17,11 @@ import java.awt.event.MouseEvent;
 
 public class MenuScreen extends Screen {
     public static final int NOTHING = -1, PACKAGE = 0, NEWGAME = 1, SCORES = 2, ABOUT = 3, EXIT = 4;
-    private Menu menu;
+    private main.moonlightowl.java.gui.component.Menu menu;
 
-    public MenuScreen(World world, Camera camera, Label title) {
+    public MenuScreen(World world, Camera camera, main.moonlightowl.java.gui.component.Label title) {
         super(world, camera, title);
-        menu = new Menu(Assets.fmenu, Assets.fmmenu, Const.HALFWIDTH, Const.HALFHEIGHT-60, 70);
+        menu = new main.moonlightowl.java.gui.component.Menu(Assets.fmenu, Assets.fmmenu, Const.HALFWIDTH, Const.HALFHEIGHT-60, 70);
         menu.addItem("< level >");
         menu.addItem("Fight!");
         menu.addItem("Scores");
@@ -38,7 +38,7 @@ public class MenuScreen extends Screen {
         menu.mouseMoved(e);
     }
     public void mouseClicked(MouseEvent e) {
-        if(menu.getSelected() != Menu.NOTHING){
+        if(menu.getSelected() != main.moonlightowl.java.gui.component.Menu.NOTHING){
             setVisible(false);
         }
     }
@@ -47,11 +47,11 @@ public class MenuScreen extends Screen {
         switch(e.getKeyCode()){
             // exit menu
             case KeyEvent.VK_ESCAPE:
-                menu.deselectAll();
+                setClosed(true);
                 setVisible(false); break;
             // select one of menu items
             case KeyEvent.VK_ENTER:
-                if(menu.getSelected() != Menu.NOTHING) setVisible(false);
+                if(menu.getSelected() != main.moonlightowl.java.gui.component.Menu.NOTHING) setVisible(false);
                 break;
         }
     }

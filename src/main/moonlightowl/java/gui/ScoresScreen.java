@@ -2,6 +2,7 @@ package main.moonlightowl.java.gui;
 
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
+import main.moonlightowl.java.gui.component.Scores;
 import main.moonlightowl.java.world.World;
 
 import java.awt.*;
@@ -18,7 +19,7 @@ import java.awt.event.MouseEvent;
 public class ScoresScreen extends Screen {
     private Scores scores;
 
-    public ScoresScreen(World world, Camera camera, Label title){
+    public ScoresScreen(World world, Camera camera, main.moonlightowl.java.gui.component.Label title){
         super(world, camera, title);
         scores = new Scores(Const.defaultScoreTable, Assets.fgui, Assets.fmgui);
     }

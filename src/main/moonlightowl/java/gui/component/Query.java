@@ -1,6 +1,7 @@
-package main.moonlightowl.java.gui;
+package main.moonlightowl.java.gui.component;
 
 import main.moonlightowl.java.Const;
+import main.moonlightowl.java.gui.component.Label;
 
 import java.awt.Color;
 import java.awt.Font;

@@ -1,4 +1,4 @@
-package main.moonlightowl.java.gui;
+package main.moonlightowl.java.gui.component;
 
 import java.awt.*;
 
