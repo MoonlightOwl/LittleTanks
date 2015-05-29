@@ -16,6 +16,7 @@ import main.moonlightowl.java.world.entity.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -190,7 +191,6 @@ public class GameScreen extends Screen {
         changeLife(-amount);
 
         if(player.getLife() <= 0){
-            //gameOver(false);
             setVisible(false);
         }
         else minus_timer = 100;
@@ -242,20 +242,21 @@ public class GameScreen extends Screen {
     private boolean fireTank(Tank tank){
         if(tank.isIdle()){
             if(tank.getAmmo()>0){
-                int x = tank.getX()+30, y = tank.getY()+30;
-                float dx = 0, dy = 0;
-                switch((int)tank.getAngle()){
-                    case 0: dy = -1.0f; y = y - 30; break;
-                    case 90: dx = 1.0f; x = x + 30; break;
-                    case 180: dy = 1.0f; y = y + 30; break;
-                    case 270: dx = -1.0f; x = x - 30; break;
-                }
-                world.newBullet.add(new Bullet(x, y, dx, dy, tank.getLevel()));
+                int x = tank.getX()+Const.HALF_TILE, y = tank.getY()+Const.HALF_TILE;
+                Point2D.Float delta = GMath.getVector(tank.getAngle());
+                int dx = (int)(delta.x * Const.HALF_TILE),
+                    dy = (int)(delta.y * Const.HALF_TILE);
+                world.newBullet.add(new Bullet(x+dx, y+dy, delta.x, delta.y, tank.getLevel()));
                 // play sound
                 if(tank == player || GMath.rand.nextBoolean()){
                     switch(tank.getLevel()){
                         case 1: case 2: soundManager.play(Sound.SHOOT); break;
-                        case 3: soundManager.play(Sound.LAUNCH); break;
+                        case 3:
+                            soundManager.play(Sound.LAUNCH);
+                            for(int i=0; i<3; i++)
+                                world.fx.add(x-dx-40+GMath.rand.nextInt(10),
+                                             y-dy-40+GMath.rand.nextInt(10), FX.SMOKE);
+                            break;
                     }
                 }
                 // decrease ammo
@@ -317,19 +318,19 @@ public class GameScreen extends Screen {
         else if(!paused)
             switch(e.getKeyCode()){
                 case KeyEvent.VK_LEFT:
-                    player.turn(270);
+                    player.turn(Math.PI);
                     moveTank(player, player.getX() - Const.TILE_SIZE, player.getY());
                     break;
                 case KeyEvent.VK_RIGHT:
-                    player.turn(90);
+                    player.turn(0.0);
                     moveTank(player, player.getX() + Const.TILE_SIZE, player.getY());
                     break;
                 case KeyEvent.VK_UP:
-                    player.turn(0);
+                    player.turn(Math.PI+Math.PI/2);
                     moveTank(player, player.getX(), player.getY() - Const.TILE_SIZE);
                     break;
                 case KeyEvent.VK_DOWN:
-                    player.turn(180);
+                    player.turn(Math.PI/2);
                     moveTank(player, player.getX(), player.getY() + Const.TILE_SIZE);
                     break;
                 case KeyEvent.VK_SPACE:
@@ -423,10 +424,10 @@ public class GameScreen extends Screen {
                             if (GMath.rand.nextBoolean()) dx = Const.TILE_SIZE * (GMath.rand.nextBoolean() ? -1 : 1);
                             else dy = Const.TILE_SIZE * (GMath.rand.nextBoolean() ? -1 : 1);
                             moveTank(t, t.getX() + dx, t.getY() + dy);
-                            if (dx < 0) t.turn(270);
-                            else if (dy < 0) t.turn(0);
-                            else if (dx > 0) t.turn(90);
-                            else if (dy > 0) t.turn(180);
+                            if (dx < 0) t.turn(0.0);
+                            else if (dy < 0) t.turn(Math.PI+Math.PI/2);
+                            else if (dx > 0) t.turn(Math.PI);
+                            else if (dy > 0) t.turn(Math.PI/2);
                         } else if (action == 2) fireTank(t);
                     }
                     // bullet collision

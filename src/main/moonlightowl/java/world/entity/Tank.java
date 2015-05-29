@@ -1,6 +1,7 @@
 package main.moonlightowl.java.world.entity;
 
 import main.moonlightowl.java.Assets;
+import main.moonlightowl.java.Const;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.world.Item;
 import main.moonlightowl.java.world.Level;
@@ -12,7 +13,7 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 public class Tank {
-    public static final double TURN_SPEED = 10.0;
+    public static final double TURN_SPEED = Math.PI/20;
     public static final int MOVE_SPEED = 5, MAX_LEVEL = 3,
         INIT_AMMO = 20, INIT_LIFE = 5, INIT_MINES = 0;
     public static final int GUNFIGHTER = 1, BIGCALIBRE = 2, LAUNCHER = 3;
@@ -29,7 +30,7 @@ public class Tank {
         position = new Point(0, 0);
         targetposition = new Point(0, 0);
         at = new AffineTransform();
-        setAngle(0.0);
+        setAngle(Math.PI/2);
         ammo = INIT_AMMO;
         life = INIT_LIFE;
         bombs = INIT_MINES;
@@ -74,7 +75,7 @@ public class Tank {
     public int getLevel(){ return level; }
     public AffineTransform getTransform(){
         AffineTransform a = AffineTransform.getTranslateInstance(position.x, position.y);
-        a.rotate(Math.toRadians(angle), 30, 30);
+        at.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
         return a;
     }
     public int getShield(){ return shield; }
@@ -145,8 +146,8 @@ public class Tank {
     public void update(){
         if(angle != targetangle){
             double delta = targetangle - angle;
-            if(delta > 180.0) delta -= 360.0;
-            if(delta < -180.0) delta += 360.0;
+            if(delta > Math.PI) delta -= GMath.PI2;
+            if(delta < -Math.PI) delta += GMath.PI2;
 
             if(Math.abs(delta) < TURN_SPEED){
                 angle += delta;
@@ -154,8 +155,8 @@ public class Tank {
             else {
                 angle += TURN_SPEED * Math.signum(delta);
             }
-            if(angle < 0.0) angle += 360.0;
-            else if(angle >= 360.0) angle -= 360.0;
+            if(angle < 0.0) angle += GMath.PI2;
+            else if(angle >= GMath.PI2) angle -= GMath.PI2;
         }
         if(!position.equals(targetposition)){
             Point delta = minus(targetposition,position);
@@ -174,7 +175,7 @@ public class Tank {
     public void draw(Graphics2D g, Point camera){
         at.setToIdentity();
         at.translate(position.x-camera.x, position.y-camera.y);
-        at.rotate(Math.toRadians(angle), 30, 30);
+        at.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
         g.drawImage(Assets.itank[level], at, null);
 
         if(shield > 0)

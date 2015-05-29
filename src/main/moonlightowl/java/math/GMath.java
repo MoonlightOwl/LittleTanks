@@ -2,6 +2,7 @@ package main.moonlightowl.java.math;
 
 import main.moonlightowl.java.Const;
 
+import java.awt.geom.Point2D;
 import java.util.Random;
 
 /**
@@ -27,5 +28,12 @@ public class GMath {
     }
     public static double distance(double x1, double y1, double x2, double y2){
         return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+    }
+
+    public static Point2D.Float getVector(double angle){
+        Point2D.Float vector = new Point2D.Float();
+        vector.x = (float)Math.cos(angle);
+        vector.y = (float)Math.sin(angle);
+        return vector;
     }
 }
