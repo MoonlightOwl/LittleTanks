@@ -428,9 +428,9 @@ public class GameScreen extends Screen {
                             if (GMath.rand.nextBoolean()) dx = Const.TILE_SIZE * (GMath.rand.nextBoolean() ? -1 : 1);
                             else dy = Const.TILE_SIZE * (GMath.rand.nextBoolean() ? -1 : 1);
                             moveTank(t, t.getX() + dx, t.getY() + dy);
-                            if (dx < 0) t.turn(0.0);
+                            if (dx < 0) t.turn(Math.PI);
                             else if (dy < 0) t.turn(Math.PI+Math.PI/2);
-                            else if (dx > 0) t.turn(Math.PI);
+                            else if (dx > 0) t.turn(0.0);
                             else if (dy > 0) t.turn(Math.PI/2);
                         } else if (action == 2) fireTank(t);
                     }
@@ -465,7 +465,7 @@ public class GameScreen extends Screen {
                                 // score points
                                 int bonus = GMath.rand.nextInt(100);
                                 changeScore(bonus);
-                                addMessage("mine death!", Const.MESSAGE_TIME);
+                                addMessage("bomb death!", Const.MESSAGE_TIME);
                             }
                         }
                     }
