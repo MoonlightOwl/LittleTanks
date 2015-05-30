@@ -386,7 +386,7 @@ public class GameScreen extends Screen {
                 setFreezeCounter(effectFreeze);
             }
             // tracks =)
-            if(!player.isIdle() && GMath.rand.nextInt(20) == 0) {  //if(GMath.rand.nextInt(60) == 0) {
+            if(!player.isIdle() && GMath.rand.nextInt(20) == 0) {
                 world.level.drawSplash(Assets.itrack, player.getTransform());
             }
             // add new projectiles

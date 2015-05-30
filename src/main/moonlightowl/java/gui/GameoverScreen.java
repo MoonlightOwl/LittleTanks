@@ -72,6 +72,14 @@ public class GameoverScreen extends TextboxScreen {
     }
 
     public void draw(Graphics2D g){
-        super.draw(g);
+        // game world
+        world.draw(g, camera.getPosition());
+        // special effects
+        world.fx.draw(g, camera.getPosition());
+        // ui
+        g.setColor(Const.OPAQUE_DARK_COLOR);
+        g.fillRect(0, Const.HALFHEIGHT-120, Const.WIDTH, 120);
+        title.draw(g);
+        query.draw(g);
     }
 }
