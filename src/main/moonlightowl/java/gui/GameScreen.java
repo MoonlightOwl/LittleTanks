@@ -528,7 +528,6 @@ public class GameScreen extends Screen {
                         if (!world.level.isFlyable(x, y)) {
                             // crush! destroy! swag!
                             Tile tile = world.level.get(x, y);
-                            int px = (int) b.getX(), py = (int) b.getY();
                             switch (tile.get()) {
                                 case Tile.BOX:
                                 case Tile.BARREL:
@@ -553,11 +552,13 @@ public class GameScreen extends Screen {
                                     break;
                             }
                             // bullet/rocket gone in sparkles/explosion
+                            int px = x * Const.TILE_SIZE,
+                                py = y * Const.TILE_SIZE;
                             switch (b.getLevel()) {
                                 case 1:
                                 case 2:
-                                    world.fx.add(px - (int) Math.sin(b.getAngle()) * 30,
-                                            py + (int) Math.cos(b.getAngle()) * 30, FX.SPARKLE);
+                                    world.fx.add(px - (int) Math.sin(b.getAngle()) * Const.HALF_TILE,
+                                            py + (int) Math.cos(b.getAngle()) * Const.HALF_TILE, FX.SPARKLE);
                                     break;
                                 case 3:
                                     world.fx.add((int) b.getX() - 50, (int) b.getY() - 50, FX.EXPLOSION);
