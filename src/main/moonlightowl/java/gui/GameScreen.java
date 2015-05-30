@@ -280,7 +280,8 @@ public class GameScreen extends Screen {
                 world.level.clear(x, y);
                 world.level.drawSplash(Assets.iexpldec, px-20, py-20);
                 synchronized(world.bonuses){
-                    world.bonuses.add(new Bonus(px+30, py+30, GMath.rand.nextInt(Bonus.COUNT)));
+                    world.bonuses.add(new Bonus(px+Const.HALF_TILE, py+Const.HALF_TILE,
+                            GMath.rand.nextInt(Bonus.COUNT)));
                 }
                 world.fx.add(px-20, py-20, FX.SMALLEXPLOSION);
                 break;
@@ -545,13 +546,7 @@ public class GameScreen extends Screen {
                                     break;
                                 case Tile.SAFE:
                                     if (tile.getStage() == 0) {
-                                        world.level.clear(x, y);
-                                        world.level.drawSplash(Assets.iexpldec, px - 20, py - 20);
-                                        synchronized (world.bonuses) {
-                                            world.bonuses.add(
-                                                    new Bonus(px + 30, py + 30, GMath.rand.nextInt(Bonus.COUNT)));
-                                        }
-                                        world.fx.add(px - 20, py - 20, FX.SMALLEXPLOSION);
+                                        activateMapTile(x, y);
                                     }
                                     break;
                             }
