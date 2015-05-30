@@ -27,7 +27,8 @@ public class Assets {
         ishadowr, ishadowd, imetal, igrid, isplash_text, ibarrel,
         irocket, iconcrete, isand, ibush, ikey, ibarrelside,
         ishadowLS, ishadowLB, ishadowRS, ishadowRB, isnow, irustblock,
-        icandy, iturret_base, iturret_tower, ifloor_tiles, icobblestone;
+        icandy, iturret_base, iturret_tower, ifloor_tiles, icobblestone,
+        itankshadow;
     public static BufferedImage[] iexplosion = new BufferedImage[4],
         isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
         itank = new BufferedImage[4], ismoke = new BufferedImage[4],
@@ -62,6 +63,7 @@ public class Assets {
             ibomb_off = ImageIO.read(new File("resources/images/bomb_off.png"));
             ishadowr = ImageIO.read(new File("resources/images/shadowr.png"));
             ishadowd = ImageIO.read(new File("resources/images/shadowd.png"));
+            itankshadow = ImageIO.read(new File("resources/images/tankshadow.png"));
 
             fillArray(iexplosion, "expl");
             fillArray(ismoke, "smoke");

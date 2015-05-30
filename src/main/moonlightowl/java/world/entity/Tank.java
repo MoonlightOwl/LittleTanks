@@ -174,6 +174,10 @@ public class Tank {
     // to screen
     public void draw(Graphics2D g, Point camera){
         at.setToIdentity();
+        at.translate(position.x-2-camera.x, position.y+10-camera.y);
+        at.rotate(angle+Math.PI/2, Const.HALF_TILE+2, Const.HALF_TILE-4);
+        g.drawImage(Assets.itankshadow, at, null);
+        at.setToIdentity();
         at.translate(position.x-camera.x, position.y-camera.y);
         at.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
         g.drawImage(Assets.itank[level], at, null);
