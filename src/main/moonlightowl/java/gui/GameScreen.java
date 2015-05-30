@@ -367,9 +367,11 @@ public class GameScreen extends Screen {
         // update game objects
         if(!paused) {
             // update player
-            world.level.setCollision(player.getMapX(), player.getMapY(), false);
+            int pcx = player.getMapX(), pcy = player.getMapY();
             player.update();
             world.level.setCollision(player.getMapX(), player.getMapY(), true);
+            if(pcx != player.getMapX() || pcy != player.getMapY())
+                world.level.setCollision(pcx, pcy, false);
             // move camera to player position
             if(Sound.EXPLODE.isPlaying())
                 camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
@@ -412,9 +414,12 @@ public class GameScreen extends Screen {
                 Iterator<Tank> itenemies = world.enemies.iterator();
                 while (itenemies.hasNext()) {
                     Tank t = itenemies.next();
-                    world.level.setCollision(t.getMapX(), t.getMapY(), false);
+                    // update & collision
+                    pcx = t.getMapX(); pcy = t.getMapY();
                     t.update();
                     world.level.setCollision(t.getMapX(), t.getMapY(), true);
+                    if(pcx != t.getMapX() || pcy != t.getMapY())
+                        world.level.setCollision(pcx, pcy, false);
                     // random movement
                     if (t.isIdle()) {
                         int action = GMath.rand.nextInt(effectFreeze == 0 ? 10 : 100);
