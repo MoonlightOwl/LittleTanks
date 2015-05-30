@@ -358,14 +358,8 @@ public class GameScreen extends Screen {
     }
 
 
-    // screen processing
+    /** Screen processing */
     public void update(){
-        // move camera to player position
-        if(Sound.EXPLODE.isPlaying())
-            camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
-                               player.getY() - 3 + GMath.rand.nextInt(6));
-        else camera.setPosition(player.getX(), player.getY());
-
         // messages
         if(message_timer > 0)
             message_timer--;
@@ -376,6 +370,11 @@ public class GameScreen extends Screen {
             world.level.setCollision(player.getMapX(), player.getMapY(), false);
             player.update();
             world.level.setCollision(player.getMapX(), player.getMapY(), true);
+            // move camera to player position
+            if(Sound.EXPLODE.isPlaying())
+                camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
+                        player.getY() - 3 + GMath.rand.nextInt(6));
+            else camera.setPosition(player.getX(), player.getY());
             // effects
             if (effectFreeze > 0) {
                 effectFreeze--;
