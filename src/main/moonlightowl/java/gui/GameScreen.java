@@ -364,6 +364,8 @@ public class GameScreen extends Screen {
         // messages
         if(message_timer > 0)
             message_timer--;
+        if(minus_timer > 0)
+            minus_timer --;
 
         // update game objects
         if(!paused) {
@@ -379,12 +381,12 @@ public class GameScreen extends Screen {
                         player.getY() - 3 + GMath.rand.nextInt(6));
             else camera.setPosition(player.getX(), player.getY());
             // effects
-            if (effectFreeze > 0) {
+            if(effectFreeze > 0) {
                 effectFreeze--;
                 setFreezeCounter(effectFreeze);
             }
             // tracks =)
-            if (GMath.rand.nextInt(60) == 0) {
+            if(!player.isIdle() && GMath.rand.nextInt(20) == 0) {  //if(GMath.rand.nextInt(60) == 0) {
                 world.level.drawSplash(Assets.itrack, player.getTransform());
             }
             // add new projectiles
@@ -702,6 +704,8 @@ public class GameScreen extends Screen {
         // message
         if(message_timer > 0)
             lmessage.draw(g);
+        if(minus_timer > 0 && System.currentTimeMillis()%400 < 200)
+            lminus.draw(g);
         // inventory
         Iterator<Item> ititems = player.inventory.iterator();
         int x = Const.WIDTH - 80;

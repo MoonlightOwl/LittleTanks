@@ -75,7 +75,7 @@ public class Tank {
     public int getLevel(){ return level; }
     public AffineTransform getTransform(){
         AffineTransform a = AffineTransform.getTranslateInstance(position.x, position.y);
-        at.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
+        a.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
         return a;
     }
     public int getShield(){ return shield; }
