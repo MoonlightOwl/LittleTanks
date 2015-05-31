@@ -22,6 +22,7 @@ import java.util.LinkedList;
 public class World {
     public Level level;
     public final LinkedList<Bullet> bullets, newBullet;
+    public final LinkedList<LaserBeam> beams;
     public final ArrayList<Bonus> bonuses;
     public final ArrayList<Tank> enemies, newEnemies;
     public final ArrayList<Bomb> bombs;
@@ -35,6 +36,7 @@ public class World {
         // no "diamonds" for 1.6 back compatibility
         enemies = new ArrayList<Tank>(); newEnemies = new ArrayList<Tank>();
         bullets = new LinkedList<Bullet>(); newBullet = new LinkedList<Bullet>();
+        beams = new LinkedList<LaserBeam>();
         bonuses = new ArrayList<Bonus>();
         bombs = new ArrayList<Bomb>();
         spawners = new ArrayList<Point3D>();
@@ -151,6 +153,7 @@ public class World {
     public synchronized void reset(){
         bullets.clear();
         newBullet.clear();
+        beams.clear();
         bonuses.clear();
         bombs.clear();
         enemies.clear();
@@ -192,6 +195,11 @@ public class World {
         synchronized(bullets){
             for(Bullet b: bullets) {
                 b.draw(g, camera);
+            }
+        }
+        synchronized(beams){
+            for(LaserBeam l: beams) {
+                l.draw(g, camera);
             }
         }
     }

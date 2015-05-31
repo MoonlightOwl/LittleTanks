@@ -246,7 +246,21 @@ public class GameScreen extends Screen {
                 Point2D.Float delta = GMath.getVector(tank.getAngle());
                 int dx = (int)(delta.x * Const.HALF_TILE),
                     dy = (int)(delta.y * Const.HALF_TILE);
-                world.newBullet.add(new Bullet(x+dx, y+dy, delta.x, delta.y, tank.getLevel()));
+                if(tank.getLevel() < 4)
+                    world.newBullet.add(new Bullet(x+dx, y+dy, delta.x, delta.y, tank.getLevel()));
+                else if(tank.getLevel() == 4){
+                    // calculate target point
+                    int tx = tank.getMapX(), ty = tank.getMapY();
+                    while(world.level.isFlyable(tx, ty)){
+                        tx += Math.signum(dx);
+                        ty += Math.signum(dy);
+                    }
+                    activateMapTile(tx, ty);
+                    world.beams.add(new LaserBeam(tank.getMapX(), tank.getMapY(), tx, ty));
+                    for(int i=0; i<4; i++)
+                        world.fx.add(tx*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
+                                     ty*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
+                }
                 // play sound
                 if(tank == player || GMath.rand.nextBoolean()){
                     switch(tank.getLevel()){
@@ -257,6 +271,7 @@ public class GameScreen extends Screen {
                                 world.fx.add(x-dx-40+GMath.rand.nextInt(10),
                                              y-dy-40+GMath.rand.nextInt(10), FX.SMOKE);
                             break;
+                        case 4: soundManager.play(Sound.LASER); break;
                     }
                 }
                 // decrease ammo
@@ -472,6 +487,19 @@ public class GameScreen extends Screen {
                             }
                         }
                     }
+                    // laser collision
+                    synchronized (world.beams){
+                        for(LaserBeam l: world.beams){
+                            for(Point p: l.getRay()){
+                                if(t.getMapX() == p.x && t.getMapY() == p.y){
+                                    if (t.hit(GMath.rand.nextInt(2))) soundManager.play(Sound.HIT);
+                                    // score points
+                                    int bonus = GMath.rand.nextInt(50);
+                                    changeScore(bonus);
+                                }
+                            }
+                        }
+                    }
                     // explosion
                     if (t.getLife() <= 0) {
                         world.level.setCollision(t.getMapX(), t.getMapY(), false);
@@ -677,6 +705,23 @@ public class GameScreen extends Screen {
                                 changeScore(bonus);
                             }
                         }
+                    }
+                }
+            }
+
+            synchronized (world.beams) {
+                Iterator<LaserBeam> itbeams = world.beams.iterator();
+                while (itbeams.hasNext()) {
+                    LaserBeam l = itbeams.next();
+                    l.update();
+                    // collect items to player inventory
+                    if (l.getTimeRemaining() <= 0) {
+                        itbeams.remove();
+                    } else if(GMath.rand.nextBoolean()){
+                        Point point = l.getRandomPoint();
+                        if(point != null)
+                            world.fx.add(point.x*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
+                                         point.y*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
                     }
                 }
             }

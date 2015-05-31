@@ -14,9 +14,9 @@ import java.util.Iterator;
 
 public class Tank {
     public static final double TURN_SPEED = Math.PI/20;
-    public static final int MOVE_SPEED = 5, MAX_LEVEL = 3,
+    public static final int MOVE_SPEED = 5, MAX_LEVEL = 4,
         INIT_AMMO = 20, INIT_LIFE = 5, INIT_MINES = 0;
-    public static final int GUNFIGHTER = 1, BIGCALIBRE = 2, LAUNCHER = 3;
+    public static final int GUNFIGHTER = 1, BIGCALIBRE = 2, LAUNCHER = 3, LASER = 4;
 
     private Point position, targetposition, mappos;
     private double angle, targetangle;
