@@ -8,6 +8,7 @@ public enum Sound {
     EXPLODE("resources/sounds/explosion.wav"),
     SHOOT("resources/sounds/railgun.wav"),
     LAUNCH("resources/sounds/launcher.wav"),
+    LASER("resources/sounds/laser.wav"),
     NOAMMO("resources/sounds/noammo.wav"),
     HIT("resources/sounds/hit.wav"),
     BEEP("resources/sounds/beep.wav"),

@@ -4,13 +4,11 @@ package main.moonlightowl.java;
 
 import main.moonlightowl.java.sound.Sound;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.FontFormatException;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
@@ -28,10 +26,10 @@ public class Assets {
         irocket, iconcrete, isand, ibush, ikey, ibarrelside,
         ishadowLS, ishadowLB, ishadowRS, ishadowRB, isnow, irustblock,
         icandy, iturret_base, iturret_tower, ifloor_tiles, icobblestone,
-        itankshadow;
+        itankshadow, ibeamh, ibeamv;
     public static BufferedImage[] iexplosion = new BufferedImage[4],
         isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
-        itank = new BufferedImage[4], ismoke = new BufferedImage[4],
+        itank = new BufferedImage[5], ismoke = new BufferedImage[4],
         isparkle = new BufferedImage[4], idoor = new BufferedImage[6],
         isafe = new BufferedImage[2], ibutton = new BufferedImage[2];
 
@@ -96,6 +94,14 @@ public class Assets {
             icobblestone = ImageIO.read(new File("resources/images/stone.png"));
             isnow = ImageIO.read(new File("resources/images/snow.png"));
             irustblock = ImageIO.read(new File("resources/images/rustblock.png"));
+
+            ibeamv = ImageIO.read(new File("resources/images/beam.png"));
+            ibeamh = new BufferedImage(ibeamv.getHeight(), ibeamv.getWidth(),
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = ibeamh.createGraphics();
+            g.rotate(-Math.PI/2);
+            g.drawImage(ibeamv, -ibeamv.getWidth(), 0, null);
+            g.dispose();
 
             // sounds
             Sound.init();
