@@ -715,14 +715,32 @@ public class GameScreen extends Screen {
                 while (itbeams.hasNext()) {
                     LaserBeam l = itbeams.next();
                     l.update();
-                    // collect items to player inventory
+                    //
                     if (l.getTimeRemaining() <= 0) {
                         itbeams.remove();
-                    } else if(GMath.rand.nextBoolean()){
-                        Point point = l.getRandomPoint();
-                        if(point != null)
-                            world.fx.add(point.x*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
-                                         point.y*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
+                    } else {
+                        // check player collision
+                        for(Point point: l.getRay()){
+                            if(point.x == player.getMapX() && point.y == player.getMapY()){
+                                if(GMath.rand.nextBoolean()) {
+                                    if (player.getShield() > 0) changeShield(GMath.rand.nextInt(2));
+                                    else {
+                                        minusLife(GMath.rand.nextInt(2));
+                                        soundManager.play(Sound.HIT);
+                                    }
+                                    if (player.getLife() <= 0)
+                                        world.fx.add(player.getX() - 20, player.getY() - 20, FX.EXPLOSION);
+                                }
+                                break;
+                            }
+                        }
+                        // a bit of smoke
+                        if(GMath.rand.nextBoolean()){
+                            Point point = l.getRandomPoint();
+                            if(point != null)
+                                world.fx.add(point.x*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
+                                        point.y*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
+                        }
                     }
                 }
             }
