@@ -91,9 +91,10 @@ public class World {
                                 // start point
                                 case '@': level.setStartPoint(x, y); break;
                                 // enemy spawner
-                                case '&': spawners.add(new Point3D(x, y, 1)); break;
-                                case '%': spawners.add(new Point3D(x, y, 2)); break;
-                                case '$': spawners.add(new Point3D(x, y, 3)); break;
+                                case '&': spawners.add(new Point3D(x, y, Tank.GUNFIGHTER)); break;
+                                case '%': spawners.add(new Point3D(x, y, Tank.BIGCALIBRE)); break;
+                                case '$': spawners.add(new Point3D(x, y, Tank.LAUNCHER)); break;
+                                case '?': spawners.add(new Point3D(x, y, Tank.LASER)); break;
                             }
                     }
                 }

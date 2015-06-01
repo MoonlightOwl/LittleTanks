@@ -41,7 +41,7 @@ public class Tile {
             case '~': create(COBBLESTONE); break;
             case '-': create(SNOW); break;
             case 'R': create(RUSTBLOCK); break;
-            case '@': case '&': case '%': case '$': create(SPAWN); break;
+            case '@': case '&': case '%': case '$': case '?': create(SPAWN); break;
             default: create(GRASS);
         }
     }
