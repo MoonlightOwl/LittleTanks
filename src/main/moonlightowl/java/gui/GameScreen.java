@@ -39,6 +39,7 @@ public class GameScreen extends Screen {
     private int score;
     private int effectFreeze = 0;
     private int minus_timer = 0, message_timer = 0;
+    private int track_frequency = 20;
     private boolean paused = false;
 
     // levels
@@ -103,6 +104,9 @@ public class GameScreen extends Screen {
         currentLevel++;
         world.reset();
         world.loadLevel(mission.getLevel(currentLevel));
+
+        // parameters
+        track_frequency = world.level.isSnowy() ? 5 : 20;
 
         // place player in the world
         player.reset();
@@ -402,7 +406,7 @@ public class GameScreen extends Screen {
                 setFreezeCounter(effectFreeze);
             }
             // tracks =)
-            if(!player.isIdle() && GMath.rand.nextInt(20) == 0) {
+            if(!player.isIdle() && GMath.rand.nextInt(track_frequency) == 0) {
                 world.level.drawSplash(Assets.itrack, player.getTransform());
             }
             // add new projectiles
