@@ -246,9 +246,9 @@ public class GameScreen extends Screen {
                 Point2D.Float delta = GMath.getVector(tank.getAngle());
                 int dx = (int)(delta.x * Const.HALF_TILE),
                     dy = (int)(delta.y * Const.HALF_TILE);
-                if(tank.getLevel() < 4)
+                if(tank.getLevel() < Tank.LASER)
                     world.newBullet.add(new Bullet(x+dx, y+dy, delta.x, delta.y, tank.getLevel()));
-                else if(tank.getLevel() == 4){
+                else if(tank.getLevel() == Tank.LASER){
                     // calculate target point
                     int tx = tank.getMapX(), ty = tank.getMapY();
                     while(world.level.isFlyable(tx, ty)){
@@ -264,14 +264,15 @@ public class GameScreen extends Screen {
                 // play sound
                 if(tank == player || GMath.rand.nextBoolean()){
                     switch(tank.getLevel()){
-                        case 1: case 2: soundManager.play(Sound.SHOOT); break;
-                        case 3:
+                        case Tank.GUNFIGHTER: case Tank.BIGCALIBRE:
+                            soundManager.play(Sound.SHOOT); break;
+                        case Tank.LAUNCHER:
                             soundManager.play(Sound.LAUNCH);
                             for(int i=0; i<3; i++)
                                 world.fx.add(x-dx-40+GMath.rand.nextInt(10),
                                              y-dy-40+GMath.rand.nextInt(10), FX.SMOKE);
                             break;
-                        case 4: soundManager.play(Sound.LASER); break;
+                        case Tank.LASER: soundManager.play(Sound.LASER); break;
                     }
                 }
                 // decrease ammo
