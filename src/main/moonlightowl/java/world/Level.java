@@ -32,6 +32,7 @@ public class Level {
     private Point startPoint;
     private Rectangle pxbounds;
     private Tile borderTile = new Tile(Tile.WALL);
+    private boolean snowy;
 
     public Level(){
         this(5, 5);
@@ -45,6 +46,7 @@ public class Level {
         links = new HashMap<Integer, HashSet<Point>>();
         changeList = new HashSet<Point>();
         startPoint = new Point(1, 1);
+        snowy = false;
         // init images (render layers)
         imap = new BufferedImage(pxwidth, pxheight,
                 BufferedImage.TYPE_INT_ARGB);
@@ -109,6 +111,10 @@ public class Level {
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.ispawn, x, y, null);
                 break;
+        }
+        if(isSnowy() && tile.castShadow()){
+            if(GMath.rand.nextInt(6) == 0)
+                g.drawImage(Assets.isnowcap[GMath.rand.nextInt(Assets.isnowcap.length)], x, y, null);
         }
     }
     public void drawShadow(Graphics g, int x, int y){
@@ -229,6 +235,8 @@ public class Level {
     public boolean getCollision(int x, int y) {
         return contains(x, y) && collisionMap[x][y];
     }
+    public boolean isSnowy(){ return snowy; }
+
 
     // setters
     public void set(int x, int y, Tile tile){
@@ -276,6 +284,8 @@ public class Level {
     public void setCollision(int x, int y, boolean collision){
         if(contains(x, y)) collisionMap[x][y] = collision;
     }
+    public void setSnowy(boolean snowy){ this.snowy = snowy; }
+
 
     public void draw(Graphics2D g, Point camera){
         g.drawImage(irender, -camera.x, -camera.y, null);

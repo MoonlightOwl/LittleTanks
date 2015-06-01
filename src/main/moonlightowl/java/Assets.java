@@ -31,7 +31,8 @@ public class Assets {
         isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
         itank = new BufferedImage[5], ismoke = new BufferedImage[4],
         isparkle = new BufferedImage[4], idoor = new BufferedImage[6],
-        isafe = new BufferedImage[2], ibutton = new BufferedImage[2];
+        isafe = new BufferedImage[2], ibutton = new BufferedImage[2],
+        isnowcap = new BufferedImage[2];
 
     // load resourses
     public static void load(JPanel board){
@@ -72,6 +73,7 @@ public class Assets {
             fillArray(idoor, "door");
             fillArray(isafe, "safe");
             fillArray(ibutton, "button");
+            fillArray(isnowcap, "snowcap");
 
             ibarrel = ImageIO.read(new File("resources/images/barrel.png"));
             ibarrelside = ImageIO.read(new File("resources/images/barrel2.png"));

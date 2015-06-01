@@ -117,6 +117,10 @@ public class World {
                     catch(NumberFormatException e){
                         System.out.println("[ERROR] '"+filename+"': wrong link coords.");
                     }
+                } else if(data[0].equals("snowy")){
+                    if(data[1].equals("true")){
+                        level.setSnowy(true);
+                    }
                 }
             }
             // arrangement of the tanks
