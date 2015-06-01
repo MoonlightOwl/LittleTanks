@@ -495,8 +495,9 @@ public class GameScreen extends Screen {
                                 if(t.getMapX() == p.x && t.getMapY() == p.y){
                                     if (t.hit(GMath.rand.nextInt(2))) soundManager.play(Sound.HIT);
                                     // score points
-                                    int bonus = GMath.rand.nextInt(50);
+                                    int bonus = GMath.rand.nextInt(10);
                                     changeScore(bonus);
+                                    break;
                                 }
                             }
                         }
@@ -685,7 +686,9 @@ public class GameScreen extends Screen {
                             }
                         }
                     } else t.update(false);
+
                     // bullet collision
+                    boolean removed = false;
                     synchronized (world.bullets) {
                         Iterator<Bullet> itbullets = world.bullets.iterator();
                         while (itbullets.hasNext()) {
@@ -694,8 +697,9 @@ public class GameScreen extends Screen {
                                     GMath.toMap((int) b.getY()) == t.getMapY()) {
                                 // hit!
                                 t.changeLife(-1);
-                                if (t.getLife() == 0) {
+                                if (t.getLife() <= 0) {
                                     itturrets.remove();
+                                    removed = true;
                                     // explode!
                                     world.fx.add((int) b.getX() - 50, (int) b.getY() - 50, FX.EXPLOSION);
                                     soundManager.play(Sound.EXPLODE);
@@ -704,6 +708,31 @@ public class GameScreen extends Screen {
                                 // score points
                                 int bonus = GMath.rand.nextInt(20);
                                 changeScore(bonus);
+                                if(removed) break;
+                            }
+                        }
+                    }
+                    if(!removed) {
+                        // laser collision
+                        synchronized (world.beams) {
+                            for (LaserBeam l : world.beams) {
+                                for (Point p : l.getRay()) {
+                                    if (t.getMapX() == p.x && t.getMapY() == p.y) {
+                                        t.changeLife(-GMath.rand.nextInt(2));
+                                        if (t.getLife() <= 0) {
+                                            itturrets.remove();
+                                            removed = true;
+                                            // explode!
+                                            world.fx.add(t.getX() - 20, t.getY() - 20, FX.EXPLOSION);
+                                            soundManager.play(Sound.EXPLODE);
+                                        }
+                                        // score points
+                                        int bonus = GMath.rand.nextInt(8);
+                                        changeScore(bonus);
+                                        break;
+                                    }
+                                }
+                                if(removed) break;
                             }
                         }
                     }
