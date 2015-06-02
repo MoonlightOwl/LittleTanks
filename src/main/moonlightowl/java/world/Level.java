@@ -7,6 +7,7 @@ package main.moonlightowl.java.world;
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.math.GMath;
+import main.moonlightowl.java.world.entity.Tank;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
@@ -30,6 +31,7 @@ public class Level {
     // level parameters
     private int width, height, pxwidth, pxheight;
     private Point startPoint;
+    private Tank.State startState;
     private Rectangle pxbounds;
     private Tile borderTile = new Tile(Tile.WALL);
     private boolean snowy;
@@ -46,6 +48,7 @@ public class Level {
         links = new HashMap<Integer, HashSet<Point>>();
         changeList = new HashSet<Point>();
         startPoint = new Point(1, 1);
+        startState = new Tank.State();
         snowy = false;
         // init images (render layers)
         imap = new BufferedImage(pxwidth, pxheight,
@@ -220,6 +223,7 @@ public class Level {
     public Tile getBackground(){ return new Tile(BACK); }
     public int getStage(int x, int y){ return get(x, y).getStage(); }
     public Point getStartPoint(){ return startPoint; }
+    public Tank.State getStartState(){ return startState; }
     public int getPxWidth(){ return pxwidth; }
     public int getPxHeight(){ return pxheight; }
     public boolean isFlyable(int x, int y){
@@ -256,6 +260,7 @@ public class Level {
         startPoint.x = x;
         startPoint.y = y;
     }
+    public void setStartState(Tank.State state){ startState = state; }
     public boolean setStage(int x, int y, int stage){
         if(contains(x, y)){
             Tile tile = get(x,y);

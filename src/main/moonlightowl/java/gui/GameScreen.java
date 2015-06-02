@@ -95,6 +95,7 @@ public class GameScreen extends Screen {
         int x = GMath.toPixel(sp.x);
         int y = GMath.toPixel(sp.y);
         player.setPosition(x, y);
+        player.setStateTo(world.level.getStartState());
 
         // move camera to player
         int width = world.level.getPxWidth(), height = world.level.getPxHeight();

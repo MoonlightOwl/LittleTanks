@@ -200,7 +200,6 @@ public class Tank {
         }
         public State(State source){
             setTo(source);
-            shieldLimit = 0;
         }
 
         public void setTo(State source){

@@ -45,6 +45,15 @@ public class World {
     }
 
     /** Loading game objects from file */
+    private int parseInt(String string, String error){
+        try {
+            return Integer.parseInt(string);
+        }
+        catch(NumberFormatException e){
+            System.out.println("[ERROR] "+error);
+            return 0;
+        }
+    }
     public synchronized void loadLevel(String filename){
         // clear old data
         reset();
@@ -62,6 +71,7 @@ public class World {
             int height = Integer.parseInt(line);
             // create new blank map
             level = new Level(width, height);
+            Tank.State startState = new Tank.State();
             // read tile data
             for(int y = 0; (y<height) && (line = reader.readLine())!=null; y++){
                 for(int x = 0; (x<line.length()) && (x<width); x++){
@@ -105,7 +115,6 @@ public class World {
                 // homemade switch =P
                 if(data[0].equals("background")){
                     level.setBackground(new Tile(data[1].charAt(0)));
-
                 } else if(data[0].equals("link")){
                     try {
                         int[] coord = new int[4];
@@ -121,12 +130,22 @@ public class World {
                     if(data[1].equals("true")){
                         level.setSnowy(true);
                     }
+                } else if(data[0].equals("ammo")){
+                    startState.ammo = parseInt(data[1], "Wrong ammo value.");
+                } else if(data[0].equals("life")){
+                    startState.life = parseInt(data[1], "Wrong life value.");
+                } else if(data[0].equals("shield")){
+                    startState.shield = parseInt(data[1], "Wrong shield value.");
+                } else if(data[0].equals("bombs")){
+                    startState.bombs = parseInt(data[1], "Wrong bombs value.");
                 }
             }
             // arrangement of the tanks
             for(Point3D spawner: spawners){
                 spawnRandomTank(GMath.toPixel(spawner.x), GMath.toPixel(spawner.y), spawner.z);
             }
+            // set initial player state
+            level.setStartState(startState);
         } catch(Exception e) {
             System.out.println("[ERROR] Something went wrong, when loading '" + filename + "' level map...");
             e.printStackTrace();

@@ -15,3 +15,7 @@ MMMMMMMMMMMM
 
 background: -
 snowy: true
+ammo: 10
+life: 6
+bombs: 2
+shield: 1
