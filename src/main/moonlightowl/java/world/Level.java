@@ -105,7 +105,10 @@ public class Level {
                 break;
             case Tile.FLOORTILES: g.drawImage(Assets.ifloor_tiles, x, y, null); break;
             case Tile.COBBLESTONE: g.drawImage(Assets.icobblestone, x, y, null); break;
-            case Tile.SNOW: g.drawImage(Assets.isnow, x, y, null); break;
+            case Tile.SNOW:
+                g.drawImage(Assets.isnow, x, y, null);
+                if(GMath.rand.nextInt(12) == 1) g.drawImage(Assets.idrygrass, x, y, null);
+                break;
             case Tile.RUSTBLOCK: g.drawImage(Assets.irustblock, x, y, null); break;
             case Tile.SPAWN:
                 drawTile(g, x, y, BACK);

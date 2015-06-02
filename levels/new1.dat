@@ -1,17 +1,17 @@
 12
 12
-RRRRRRRRRRRR
-R          R
-R  T    T  R
-R          R
-R          R
-R          R
-R###  @  BBR
-R%       BBR
-R          R
-R          R
-R    ?     R
-RRRRRRRRRRRR
+MMMMMMMMMMMM
+#          M
+#  ?       M
+#        ? M
+#          M
+#          M
+####  @  BBM
+#        BBM
+#          M
+#  T       M
+#bBBB      M
+MMMMMMMMMMMM
 
 background: -
 snowy: true
