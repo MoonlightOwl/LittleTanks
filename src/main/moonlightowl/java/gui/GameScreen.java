@@ -135,8 +135,8 @@ public class GameScreen extends Screen {
         hud.setLifeCounter(player.getLife());
     }
     private void changeShield(int shield){
-        int amount = (player.getShield() + shield <= Tank.SHIELD_LIMIT ?
-                shield : Tank.SHIELD_LIMIT - player.getShield());
+        int amount = (player.getShield() + shield <= Tank.State.SHIELD_LIMIT ?
+                shield : Tank.State.SHIELD_LIMIT - player.getShield());
         player.setShield(player.getShield() + amount);
         hud.setShieldCounter(player.getShield());
     }

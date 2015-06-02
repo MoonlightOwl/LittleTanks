@@ -4,7 +4,6 @@ import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.world.Item;
-import main.moonlightowl.java.world.Level;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -13,52 +12,43 @@ import java.util.LinkedList;
 import java.util.Iterator;
 
 public class Tank {
-    public static final double TURN_SPEED = Math.PI/20;
-    public static final int MOVE_SPEED = 5, MAX_LEVEL = 4,
-        INIT_AMMO = 20, INIT_LIFE = 5, INIT_MINES = 0, SHIELD_LIMIT = 20;
+    public static final int MAX_LEVEL = 4;
+    public static final State DEFAULT_STATE = new State();
     public static final int GUNFIGHTER = 1, BIGCALIBRE = 2, LAUNCHER = 3, LASER = 4;
 
     private Point position, targetposition, mappos;
     private double angle, targetangle;
-    private int level, ammo, life, bombs, shield;
+    private State state;
     private AffineTransform at;
 
     public LinkedList<Item> inventory = new LinkedList<Item>();
 
     public Tank(){
+        state = new State();
         mappos = new Point(0, 0);
         position = new Point(0, 0);
         targetposition = new Point(0, 0);
         at = new AffineTransform();
         setAngle(Math.PI/2);
-        ammo = INIT_AMMO;
-        life = INIT_LIFE;
-        bombs = INIT_MINES;
-        level = 1;
-        shield = 0;
     }
     public Tank(int x, int y){
         this();
         setPosition(x, y);
     }
     public Tank(int x, int y, int level){
-        this();
-        setPosition(x, y);
+        this(x, y);
         setLevel(level);
         switch(level){
-            case 2: setLife(INIT_LIFE + 3); break;
-            case 3: setLife(INIT_LIFE - 2); break;
+            case Tank.BIGCALIBRE: changeLife(3); break;
+            case Tank.LAUNCHER: changeLife(2); break;
+            case Tank.LASER: changeLife(1); break;
         }
     }
 
     public void reset(){
         setPosition(0,0);
         setAngle(0.0);
-        setLife(INIT_LIFE);
-        setAmmo(INIT_AMMO);
-        setBombs(INIT_MINES);
-        setShield(0);
-        setLevel(1);
+        state.setTo(DEFAULT_STATE);
         inventory.clear();
     }
 
@@ -69,16 +59,16 @@ public class Tank {
     public int getMapY(){ return mappos.y; }
     public double getAngle(){ return angle; }
     public boolean isIdle(){ return position.equals(targetposition) && angle == targetangle; }
-    public int getAmmo(){ return ammo; }
-    public int getLife(){ return life; }
-    public int getBombs(){ return bombs; }
-    public int getLevel(){ return level; }
+    public int getAmmo(){ return state.ammo; }
+    public int getLife(){ return state.life; }
+    public int getBombs(){ return state.bombs; }
+    public int getLevel(){ return state.level; }
+    public int getShield(){ return state.shield; }
     public AffineTransform getTransform(){
         AffineTransform a = AffineTransform.getTranslateInstance(position.x, position.y);
         a.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
         return a;
     }
-    public int getShield(){ return shield; }
     public boolean inventoryContains(int type){
         for(Item i: inventory){
             if(i.getType() == type) return true;
@@ -97,15 +87,16 @@ public class Tank {
         this.angle = angle;
         targetangle = angle;
     }
-    public void setAmmo(int a){ ammo = a; }
-    public void changeAmmo(int delta){ ammo += delta; }
-    public void setLife(int l){ life = l; }
-    public void changeLife(int delta){ life += delta; }
-    public void setBombs(int m){ bombs = m; }
-    public void changeBombs(int delta){ bombs += delta; }
-    public void setLevel(int level){ this.level = level; }
-    public void setShield(int sh){ this.shield = (sh >= 0 ? sh : 0); }
-    public void changeShield(int shield){ setShield(this.shield + shield); }
+    public void setStateTo(State newState){ state.setTo(newState); }
+    public void setAmmo(int a){ state.ammo = a; }
+    public void changeAmmo(int delta){ state.ammo += delta; }
+    public void setLife(int l){ state.life = l; }
+    public void changeLife(int delta){ state.life += delta; }
+    public void setBombs(int m){ state.bombs = m; }
+    public void changeBombs(int delta){ state.bombs += delta; }
+    public void setLevel(int level){ state.level = level; }
+    public void setShield(int sh){ state.shield = (sh >= 0 ? sh : 0); }
+    public void changeShield(int shield){ setShield(state.shield + shield); }
     public boolean removeFromInventory(int type){
         Iterator<Item> it = inventory.iterator();
         while(it.hasNext()){
@@ -138,9 +129,10 @@ public class Tank {
         return new Point(a.x+b.x, a.y+b.y);
     }
     private Point normalize(Point a){
-        return new Point(a.x == 0? 0 : (int)Math.signum(a.x)*MOVE_SPEED,
-                         a.y == 0? 0 : (int)Math.signum(a.y)*MOVE_SPEED);
+        return new Point(a.x == 0? 0 : (int)Math.signum(a.x)*state.moveSpeed,
+                         a.y == 0? 0 : (int)Math.signum(a.y)*state.moveSpeed);
     }
+
 
     // update
     public void update(){
@@ -149,29 +141,31 @@ public class Tank {
             if(delta > Math.PI) delta -= GMath.PI2;
             if(delta < -Math.PI) delta += GMath.PI2;
 
-            if(Math.abs(delta) < TURN_SPEED){
+            if(Math.abs(delta) < state.turnSpeed){
                 angle += delta;
             }
             else {
-                angle += TURN_SPEED * Math.signum(delta);
+                angle += state.turnSpeed * Math.signum(delta);
             }
             if(angle < 0.0) angle += GMath.PI2;
             else if(angle >= GMath.PI2) angle -= GMath.PI2;
         }
+
         if(!position.equals(targetposition)){
             Point delta = minus(targetposition,position);
-            if(len(delta) < MOVE_SPEED){
+            if(len(delta) < state.moveSpeed){
                 position = add(position, delta);
             }
             else {
                 position = add(position, normalize(delta));
             }
         }
+
         mappos.x = GMath.toMap(position.x);
         mappos.y = GMath.toMap(position.y);
     }
 
-    // to screen
+    // render
     public void draw(Graphics2D g, Point camera){
         at.setToIdentity();
         at.translate(position.x-2-camera.x, position.y+10-camera.y);
@@ -180,9 +174,44 @@ public class Tank {
         at.setToIdentity();
         at.translate(position.x-camera.x, position.y-camera.y);
         at.rotate(angle+Math.PI/2, Const.HALF_TILE, Const.HALF_TILE);
-        g.drawImage(Assets.itank[level], at, null);
+        g.drawImage(Assets.itank[state.level], at, null);
 
-        if(shield > 0)
+        if(state.shield > 0)
             g.drawImage(Assets.ishield, position.x-camera.x-20, position.y-camera.y-20, null);
+    }
+
+
+    public static class State {
+        public static final double TURN_SPEED = Math.PI/20;
+        public static final int MOVE_SPEED = 5,
+                INIT_AMMO = 20, INIT_LIFE = 5, INIT_BOMBS = 0, INIT_SHIELD = 0,
+                SHIELD_LIMIT = 20;
+
+        public int level, ammo, life, bombs, shield;
+        public int shieldLimit, moveSpeed;
+        public double turnSpeed;
+
+        public State(){
+            level = 1;
+            ammo = INIT_AMMO; life = INIT_LIFE; bombs = INIT_BOMBS; shield = INIT_SHIELD;
+            shieldLimit = SHIELD_LIMIT;
+            moveSpeed = MOVE_SPEED;
+            turnSpeed = TURN_SPEED;
+        }
+        public State(State source){
+            setTo(source);
+            shieldLimit = 0;
+        }
+
+        public void setTo(State source){
+            this.level = source.level;
+            this.ammo = source.ammo;
+            this.life = source.life;
+            this.bombs = source.bombs;
+            this.shield = source.shield;
+            this.shieldLimit = source.shieldLimit;
+            this.moveSpeed = source.moveSpeed;
+            this.turnSpeed = source.turnSpeed;
+        }
     }
 }
