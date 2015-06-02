@@ -3,7 +3,6 @@ package main.moonlightowl.java.gui;
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.Mission;
-import main.moonlightowl.java.gui.component.Label;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
@@ -33,15 +32,12 @@ public class GameScreen extends Screen {
     // game
     private Tank player;
     // interface
-    private Label llifes, lshield, lscore, lammo,
-    lmines, lminus, lmessage, lfreeze, lpause;
+    private HUD hud;
     // variables
     private int score;
     private int effectFreeze = 0;
-    private int minus_timer = 0, message_timer = 0;
     private int track_frequency = 20;
     private boolean paused = false;
-
     // levels
     private Mission mission;
     private int currentLevel = 0;
@@ -51,27 +47,17 @@ public class GameScreen extends Screen {
         setWorld(world);
         setCamera(camera);
 
-        // init interface
-        llifes = new Label("@@@@@", 20, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
-        lshield = new Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
-        lscore = new Label("0", 20, 50, Assets.fgui, Assets.fmgui, Color.WHITE); lscore.setShadow(true);
-        lammo = new Label(">> 10", Const.WIDTH-140, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
-        lmines = new Label("== 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lmines.setShadow(true);
-        lfreeze = new Label("", Const.HALFWIDTH, 50, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, Color.BLUE); lfreeze.setShadow(true);
-        lpause = new Label("Pause...", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.YELLOW, true, Color.BLACK); lpause.setShadow(true);
-        lminus = new Label(":(", 40, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.RED, true); lminus.setShadow(true);
-        lmessage = new Label("", Const.HALFWIDTH, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
-
         // init game
         player = new Tank();
         score = 0;
+        hud = new HUD(player);
 
         mission = new Mission("./levels/");
         loadMission("test");
     }
 
 
-    // getters
+    /** Getters */
     public boolean isPaused(){ return paused; }
     public int getScore(){ return score; }
     public Mission getMission(){ return mission; }
@@ -80,16 +66,9 @@ public class GameScreen extends Screen {
         return isVictory() || player.getLife() <= 0;
     }
 
-    // setters
+    /** Setters */
     public void setPaused(boolean paused){ this.paused = paused; }
     public void setSoundManager(SoundManager soundManager){ this.soundManager = soundManager; }
-    public void setScore(int score){
-        this.score = score;
-        setScoreCounter(score);
-    }
-    private void changeScore(int amount){
-        setScore(score + amount);
-    }
 
 
     /** Manage levels */
@@ -101,6 +80,8 @@ public class GameScreen extends Screen {
         else return false;
     }
     public void nextLevel(){
+        interfaceReset();
+
         currentLevel++;
         world.reset();
         world.loadLevel(mission.getLevel(currentLevel));
@@ -123,11 +104,8 @@ public class GameScreen extends Screen {
         // bonus points
         if(currentLevel > 1) {
             score += 10;
-            addMessage("New level! (+10 score)", Const.MESSAGE_TIME);
+            hud.addMessage("New level! (+10 score)", Const.MESSAGE_TIME);
         }
-
-        //
-        interfaceReset();
     }
     public void restartMission(){
         currentLevel = 0;
@@ -137,67 +115,37 @@ public class GameScreen extends Screen {
 
     /** Processing interface */
     public void interfaceReset(){
-        minus_timer = 0;
-        message_timer = 0;
+        hud.reset();
         effectFreeze = 0;
-        setLifeCounter(player.getLife());
-        setShieldCounter(player.getShield());
-        setAmmoCounter(player.getAmmo());
-        setMinesCounter(player.getBombs());
-        setFreezeCounter(effectFreeze);
+        hud.setLifeCounter(player.getLife());
+        hud.setShieldCounter(player.getShield());
+        hud.setAmmoCounter(player.getAmmo());
+        hud.setBombsCounter(player.getBombs());
+        hud.setFreezeCounter(effectFreeze);
+    }
+    public void setScore(int score){
+        this.score = score;
+        hud.setScoreCounter(score);
+    }
+    private void changeScore(int amount){
+        setScore(score + amount);
     }
     private void changeLife(int l){
         player.setLife(player.getLife() + l);
-        setLifeCounter(player.getLife());
+        hud.setLifeCounter(player.getLife());
     }
-    private void setLifeCounter(int count){
-        String text = "";
-        for(int i = 0; i<count; i++){
-            text+="@";
-        }
-        llifes.changeText(text);
-    }
-    private void changeShield(int s){
-        int amount = (player.getShield() + s <= 20 ? s : 20 - player.getShield());
+    private void changeShield(int shield){
+        int amount = (player.getShield() + shield <= Tank.SHIELD_LIMIT ?
+                shield : Tank.SHIELD_LIMIT - player.getShield());
         player.setShield(player.getShield() + amount);
-        setShieldCounter(player.getShield());
-    }
-    private void setShieldCounter(int count){
-        String text = "";
-        for(int i = 0; i<Math.ceil(count/2); i++){
-            text+="*";
-        }
-        lshield.changeText(text);
-    }
-    private void setAmmoCounter(int ammo){
-        lammo.changeText(">> "+Integer.toString(ammo));
-    }
-    private void setMinesCounter(int mines){
-        lmines.changeText("== "+Integer.toString(mines));
-    }
-
-    private void setScoreCounter(int score){
-        lscore.changeText(Integer.toString(score));
-    }
-    private void setFreezeCounter(int freeze){
-        if(freeze > 0)
-            lfreeze.changeText("< " + Integer.toString(freeze) + " >");
-        else
-            lfreeze.changeText("");
-        lfreeze.setX(Const.HALFWIDTH);
-    }
-    private void addMessage(String text, int time){
-        lmessage.changeText(text);
-        message_timer = time;
+        hud.setShieldCounter(player.getShield());
     }
     private void minusLife(int amount){
         changeScore(-50*amount);
         changeLife(-amount);
 
-        if(player.getLife() <= 0){
-            setVisible(false);
-        }
-        else minus_timer = 100;
+        if(player.getLife() <= 0) setVisible(false);
+        else hud.minusLife();
     }
 
 
@@ -356,12 +304,12 @@ public class GameScreen extends Screen {
                     break;
                 case KeyEvent.VK_SPACE:
                     if(!fireTank(player)) soundManager.play(Sound.NOAMMO);
-                    setAmmoCounter(player.getAmmo());
+                    hud.setAmmoCounter(player.getAmmo());
                     break;
                 case KeyEvent.VK_C:
                     if(player.getBombs() > 0){
                         player.changeBombs(-1);
-                        setMinesCounter(player.getBombs());
+                        hud.setBombsCounter(player.getBombs());
                         world.bombs.add(new Bomb(player.getX()+30, player.getY()+30));
                         soundManager.play(Sound.BEEP);
                     }
@@ -370,7 +318,7 @@ public class GameScreen extends Screen {
                 case KeyEvent.VK_E:
                     if(player.removeFromInventory(Item.CANDY)){
                         changeLife(1);
-                        addMessage("+1 life", Const.MESSAGE_TIME);
+                        hud.addMessage("+1 life");
                     }
                     break;
             }
@@ -381,11 +329,8 @@ public class GameScreen extends Screen {
 
     /** Screen processing */
     public void update(){
-        // messages
-        if(message_timer > 0)
-            message_timer--;
-        if(minus_timer > 0)
-            minus_timer --;
+        // UI
+        hud.update();
 
         // update game objects
         if(!paused) {
@@ -403,7 +348,7 @@ public class GameScreen extends Screen {
             // effects
             if(effectFreeze > 0) {
                 effectFreeze--;
-                setFreezeCounter(effectFreeze);
+                hud.setFreezeCounter(effectFreeze);
             }
             // tracks =)
             if(!player.isIdle() && GMath.rand.nextInt(track_frequency) == 0) {
@@ -488,7 +433,7 @@ public class GameScreen extends Screen {
                                 // score points
                                 int bonus = GMath.rand.nextInt(100);
                                 changeScore(bonus);
-                                addMessage("bomb death!", Const.MESSAGE_TIME);
+                                hud.addMessage("bomb death!");
                             }
                         }
                     }
@@ -514,7 +459,7 @@ public class GameScreen extends Screen {
                         // score points
                         int bonus = GMath.rand.nextInt(100) * t.getLevel() + 10;
                         changeScore(bonus);
-                        addMessage("+" + bonus + " score", Const.MESSAGE_TIME);
+                        hud.addMessage("+" + bonus + " score");
                         // game over, man, it's over
                         soundManager.play(Sound.EXPLODE);
                         itenemies.remove();
@@ -614,26 +559,26 @@ public class GameScreen extends Screen {
                         switch (s.getType()) {
                             case Bonus.LIFE:
                                 changeLife(1);
-                                addMessage("+1 life", Const.MESSAGE_TIME);
+                                hud.addMessage("+1 life");
                                 break;
                             case Bonus.AMMO:
                                 player.setAmmo(player.getAmmo() + 10);
-                                setAmmoCounter(player.getAmmo());
-                                addMessage("+10 ammo", Const.MESSAGE_TIME);
+                                hud.setAmmoCounter(player.getAmmo());
+                                hud.addMessage("+10 ammo");
                                 break;
                             case Bonus.SCORE:
                                 int bonus = GMath.rand.nextInt(50);
                                 changeScore(bonus);
-                                addMessage("+" + bonus + " score", Const.MESSAGE_TIME);
+                                hud.addMessage("+" + bonus + " score");
                                 break;
                             case Bonus.MINE:
                                 player.changeBombs(2);
-                                setMinesCounter(player.getBombs());
-                                addMessage("+2 bombs", Const.MESSAGE_TIME);
+                                hud.setBombsCounter(player.getBombs());
+                                hud.addMessage("+2 bombs");
                                 break;
                             case Bonus.FREEZE:
                                 effectFreeze += 1000;
-                                addMessage("slow down", Const.MESSAGE_TIME);
+                                hud.addMessage("slow down");
                                 soundManager.play(Sound.FREEZE);
                                 break;
                             case Bonus.POWER:
@@ -642,11 +587,11 @@ public class GameScreen extends Screen {
                                     level = GMath.rand.nextInt(Tank.MAX_LEVEL) + 1;
                                 } while (level == player.getLevel());
                                 player.setLevel(level);
-                                addMessage("random power", Const.MESSAGE_TIME);
+                                hud.addMessage("random power");
                                 break;
                             case Bonus.SHIELD:
                                 changeShield(8);
-                                addMessage("shields up", Const.MESSAGE_TIME);
+                                hud.addMessage("shields up");
                                 soundManager.play(Sound.SHIELD);
                                 break;
                         }
@@ -787,37 +732,7 @@ public class GameScreen extends Screen {
         world.fx.draw(g, camera.getPosition());
 
         // UI
-        // shadowed background
-        g.drawImage(Assets.ishadowLS, 0, 0, null);
-        g.drawImage(Assets.ishadowLB, 0, Const.HEIGHT-142, null);
-        g.drawImage(Assets.ishadowRS, Const.WIDTH-224, 0, null);
-        g.drawImage(Assets.ishadowRB, Const.WIDTH-224, Const.HEIGHT-142, null);
-        // indicators
-        llifes.draw(g);
-        lshield.draw(g);
-        lscore.draw(g);
-        lammo.draw(g);
-        lmines.draw(g);
-        lfreeze.draw(g);
-        // message
-        if(message_timer > 0)
-            lmessage.draw(g);
-        if(minus_timer > 0 && System.currentTimeMillis()%400 < 200)
-            lminus.draw(g);
-        // inventory
-        Iterator<Item> ititems = player.inventory.iterator();
-        int x = Const.WIDTH - 80;
-        while(ititems.hasNext()){
-            Item i = ititems.next();
-            i.drawIcon(g, x, 10);
-            x-=30;
-        }
-
-        // "game paused" bar
-        if(paused){
-            g.setColor(Const.OPAQUE_DARK_COLOR);
-            g.fillRect(0, Const.HALFHEIGHT-120, Const.WIDTH, 120);
-            lpause.draw(g);
-        }
+        hud.draw(g);
+        if(paused){ hud.drawPaused(g); }
     }
 }
