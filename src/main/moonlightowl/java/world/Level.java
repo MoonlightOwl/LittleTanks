@@ -30,11 +30,12 @@ public class Level {
     private boolean[][] collisionMap;
     // level parameters
     private int width, height, pxwidth, pxheight;
+    private Tile borderTile = new Tile(Tile.WALL);
     private Point startPoint;
     private Tank.State startState;
     private Rectangle pxbounds;
-    private Tile borderTile = new Tile(Tile.WALL);
     private boolean snowy;
+    private int enemyRespawnTime;
 
     public Level(){
         this(5, 5);
@@ -50,6 +51,7 @@ public class Level {
         startPoint = new Point(1, 1);
         startState = new Tank.State();
         snowy = false;
+        enemyRespawnTime = 0;
         // init images (render layers)
         imap = new BufferedImage(pxwidth, pxheight,
                 BufferedImage.TYPE_INT_ARGB);
@@ -243,6 +245,8 @@ public class Level {
         return contains(x, y) && collisionMap[x][y];
     }
     public boolean isSnowy(){ return snowy; }
+    public int getEnemyRespawnTime(){ return enemyRespawnTime; }
+    public boolean enemyRespawnEnabled(){ return enemyRespawnTime > 0; }
 
 
     // setters
@@ -293,8 +297,10 @@ public class Level {
         if(contains(x, y)) collisionMap[x][y] = collision;
     }
     public void setSnowy(boolean snowy){ this.snowy = snowy; }
+    public void setEnemyRespawnTime(int time){ enemyRespawnTime = time; }
 
 
+    // render
     public void draw(Graphics2D g, Point camera){
         g.drawImage(irender, -camera.x, -camera.y, null);
     }

@@ -138,6 +138,8 @@ public class World {
                     startState.shield = parseInt(data[1], "Wrong shield value.");
                 } else if(data[0].equals("bombs")){
                     startState.bombs = parseInt(data[1], "Wrong bombs value.");
+                } else if(data[0].equals("enemy_respawn")){
+                    level.setEnemyRespawnTime(parseInt(data[1], "Wrong enemy respawn time value.") * 1000);
                 }
             }
             // arrangement of the tanks
@@ -170,7 +172,7 @@ public class World {
         enemy.setBombs(GMath.rand.nextInt(4));
         if(GMath.rand.nextInt(10) == 1) enemy.setShield(GMath.rand.nextInt(10));
         // go!
-        enemies.add(enemy);
+        synchronized(newEnemies) { newEnemies.add(enemy); }
     }
 
     /** Unloading all objects, and clear lists */

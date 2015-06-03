@@ -4,6 +4,7 @@ import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.Mission;
 import main.moonlightowl.java.math.GMath;
+import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
 import main.moonlightowl.java.world.FX;
@@ -37,6 +38,7 @@ public class GameScreen extends Screen {
     private int score;
     private int effectFreeze = 0;
     private int track_frequency = 20;
+    private long enemyRespawnTime = 0;
     private boolean paused = false;
     // levels
     private Mission mission;
@@ -88,6 +90,7 @@ public class GameScreen extends Screen {
 
         // parameters
         track_frequency = world.level.isSnowy() ? 5 : 20;
+        enemyRespawnTime = System.currentTimeMillis();
 
         // place player in the world
         player.reset();
@@ -170,7 +173,7 @@ public class GameScreen extends Screen {
                         }
                     }
                 }
-                // open if closed (for players only =))
+            // open if closed (for players only =))
             } else if(tank == player) {
                 int tile = world.level.get(mx, my).get();
                 if(tile == Tile.DOOR){
@@ -271,9 +274,7 @@ public class GameScreen extends Screen {
             case Tile.SPAWN:
                 int stage = world.level.getStage(x, y);
                 if(stage > 0){
-                    Tank enemy = new Tank(px, py, stage);
-                    enemy.setAmmo(1000);
-                    synchronized(world.newEnemies) { world.newEnemies.add(enemy); }
+                    world.spawnRandomTank(px, py, stage);
                 }
                 break;
         }
@@ -319,7 +320,7 @@ public class GameScreen extends Screen {
                 case KeyEvent.VK_E:
                     if(player.removeFromInventory(Item.CANDY)){
                         changeLife(1);
-                        hud.addMessage("+1 life");
+                        hud.addMessage("Mmm... Yummy!");
                     }
                     break;
             }
@@ -335,6 +336,15 @@ public class GameScreen extends Screen {
 
         // update game objects
         if(!paused) {
+            if(world.level.enemyRespawnEnabled()){
+                if(System.currentTimeMillis() - enemyRespawnTime > world.level.getEnemyRespawnTime()){
+                    int n = GMath.rand.nextInt(world.spawners.size());
+                    Point3D spawner = world.spawners.get(n);
+                    world.spawnRandomTank(GMath.toPixel(spawner.x),
+                                          GMath.toPixel(spawner.y), spawner.z);
+                    enemyRespawnTime = System.currentTimeMillis();
+                }
+            }
             // update player
             int pcx = player.getMapX(), pcy = player.getMapY();
             player.update();
