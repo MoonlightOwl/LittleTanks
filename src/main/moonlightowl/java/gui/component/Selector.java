@@ -4,6 +4,7 @@ import main.moonlightowl.java.Const;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * LittleTanks.Selector
@@ -69,6 +70,13 @@ public class Selector {
         int number = iy*columns + ix + page*pagesize;
         return number < items.length;
     }
+    private void correctSelection(){
+        while(!isValidItem(ax, ay)){
+            if(ay > 0) ay--;
+            else if(ax > 0) ax--;
+            else break;
+        }
+    }
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){
             case KeyEvent.VK_LEFT:
@@ -92,12 +100,18 @@ public class Selector {
                 if(ay < (rows-1)) ay++;
                 break;
         }
-        // correct for partially filled pages
-        while(!isValidItem(ax, ay)){
-            if(ay > 0) ay--;
-            else if(ax > 0) ax--;
-            else break;
+        correctSelection();
+    }
+    public boolean mouseClicked(MouseEvent e) {
+        if(e.getX() >= x && e.getX() <= (x+width)){
+            if(e.getY() >= y && e.getY() <= (y+height)){
+                ax = (e.getX()-x) / (width/columns);
+                ay = (e.getY()-y) / (height/rows);
+                correctSelection();
+                return true;
+            }
         }
+        return false;
     }
 
 

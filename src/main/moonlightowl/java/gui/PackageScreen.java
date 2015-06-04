@@ -9,6 +9,7 @@ import main.moonlightowl.java.world.World;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 /**
  * LittleTanks.PackageScreen
@@ -69,6 +70,18 @@ public class PackageScreen extends TextboxScreen {
         else selector.keyPressed(e);
     }
 
+    public void mouseClicked(MouseEvent e){
+        String selected = selector.isActive() ? selector.currentItem() : "";
+        if(selector.mouseClicked(e) == query.isActive())
+            swapActive();
+        //noinspection StringEquality
+        if(selector.isActive() && selected == selector.currentItem()){
+            setText(selected);
+            setVisible(false);
+        }
+    }
+
+    // render
     public void draw(Graphics2D g){
         super.draw(g);
         selector.draw(g);
