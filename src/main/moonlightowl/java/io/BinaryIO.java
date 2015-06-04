@@ -51,7 +51,7 @@ public final class BinaryIO {
       }
     }
     catch (FileNotFoundException ex) {
-      log("File not found.");
+      log("File `" + aInputFileName + "` not found.");
     }
     catch (IOException ex) {
       log(ex);
