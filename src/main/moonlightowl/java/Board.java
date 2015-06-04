@@ -6,7 +6,6 @@ package main.moonlightowl.java;
 
 import main.moonlightowl.java.gui.*;
 import main.moonlightowl.java.gui.component.Label;
-import main.moonlightowl.java.gui.component.Query;
 import main.moonlightowl.java.sound.Music;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
@@ -37,7 +36,7 @@ public class Board extends JPanel implements ActionListener{
     private MenuScreen menuScreen;
     private AboutScreen aboutScreen;
     private ScoresScreen scoresScreen;
-    private TextboxScreen packageScreen;
+    private PackageScreen packageScreen;
     private GameoverScreen gameoverScreen;
     private GameScreen gameScreen;
 
@@ -78,11 +77,9 @@ public class Board extends JPanel implements ActionListener{
         gameScreen = new GameScreen(world, camera);
         gameScreen.setSoundManager(soundManager);
 
-        Query nickname = new Query("Enter your nick name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
-        gameoverScreen = new GameoverScreen(world, camera, nickname);
-
-        Query packagename = new Query("Enter package name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
-        packageScreen = new TextboxScreen(world, camera, title, packagename);
+        gameoverScreen = new GameoverScreen(world, camera);
+        packageScreen = new PackageScreen(world, camera, title);
+        packageScreen.setItems(gameScreen.getMission().missionList());
 
         camera.newTarget();
 

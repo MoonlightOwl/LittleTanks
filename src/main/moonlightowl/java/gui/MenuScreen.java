@@ -68,7 +68,7 @@ public class MenuScreen extends Screen {
         world.draw(g, camera.getPosition());
         world.fx.draw(g, camera.getPosition());
         // shadow
-        g.setColor(Const.OPAQUE_DARK_COLOR);
+        g.setColor(Const.OPAQUE_COLOR);
         g.fillRect(0, 40, Const.WIDTH, 120);
         // interface
         title.draw(g);

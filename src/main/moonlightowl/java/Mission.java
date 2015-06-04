@@ -1,6 +1,7 @@
 package main.moonlightowl.java;
 
 import java.io.File;
+import java.io.FileFilter;
 
 /**
  * LittleTanks.Mission
@@ -30,6 +31,19 @@ public class Mission {
     public String getName(){ return name; }
     public String getLevel(int index){
         return new File(root, name + index + ".dat").getPath();
+    }
+
+    public String[] missionList(){
+        FileFilter filter = new FileFilter(){
+            public boolean accept(File file){
+                return file.getName().matches(".*\\D+1\\.dat");
+            }
+        };
+        File[] filelist = root.listFiles(filter);
+        String[] names = new String[filelist.length];
+        for(int i=0; i<filelist.length; i++)
+            names[i] = filelist[i].getName().replaceFirst("\\d+\\.dat", "");
+        return names;
     }
 
     public boolean load(String name){

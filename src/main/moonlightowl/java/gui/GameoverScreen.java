@@ -23,8 +23,11 @@ public class GameoverScreen extends TextboxScreen {
     private boolean waitingForInput;
     private int timeout;
 
-    public GameoverScreen(World world, Camera camera, Query query){
-        super(world, camera, null, query);
+    public GameoverScreen(World world, Camera camera){
+        super(world, camera, null);
+
+        Query query = new Query("Enter your nick name:", Const.HALFWIDTH, 400, Assets.fgui, Assets.fmgui, Color.WHITE);
+        setQuery(query);
 
         lcrash = new Label("Game OVER", Const.HALFWIDTH, Const.HALFHEIGHT-20,
                 Assets.ftitle, Assets.fmtitle, Color.RED, true);

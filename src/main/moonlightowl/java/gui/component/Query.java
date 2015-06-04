@@ -13,7 +13,7 @@ import java.awt.event.KeyEvent;
 
 public class Query {
     private Label question, nickname;
-    private boolean visible;
+    private boolean visible, active;
     private Rectangle rect;
 
     public Query(String question, int x, int y, Font font, FontMetrics fm, Color color){
@@ -21,13 +21,16 @@ public class Query {
         nickname = new Label("", x, y+font.getSize(), font, fm, color, true);
         rect = new Rectangle(0, y-50, Const.WIDTH, font.getSize()*2+20);
         visible = true;
+        active = true;
     }
 
     // getters & setters
-    public void setVisible(boolean visible){ this.visible = visible; }
-    public void setText(String text){ nickname.changeText(text); }
     public boolean isVisible(){ return visible; }
+    public boolean isActive(){ return active; }
     public String getText(){ return nickname.getText(); }
+    public void setVisible(boolean visible){ this.visible = visible; }
+    public void setActive(boolean active){ this.active = active; }
+    public void setText(String text){ nickname.changeText(text); }
 
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){
@@ -49,7 +52,7 @@ public class Query {
         if(isVisible()) {
             g.setColor(Const.OPAQUE_DARK_COLOR);
             g.fillRect(rect.x, rect.y, rect.width, rect.height);
-            if (System.currentTimeMillis() % 800 < 400) {
+            if (active && System.currentTimeMillis() % 800 < 400) {
                 g.setColor(Color.GREEN);
                 g.drawRect(nickname.getX() - 5, nickname.getY() - nickname.height() + 5,
                         nickname.width() + 10, nickname.height());

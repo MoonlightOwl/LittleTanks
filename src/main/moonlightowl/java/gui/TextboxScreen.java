@@ -17,15 +17,19 @@ import java.awt.event.KeyEvent;
 public class TextboxScreen extends Screen {
     protected Query query;
 
+    public TextboxScreen(World world, Camera camera, Label title){
+        super(world, camera, title);
+    }
     public TextboxScreen(World world, Camera camera, Label title, Query query){
         super(world, camera, title);
-        this.query = query;
+        setQuery(query);
     }
 
     // getters
     public String getText(){ return query.getText(); }
 
     // setters
+    public void setQuery(Query query){ this.query = query; }
     public void setText(String text){ query.setText(text); }
 
     // event handling
