@@ -13,7 +13,8 @@ public final class Const {
             TILE_SIZE = 60, HALF_TILE = TILE_SIZE/2,
             BONUS_SIZE = 50,
             MESSAGE_TIME = 120,
-            SCOREBOARD_SIZE = 7, NICKNAME_LEN = 30;
+            SCOREBOARD_SIZE = 7, NICKNAME_LEN = 30,
+            BONUS_DROP_CHANCE = 80;
 
     public final static Color TITLE_COLOR = Color.WHITE,
             MENU_COLOR = Color.BLACK, MENU_SELECTED_COLOR = Color.RED, MENU_SHADOW_COLOR = Color.WHITE,

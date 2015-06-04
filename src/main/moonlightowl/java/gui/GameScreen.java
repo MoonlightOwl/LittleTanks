@@ -471,6 +471,14 @@ public class GameScreen extends Screen {
                         int bonus = GMath.rand.nextInt(100) * t.getLevel() + 10;
                         changeScore(bonus);
                         hud.addMessage("+" + bonus + " score");
+                        // drop random bonus
+                        if(GMath.rand.nextInt(100) < Const.BONUS_DROP_CHANCE){
+                            synchronized(world.bonuses){
+                                world.bonuses.add(new Bonus(t.getX()+Const.HALF_TILE,
+                                        t.getY()+Const.HALF_TILE,
+                                        GMath.rand.nextInt(Bonus.COUNT)));
+                            }
+                        }
                         // game over, man, it's over
                         soundManager.play(Sound.EXPLODE);
                         itenemies.remove();
