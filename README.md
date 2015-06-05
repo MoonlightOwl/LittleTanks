@@ -3,7 +3,7 @@ This is a small game about, eh... tanks.
 
 Written on holidays, at my spare time, in Java + Swing, just for fun.
 
-All that I had in my notebook was only Java 6, TextMate for editing and Terminal for compiling. 
+All that I had in my notebook was only Java 6, text editor and Terminal for compiling. 
 Therefore, source codes are a bit.. frightening. But I promise to improve it. =)
 
 ![Little Tanks Screenshot]
