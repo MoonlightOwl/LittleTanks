@@ -112,6 +112,7 @@ public class GameScreen extends Screen {
         }
     }
     public void restartMission(){
+        setScore(0);
         currentLevel = 0;
         nextLevel();
     }
