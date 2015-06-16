@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
 
 public class Menu {
-    public static final int NOTHING = -1;
+    public static final int NOTHING = -1, MAX_LENGTH = 20;
 
     private Font font;
     private FontMetrics metr;
@@ -63,7 +63,10 @@ public class Menu {
         }
 
         private void init(String name){
-            this.name = name;
+            if(name.length() <= MAX_LENGTH)
+                this.name = name;
+            else
+                this.name = name.substring(0, MAX_LENGTH);
             this.selected = false;
         }
     }

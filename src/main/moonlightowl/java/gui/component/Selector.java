@@ -15,14 +15,14 @@ import java.awt.event.MouseEvent;
 
 public class Selector {
     private int x, y, ax, ay, columns, rows, page, totalpages, pagesize,
-        gap, offx, itemwidth, itemheight;
+        gap, offx, itemwidth, itemheight, labelwidth;
     private int width = Const.WIDTH, height = 200;
     private boolean active;
     private Font font;
     private FontMetrics fm;
     private Color colorSelected;
     private Polygon leftArrow, rightArrow;
-    private String[] items;
+    private String[] items, labels;
 
     public Selector(int x, int y, int columns, int rows, Font font, FontMetrics fm, Color selected){
         this.x = x; this.y = y; this.columns = columns; this.rows = rows;
@@ -43,7 +43,10 @@ public class Selector {
         itemwidth = (width - offx*2 - gap*(columns-1)) / columns;
         itemheight = (height - gap*(rows+1))/rows;
 
+        labelwidth = (int)Math.floor(itemwidth / fm.charWidth(' '));
+
         items = new String[0];
+        labels = new String[0];
 
         active = true;
     }
@@ -60,6 +63,14 @@ public class Selector {
         this.items = items;
         page = 0; ax = 0; ay = 0;
         totalpages = (int)Math.floor(items.length / pagesize);
+        // generate labels
+        labels = new String[items.length];
+        for(int i=0; i<items.length; i++){
+            if(items[i].length() > labelwidth)
+                labels[i] = items[i].substring(0, labelwidth-1) + "~";
+            else
+                labels[i] = items[i];
+        }
     }
     public boolean lowerBoundaryReached(){
         return (ay == (rows-1)) || (!isValidItem(ax, ay+1));
@@ -141,7 +152,7 @@ public class Selector {
                     }
                     g.setColor(colorSelected);
                 } else g.setColor(Color.WHITE);
-                g.drawString(items[i], px + 10, py + itemheight - 5);
+                g.drawString(labels[i], px + 10, py + itemheight - 5);
 
                 ix++;
                 if (ix >= columns) {
