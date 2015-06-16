@@ -22,7 +22,7 @@ Key | Action
 `Escape` | Return to menu / Exit
 
 ## Levels
-Game contains a few test levels. They form "level packs". All files can be found in `/levels/` directory.
+Game contains a few test levels. They form "level packs" (or "missions"). All files can be found in `/levels/` directory.
 
 You need to click first menu item (in square brackets) to change "package".
 
@@ -35,7 +35,9 @@ Score table for any level pack, can be found in `/scores/` directory. Just remov
 You can easily build game sources by yourself.
 
 Create a project in your favorite IDE, and download sources from this Git.
-Launch game from `LittleTanks` class, and set root project folder as working directory.
+Attach JLayer library (http://www.javazoom.net/javalayer/javalayer.html).
+
+Set root project folder as working directory, and then launch game from `LittleTanks` class. 
 
 
 ## Credits
