@@ -239,16 +239,27 @@ public class GameScreen extends Screen {
         return true;
     }
     private void activateMapTile(int x, int y){
+        activateMapTile(x, y, 0);
+    }
+    private void activateMapTile(int x, int y, int bullet){
         Tile tile = world.level.get(x, y);
         int px = GMath.toPixel(x), py = GMath.toPixel(y);
         switch(tile.get()){
             case Tile.DOOR:
-                if(tile.getStage() == 5){
+                // bullet can open only unlocked doors
+                if(bullet > 0){
+                    if(tile.getStage() > 0 && tile.getStage() < 5)
+                        world.level.setStage(x, y, tile.getStage() - bullet);
+                }
+                // switches can unlock & open doors
+                else if(tile.getStage() == 5){
                     world.level.setStage(x, y, 0);
                     soundManager.play(Sound.LOCK);
                 }
                 break;
             case Tile.SAFE:
+                // bullet can open only unlocked safes
+                if (bullet > 0 && tile.getStage() != 0) break;
             case Tile.BOX:
                 world.level.clear(x, y);
                 world.level.drawSplash(Assets.iexpldec, px-20, py-20);
@@ -276,6 +287,16 @@ public class GameScreen extends Screen {
                 int stage = world.level.getStage(x, y);
                 if(stage > 0){
                     world.spawnRandomTank(px, py, stage);
+                }
+                break;
+            case Tile.SANDSTONE:
+                if (tile.getStage() > 0) {
+                    if (bullet > 0) {
+                        if(GMath.rand.nextBoolean())
+                            world.level.setStage(x, y, tile.getStage() - bullet);
+                    } else {
+                        world.level.setStage(x, y, 0);
+                    }
                 }
                 break;
         }
@@ -526,30 +547,7 @@ public class GameScreen extends Screen {
                         int x = GMath.toMap((int) b.getX()), y = GMath.toMap((int) b.getY());
                         if (!world.level.isFlyable(x, y)) {
                             // crush! destroy! swag!
-                            Tile tile = world.level.get(x, y);
-                            switch (tile.get()) {
-                                case Tile.BOX:
-                                case Tile.BARREL:
-                                    activateMapTile(x, y);
-                                    break;
-                                case Tile.SANDSTONE:
-                                    if (tile.getStage() > 0) {
-                                        if (GMath.rand.nextBoolean()) {
-                                            world.level.setStage(x, y, tile.getStage() - b.getLevel());
-                                        }
-                                    }
-                                    break;
-                                case Tile.DOOR:
-                                    if (tile.getStage() > 0 && tile.getStage() < 5) {
-                                        world.level.setStage(x, y, tile.getStage() - b.getLevel());
-                                    }
-                                    break;
-                                case Tile.SAFE:
-                                    if (tile.getStage() == 0) {
-                                        activateMapTile(x, y);
-                                    }
-                                    break;
-                            }
+                            activateMapTile(x, y, b.getLevel());
                             // bullet/rocket gone in sparkles/explosion
                             int px = x * Const.TILE_SIZE,
                                 py = y * Const.TILE_SIZE;
