@@ -13,6 +13,7 @@ public class Bullet {
     private AffineTransform at;
     private Point2D.Float position, direction;
     private float speed = 6.0f;
+    private boolean fromPlayer = false;
 
     public Bullet(int x, int y, float dx, float dy){
         this(x, y, dx, dy, 1);
@@ -36,10 +37,12 @@ public class Bullet {
     public float getDx(){ return direction.x; }
     public float getDy(){ return direction.y; }
     public double getAngle(){ return angle; }
+    public boolean isFromPlayer(){ return fromPlayer; }
 
     // setters
     public void setPosition(int x, int y){ position.x = x; position.y = y; }
     public void setLevel(int level){ this.level = level; }
+    public void setFromPlayer(boolean fromPlayer){ this.fromPlayer = fromPlayer; }
 
     // processing
     public void update(){

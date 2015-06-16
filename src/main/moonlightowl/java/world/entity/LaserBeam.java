@@ -15,7 +15,7 @@ import java.awt.*;
 
 public class LaserBeam {
     private Point[] ray;
-    private boolean horizontally = false;
+    private boolean horizontally = false, fromPlayer = false;
     private int time, offx, offy;
 
     public LaserBeam(int x, int y, int tx, int ty){
@@ -38,6 +38,7 @@ public class LaserBeam {
         offy = Const.HALF_TILE - Assets.ibeamv.getHeight()/2;
     }
 
+
     // getters
     public int getTimeRemaining(){ return time; }
     public Point getRandomPoint(){
@@ -45,6 +46,11 @@ public class LaserBeam {
         else return null;
     }
     public Point[] getRay(){ return ray; }
+    public boolean isFromPlayer(){ return fromPlayer; }
+
+    // setters
+    public void setFromPlayer(boolean fromPlayer){ this.fromPlayer = fromPlayer; }
+
 
     public void update(){
         if(time > 0){

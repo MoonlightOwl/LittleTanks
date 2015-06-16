@@ -11,7 +11,7 @@ import java.awt.event.MouseEvent;
  * LittleTanks.Screen
  * Created by MoonlightOwl on 5/26/15.
  * ---
- * Basic interface screen
+ * Basic interface screen interface (:P)
  */
 
 public abstract class Screen {

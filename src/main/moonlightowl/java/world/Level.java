@@ -34,7 +34,7 @@ public class Level {
     private Point startPoint;
     private Tank.State startState;
     private Rectangle pxbounds;
-    private boolean snowy;
+    private boolean snowy, friendlyFire = false;
     private int enemyRespawnTime;
 
     public Level(){
@@ -247,6 +247,7 @@ public class Level {
     public boolean isSnowy(){ return snowy; }
     public int getEnemyRespawnTime(){ return enemyRespawnTime; }
     public boolean enemyRespawnEnabled(){ return enemyRespawnTime > 0; }
+    public boolean friendlyFireEnabled(){ return friendlyFire; }
 
 
     // setters
@@ -298,6 +299,7 @@ public class Level {
     }
     public void setSnowy(boolean snowy){ this.snowy = snowy; }
     public void setEnemyRespawnTime(int time){ enemyRespawnTime = time; }
+    public void allowFriendlyFire(boolean friendlyFire){ this.friendlyFire = friendlyFire; }
 
 
     // render

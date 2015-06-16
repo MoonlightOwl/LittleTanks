@@ -20,3 +20,4 @@ life: 6
 bombs: 2
 shield: 1
 enemy_respawn: 10
+friendly_fire: true

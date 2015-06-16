@@ -127,9 +127,7 @@ public class World {
                         System.out.println("[ERROR] '"+filename+"': wrong link coords.");
                     }
                 } else if(data[0].equals("snowy")){
-                    if(data[1].equals("true")){
-                        level.setSnowy(true);
-                    }
+                    if(data[1].equals("true")) level.setSnowy(true);
                 } else if(data[0].equals("ammo")){
                     startState.ammo = parseInt(data[1], "Wrong ammo value.");
                 } else if(data[0].equals("life")){
@@ -140,6 +138,8 @@ public class World {
                     startState.bombs = parseInt(data[1], "Wrong bombs value.");
                 } else if(data[0].equals("enemy_respawn")){
                     level.setEnemyRespawnTime(parseInt(data[1], "Wrong enemy respawn time value.") * 1000);
+                } else if(data[0].equals("friendly_fire")){
+                    if(data[1].equals("true")) level.allowFriendlyFire(true);
                 }
             }
             // arrangement of the tanks

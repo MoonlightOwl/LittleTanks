@@ -203,8 +203,11 @@ public class GameScreen extends Screen {
                 Point2D.Float delta = GMath.getVector(tank.getAngle());
                 int dx = (int)(delta.x * Const.HALF_TILE),
                     dy = (int)(delta.y * Const.HALF_TILE);
-                if(tank.getLevel() < Tank.LASER)
-                    world.newBullet.add(new Bullet(x+dx, y+dy, delta.x, delta.y, tank.getLevel()));
+                if(tank.getLevel() < Tank.LASER) {
+                    Bullet bullet = new Bullet(x + dx, y + dy, delta.x, delta.y, tank.getLevel());
+                    bullet.setFromPlayer(tank == player);
+                    world.newBullet.add(bullet);
+                }
                 else if(tank.getLevel() == Tank.LASER){
                     // calculate target point
                     int tx = tank.getMapX(), ty = tank.getMapY();
@@ -213,7 +216,9 @@ public class GameScreen extends Screen {
                         ty += Math.signum(dy);
                     }
                     activateMapTile(tx, ty);
-                    world.beams.add(new LaserBeam(tank.getMapX(), tank.getMapY(), tx, ty));
+                    LaserBeam beam = new LaserBeam(tank.getMapX(), tank.getMapY(), tx, ty);
+                    beam.setFromPlayer(tank == player);
+                    world.beams.add(beam);
                     for(int i=0; i<4; i++)
                         world.fx.add(tx*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
                                      ty*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
@@ -441,13 +446,14 @@ public class GameScreen extends Screen {
                         while (itbullets.hasNext()) {
                             Bullet b = itbullets.next();
                             if (world.level.getCollision((int) (b.getX() / Const.TILE_SIZE), (int) (b.getY() / Const.TILE_SIZE))) {
-                                if (GMath.distance(b.getX(), b.getY(), t.getX() + 30, t.getY() + 30) < 25) {
-                                    if (t.hit(b.getLevel())) soundManager.play(Sound.HIT);
-                                    itbullets.remove();
-                                    // score points
-                                    int bonus = GMath.rand.nextInt(50);
-                                    changeScore(bonus);
-                                }
+                                if (world.level.friendlyFireEnabled() || b.isFromPlayer())
+                                    if (GMath.distance(b.getX(), b.getY(), t.getX() + 30, t.getY() + 30) < 25) {
+                                        if (t.hit(b.getLevel())) soundManager.play(Sound.HIT);
+                                        itbullets.remove();
+                                        // score points
+                                        int bonus = GMath.rand.nextInt(50);
+                                        changeScore(bonus);
+                                    }
                             }
                         }
                     }
@@ -474,13 +480,14 @@ public class GameScreen extends Screen {
                     synchronized (world.beams){
                         for(LaserBeam l: world.beams){
                             for(Point p: l.getRay()){
-                                if(t.getMapX() == p.x && t.getMapY() == p.y){
-                                    if (t.hit(GMath.rand.nextInt(2))) soundManager.play(Sound.HIT);
-                                    // score points
-                                    int bonus = GMath.rand.nextInt(10);
-                                    changeScore(bonus);
-                                    break;
-                                }
+                                if(world.level.friendlyFireEnabled() || l.isFromPlayer())
+                                    if(t.getMapX() == p.x && t.getMapY() == p.y){
+                                        if (t.hit(GMath.rand.nextInt(2))) soundManager.play(Sound.HIT);
+                                        // score points
+                                        int bonus = GMath.rand.nextInt(10);
+                                        changeScore(bonus);
+                                        break;
+                                    }
                             }
                         }
                     }
