@@ -17,6 +17,8 @@ import java.util.Iterator;
  */
 
 public class HUD {
+    public static final int SHIELD_LIMIT = 10, LIFE_LIMIT = 10, AMMO_LIMIT = 999, BOMBS_LIMIT = 999;
+
     private Tank player;
 
     private Label llifes, lshield, lscore, lammo,
@@ -26,15 +28,15 @@ public class HUD {
     public HUD(Tank player){
         this.player = player;
 
-        llifes = new Label("@@@@@", 20, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
-        lshield = new Label("", 20, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
+        llifes = new Label("@@@@@", 20, Const.HEIGHT-50, Assets.fgui, Assets.fmgui, Color.WHITE); llifes.setShadow(true);
+        lshield = new Label("", 20, Const.HEIGHT-90, Assets.fgui, Assets.fmgui, Color.WHITE); lshield.setShadow(true);
         lscore = new Label("0", 20, 50, Assets.fgui, Assets.fmgui, Color.WHITE); lscore.setShadow(true);
-        lammo = new Label(">> 10", Const.WIDTH-140, Const.HEIGHT-40, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
-        lbombs = new Label("== 0", Const.WIDTH-140, Const.HEIGHT-80, Assets.fgui, Assets.fmgui, Color.WHITE); lbombs.setShadow(true);
+        lammo = new Label(">> 10", Const.WIDTH-140, Const.HEIGHT-50, Assets.fgui, Assets.fmgui, Color.WHITE); lammo.setShadow(true);
+        lbombs = new Label("== 0", Const.WIDTH-140, Const.HEIGHT-90, Assets.fgui, Assets.fmgui, Color.WHITE); lbombs.setShadow(true);
         lfreeze = new Label("", Const.HALFWIDTH, 50, Assets.fsmall, Assets.fmsmall, Color.WHITE, true, Color.BLUE); lfreeze.setShadow(true);
         lpause = new Label("Pause...", Const.HALFWIDTH, Const.HALFHEIGHT-20, Assets.ftitle, Assets.fmtitle, Color.YELLOW, true, Color.BLACK); lpause.setShadow(true);
         lminus = new Label(":(", 40, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.RED, true); lminus.setShadow(true);
-        lmessage = new Label("", Const.HALFWIDTH, Const.HEIGHT-80, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
+        lmessage = new Label("", Const.HALFWIDTH, Const.HEIGHT-90, Assets.fsmall, Assets.fmsmall, Color.BLACK, true, Color.RED); lmessage.setShadow(true);
     }
 
     public void reset(){
@@ -61,26 +63,29 @@ public class HUD {
         lfreeze.setX(Const.HALFWIDTH);
     }
     public void setAmmoCounter(int ammo){
-        lammo.changeText(">> "+Integer.toString(ammo));
+        lammo.changeText(">> "+Integer.toString(Math.min(ammo, AMMO_LIMIT)));
     }
     public void setBombsCounter(int bombs){
-        lbombs.changeText("== " + Integer.toString(bombs));
+        lbombs.changeText("== " + Integer.toString(Math.min(bombs, BOMBS_LIMIT)));
     }
     public void setScoreCounter(int score){
         lscore.changeText(Integer.toString(score));
     }
     public void setLifeCounter(int count){
         String text = "";
-        for(int i = 0; i<count; i++){
+        for(int i = 0; i<Math.min(count, LIFE_LIMIT); i++){
             text+="@";
         }
+        if(count > LIFE_LIMIT) text+="~";
         llifes.changeText(text);
     }
     public void setShieldCounter(int count){
         String text = "";
-        for(int i = 0; i<Math.ceil(count/2); i++){
+        int value = (int)Math.ceil(count/2);
+        for(int i = 0; i<Math.min(value, SHIELD_LIMIT); i++){
             text+="*";
         }
+        if(value > SHIELD_LIMIT) text+="~";
         lshield.changeText(text);
     }
 
