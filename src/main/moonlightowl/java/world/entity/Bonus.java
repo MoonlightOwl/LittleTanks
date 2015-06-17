@@ -12,7 +12,7 @@ import java.awt.Graphics2D;
 public class Bonus extends Primitive {
     public static final int COUNT = 7;
     public static final int LIFE = 0, AMMO = 1, SCORE = 2,
-        MINE = 3, FREEZE = 4, POWER = 5, SHIELD = 6;
+        BOMB = 3, FREEZE = 4, POWER = 5, SHIELD = 6;
 
     private Triangle shape;
     protected int type;

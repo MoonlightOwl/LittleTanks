@@ -3,6 +3,7 @@ package main.moonlightowl.java.gui;
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.Mission;
+import main.moonlightowl.java.Ruleset;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.sound.Sound;
@@ -135,6 +136,10 @@ public class GameScreen extends Screen {
     private void changeScore(int amount){
         setScore(score + amount);
     }
+    public void changeScore(int score, String message){
+        changeScore(score);
+        hud.addMessage(message);
+    }
     private void changeLife(int l){
         player.setLife(player.getLife() + l);
         hud.setLifeCounter(player.getLife());
@@ -146,7 +151,7 @@ public class GameScreen extends Screen {
         hud.setShieldCounter(player.getShield());
     }
     private void minusLife(int amount){
-        changeScore(-50*amount);
+        changeScore(-50*amount, "hit!");
         changeLife(-amount);
 
         if(player.getLife() <= 0) setVisible(false);
@@ -448,11 +453,11 @@ public class GameScreen extends Screen {
                             if (world.level.getCollision((int) (b.getX() / Const.TILE_SIZE), (int) (b.getY() / Const.TILE_SIZE))) {
                                 if (world.level.friendlyFireEnabled() || b.isFromPlayer())
                                     if (GMath.distance(b.getX(), b.getY(), t.getX() + 30, t.getY() + 30) < 25) {
-                                        if (t.hit(b.getLevel())) soundManager.play(Sound.HIT);
+                                        if (t.hit(b.getLevel())){
+                                            soundManager.play(Sound.HIT);
+                                            changeScore(Ruleset.score(Ruleset.HIT_SCORE));
+                                        }
                                         itbullets.remove();
-                                        // score points
-                                        int bonus = GMath.rand.nextInt(50);
-                                        changeScore(bonus);
                                     }
                             }
                         }
@@ -470,9 +475,7 @@ public class GameScreen extends Screen {
                                 t.setLife(0);
                                 itmines.remove();
                                 // score points
-                                int bonus = GMath.rand.nextInt(100);
-                                changeScore(bonus);
-                                hud.addMessage("bomb death!");
+                                changeScore(Ruleset.score(Ruleset.BOMB_KILL_SCORE), "bomb kill!");
                             }
                         }
                     }
@@ -482,10 +485,10 @@ public class GameScreen extends Screen {
                             for(Point p: l.getRay()){
                                 if(world.level.friendlyFireEnabled() || l.isFromPlayer())
                                     if(t.getMapX() == p.x && t.getMapY() == p.y){
-                                        if (t.hit(GMath.rand.nextInt(2))) soundManager.play(Sound.HIT);
-                                        // score points
-                                        int bonus = GMath.rand.nextInt(10);
-                                        changeScore(bonus);
+                                        if (t.hit(GMath.rand.nextInt(2))){
+                                            soundManager.play(Sound.HIT);
+                                            changeScore(Ruleset.score(Ruleset.HIT_SCORE));
+                                        }
                                         break;
                                     }
                             }
@@ -497,9 +500,8 @@ public class GameScreen extends Screen {
                         world.level.drawSplash(Assets.iexpldec, t.getX() - 20, t.getY() - 20);
                         world.fx.add(t.getX() - 20, t.getY() - 20, FX.EXPLOSION);
                         // score points
-                        int bonus = GMath.rand.nextInt(100) * t.getLevel() + 10;
-                        changeScore(bonus);
-                        hud.addMessage("+" + bonus + " score");
+                        int bonus = Ruleset.score(Ruleset.KILL_SCORE) * t.getLevel() + 10;
+                        changeScore(bonus, "+" + bonus + " score");
                         // drop random bonus
                         if(GMath.rand.nextInt(100) < Const.BONUS_DROP_CHANCE){
                             synchronized(world.bonuses){
@@ -592,17 +594,16 @@ public class GameScreen extends Screen {
                                 hud.addMessage("+10 ammo");
                                 break;
                             case Bonus.SCORE:
-                                int bonus = GMath.rand.nextInt(50);
-                                changeScore(bonus);
-                                hud.addMessage("+" + bonus + " score");
+                                int bonus = Ruleset.score(Ruleset.BONUS_SCORE);
+                                changeScore(bonus, "+" + bonus + " score");
                                 break;
-                            case Bonus.MINE:
-                                player.changeBombs(2);
+                            case Bonus.BOMB:
+                                player.changeBombs(Ruleset.BONUS_BOMBS);
                                 hud.setBombsCounter(player.getBombs());
-                                hud.addMessage("+2 bombs");
+                                hud.addMessage("+"+ Ruleset.BONUS_BOMBS +" bombs");
                                 break;
                             case Bonus.FREEZE:
-                                effectFreeze += 1000;
+                                effectFreeze += Ruleset.BONUS_FREEZE;
                                 hud.addMessage("slow down");
                                 soundManager.play(Sound.FREEZE);
                                 break;
@@ -615,7 +616,7 @@ public class GameScreen extends Screen {
                                 hud.addMessage("random power");
                                 break;
                             case Bonus.SHIELD:
-                                changeShield(8);
+                                changeShield(Ruleset.BONUS_SHIELD);
                                 hud.addMessage("shields up");
                                 soundManager.play(Sound.SHIELD);
                                 break;
@@ -679,9 +680,8 @@ public class GameScreen extends Screen {
                                     soundManager.play(Sound.EXPLODE);
                                 }
                                 itbullets.remove();
-                                // score points
-                                int bonus = GMath.rand.nextInt(20);
-                                changeScore(bonus);
+                                changeScore(Ruleset.score(Ruleset.HIT_SCORE));
+
                                 if(removed) break;
                             }
                         }
@@ -700,9 +700,7 @@ public class GameScreen extends Screen {
                                             world.fx.add(t.getX() - 20, t.getY() - 20, FX.EXPLOSION);
                                             soundManager.play(Sound.EXPLODE);
                                         }
-                                        // score points
-                                        int bonus = GMath.rand.nextInt(8);
-                                        changeScore(bonus);
+                                        changeScore(Ruleset.score(Ruleset.HIT_SCORE));
                                         break;
                                     }
                                 }
