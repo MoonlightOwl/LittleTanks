@@ -7,7 +7,7 @@ All that I had in my notebook was only Java 6, text editor and Terminal for comp
 Therefore, source codes are a bit.. frightening. But I promise to improve it. =)
 
 ![Little Tanks Screenshot]
-(https://lh3.googleusercontent.com/-1JlfmgI6fho/VV4hOg-Nn_I/AAAAAAAAA_0/ocMSgHhyxgU/w807-h569-no/littleTanks1.png)
+(https://lh3.googleusercontent.com/-kmn32RDGYBw/VW1mtFNHLnI/AAAAAAAABBw/ybVxFgG7hBo/s806/littleTanks4.png)
 
 ## Controls
 Key | Action
