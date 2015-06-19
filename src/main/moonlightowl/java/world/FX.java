@@ -1,6 +1,7 @@
 package main.moonlightowl.java.world;
 
 import main.moonlightowl.java.Assets;
+import main.moonlightowl.java.math.GMath;
 
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
@@ -11,7 +12,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 public class FX {
-    public static final int EXPLOSION = 0, SMALLEXPLOSION = 1, SMOKE = 2, SPARKLE = 3;
+    public static final int EXPLOSION = 0, SMALLEXPLOSION = 1, SMOKE = 2,
+            SPARKLE = 3, SNOWFLAKE = 4;
     private LinkedList<Particle> particles;
     private Iterator<Particle> it;
     private int width, height;
@@ -34,13 +36,16 @@ public class FX {
 
     public void add(int x, int y, int type){
         BufferedImage[] image = Assets.iexplosion;
-        int stage = 0;
+        int stage = 0, delay = 100;
         switch(type){
             case SMALLEXPLOSION: stage = 2; break;
             case SMOKE: image = Assets.ismoke; break;
             case SPARKLE: image = Assets.isparkle; break;
+            case SNOWFLAKE: image = Assets.isnowflake; delay = 2000; break;
         }
-        particles.add(new Particle(x, y, image, stage));
+        Particle particle = new Particle(x, y, type, image, stage);
+        particle.setAnimaionDelay(delay);
+        particles.add(particle);
     }
 
     public void update(){
@@ -55,6 +60,10 @@ public class FX {
                 else{
                     p.draw(g);
                     p.update();
+                    if(p.getType() == SNOWFLAKE){
+                        p.move(GMath.rand.nextBoolean() ? -1+GMath.rand.nextInt(3): 0,
+                                GMath.rand.nextInt(3));
+                    }
                 }
             }
         }

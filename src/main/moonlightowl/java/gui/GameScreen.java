@@ -386,6 +386,14 @@ public class GameScreen extends Screen {
 
         // update game objects
         if(!paused) {
+            // update special effects
+            if(world.level.isSnowy()){
+                if(GMath.rand.nextInt(20) == 1){
+                    world.fx.add(GMath.rand.nextInt(Const.WIDTH),
+                            GMath.rand.nextInt(Const.HEIGHT), FX.SNOWFLAKE);
+                }
+            }
+            // spawn reinforcements
             if(world.level.enemyRespawnEnabled()){
                 if(System.currentTimeMillis() - enemyRespawnTime > world.level.getEnemyRespawnTime()){
                     int n = GMath.rand.nextInt(world.spawners.size());

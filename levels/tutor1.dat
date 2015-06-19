@@ -17,3 +17,5 @@ message: 10 3 'Space' to fire
 message: 10 7 'C' to place bomb
 message: 8 5  'P' to pause game
 message: 12 5 'Esc' to exit
+ammo: 100
+bombs: 10
