@@ -162,6 +162,12 @@ public class Board extends JPanel implements ActionListener{
                     playMusic = true;
                     music.next();
                     break;
+                default:
+                    if(gamestate == GAME){
+                        if(e.getKeyCode() == KeyEvent.VK_P && gameScreen.isPaused()){
+                            camera.newTarget();
+                        }
+                    }
             }
         }
     }
@@ -234,7 +240,7 @@ public class Board extends JPanel implements ActionListener{
         }
 
         // update camera position
-        if(gamestate != GAME){
+        if(gamestate != GAME || gameScreen.isPaused()){
             camera.moveToTarget();
         }
 
