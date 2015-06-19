@@ -405,9 +405,9 @@ public class GameScreen extends Screen {
             }
             // move camera to player position
             if(Sound.EXPLODE.isPlaying())
-                camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
-                        player.getY() - 3 + GMath.rand.nextInt(6));
-            else camera.setPosition(player.getX(), player.getY());
+                camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6) + Const.HALF_TILE,
+                        player.getY() - 3 + GMath.rand.nextInt(6) + Const.HALF_TILE);
+            else camera.setPosition(player.getX() + Const.HALF_TILE, player.getY() + Const.HALF_TILE);
             // effects
             if(effectFreeze > 0) {
                 effectFreeze--;
