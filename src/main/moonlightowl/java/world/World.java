@@ -9,6 +9,7 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -29,6 +30,7 @@ public class World {
     public final ArrayList<Point3D> spawners;
     public final ArrayList<Item> items;
     public final ArrayList<Turret> turrets;
+    public final ArrayList<PopupMessage> messages;
     public FX fx;
 
     public World(){
@@ -42,6 +44,7 @@ public class World {
         spawners = new ArrayList<Point3D>();
         items = new ArrayList<Item>();
         turrets = new ArrayList<Turret>();
+        messages = new ArrayList<PopupMessage>();
     }
 
     /** Loading game objects from file */
@@ -100,25 +103,25 @@ public class World {
                             switch(ch){
                                 // start point
                                 case '@': level.setStartPoint(x, y); break;
-                                // enemy spawner
-                                case '&': spawners.add(new Point3D(x, y, Tank.GUNFIGHTER)); break;
-                                case '%': spawners.add(new Point3D(x, y, Tank.BIGCALIBRE)); break;
-                                case '$': spawners.add(new Point3D(x, y, Tank.LAUNCHER)); break;
-                                case '?': spawners.add(new Point3D(x, y, Tank.LASER)); break;
+                                // enemy spawners
+                                case '1': spawners.add(new Point3D(x, y, Tank.GUNFIGHTER)); break;
+                                case '2': spawners.add(new Point3D(x, y, Tank.BIGCALIBRE)); break;
+                                case '3': spawners.add(new Point3D(x, y, Tank.LAUNCHER)); break;
+                                case '4': spawners.add(new Point3D(x, y, Tank.LASER)); break;
                             }
                     }
                 }
             }
             // processing given map parameters
-            while((line = reader.readLine())!=null){
+            while((line = reader.readLine())!=null) {
                 String[] data = line.split("\\s*(\\s|:)\\s*");
                 // homemade switch =P
-                if(data[0].equals("background")){
+                if(data[0].equals("background")) {
                     level.setBackground(new Tile(data[1].charAt(0)));
-                } else if(data[0].equals("link")){
+                } else if(data[0].equals("link")) {
                     try {
                         int[] coord = new int[4];
-                        for(int c = 0; c < 4; c++){
+                        for(int c = 0; c < 4; c++) {
                             coord[c] = Integer.parseInt(data[c+1]);
                         }
                         level.addLink(coord[0], coord[1], coord[2], coord[3]);
@@ -126,20 +129,28 @@ public class World {
                     catch(NumberFormatException e){
                         System.out.println("[ERROR] '"+filename+"': wrong link coords.");
                     }
-                } else if(data[0].equals("snowy")){
+                } else if(data[0].equals("snowy")) {
                     if(data[1].equals("true")) level.setSnowy(true);
-                } else if(data[0].equals("ammo")){
+                } else if(data[0].equals("ammo")) {
                     startState.ammo = parseInt(data[1], "Wrong ammo value.");
-                } else if(data[0].equals("life")){
+                } else if(data[0].equals("life")) {
                     startState.life = parseInt(data[1], "Wrong life value.");
-                } else if(data[0].equals("shield")){
+                } else if(data[0].equals("shield")) {
                     startState.shield = parseInt(data[1], "Wrong shield value.");
-                } else if(data[0].equals("bombs")){
+                } else if(data[0].equals("bombs")) {
                     startState.bombs = parseInt(data[1], "Wrong bombs value.");
-                } else if(data[0].equals("enemy_respawn")){
+                } else if(data[0].equals("enemy_respawn")) {
                     level.setEnemyRespawnTime(parseInt(data[1], "Wrong enemy respawn time value.") * 1000);
-                } else if(data[0].equals("friendly_fire")){
+                } else if(data[0].equals("friendly_fire")) {
                     if(data[1].equals("true")) level.allowFriendlyFire(true);
+                } else if(data[0].equals("message")) {
+                    int x = parseInt(data[1], "Wrong message X coordinate."),
+                        y = parseInt(data[2], "Wrong message Y coordinate.");
+                    String message = "";
+                    for(int c = 3; c<data.length; c++) {
+                        message += data[c] + " ";
+                    }
+                    messages.add(new PopupMessage(x, y, message));
                 }
             }
             // arrangement of the tanks
@@ -187,6 +198,7 @@ public class World {
         spawners.clear();
         items.clear();
         turrets.clear();
+        messages.clear();
     }
 
     /** Draw the world! */

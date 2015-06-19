@@ -26,7 +26,7 @@ public class Assets {
         irocket, iconcrete, isand, ibush, ikey, ibarrelside,
         ishadowLS, ishadowLB, ishadowRS, ishadowRB, isnow, irustblock,
         icandy, iturret_base, iturret_tower, ifloor_tiles, icobblestone,
-        itankshadow, ibeamh, ibeamv, idrygrass;
+        itankshadow, ibeamh, ibeamv, idrygrass, iquestion;
     public static BufferedImage[] iexplosion = new BufferedImage[4],
         isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
         itank = new BufferedImage[5], ismoke = new BufferedImage[4],
@@ -106,6 +106,7 @@ public class Assets {
             g.dispose();
 
             idrygrass = ImageIO.read(new File("resources/images/drygrass.png"));
+            iquestion = ImageIO.read(new File("resources/images/question.png"));
 
             // sounds
             Sound.init();

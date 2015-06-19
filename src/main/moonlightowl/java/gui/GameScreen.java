@@ -4,6 +4,7 @@ import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.Mission;
 import main.moonlightowl.java.Ruleset;
+import main.moonlightowl.java.gui.component.Popup;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.sound.Sound;
@@ -35,6 +36,7 @@ public class GameScreen extends Screen {
     private Tank player;
     // interface
     private HUD hud;
+    private Popup textTrigger;
     // variables
     private int score;
     private int effectFreeze = 0;
@@ -54,9 +56,12 @@ public class GameScreen extends Screen {
         player = new Tank();
         score = 0;
         hud = new HUD(player);
+        textTrigger = new Popup("Hello World!",
+                Const.HALFWIDTH, Const.HALFHEIGHT + Const.TILE_SIZE + 20,
+                Assets.fsmall, Assets.fmsmall);
 
         mission = new Mission("./levels/");
-        loadMission("test");
+        loadMission("tutor");
     }
 
 
@@ -100,6 +105,9 @@ public class GameScreen extends Screen {
         int y = GMath.toPixel(sp.y);
         player.setPosition(x, y);
         player.setStateTo(world.level.getStartState());
+
+        // check if there was text message for us
+        checkTextTrigger();
 
         // move camera to player
         int width = world.level.getPxWidth(), height = world.level.getPxHeight();
@@ -311,6 +319,16 @@ public class GameScreen extends Screen {
                 break;
         }
     }
+    private void checkTextTrigger(){
+        textTrigger.setVisible(false);
+        for(PopupMessage popup: world.messages){
+            if(popup.compareXY(player.getMapX(), player.getMapY())){
+                textTrigger.setMessage(popup.getText());
+                textTrigger.setVisible(true);
+                break;
+            }
+        }
+    }
 
 
     /** Event handling */
@@ -381,8 +399,10 @@ public class GameScreen extends Screen {
             int pcx = player.getMapX(), pcy = player.getMapY();
             player.update();
             world.level.setCollision(player.getMapX(), player.getMapY(), true);
-            if(pcx != player.getMapX() || pcy != player.getMapY())
+            if(pcx != player.getMapX() || pcy != player.getMapY()) {
                 world.level.setCollision(pcx, pcy, false);
+                checkTextTrigger();
+            }
             // move camera to player position
             if(Sound.EXPLODE.isPlaying())
                 camera.setPosition(player.getX() - 3 + GMath.rand.nextInt(6),
@@ -757,5 +777,7 @@ public class GameScreen extends Screen {
         // UI
         hud.draw(g);
         if(paused){ hud.drawPaused(g); }
+
+        textTrigger.draw(g);
     }
 }

@@ -1,14 +1,14 @@
 10
 10
 CCCCCCCCCC
-C,,,,**,,C
-C,@,B,,,,C
-C,B,,,,,,C
-C,,,bb,,,C
-C,,,,,,,,C
-C,,,X,,,,C
-C,,,X,,&,C
-C*,,Xb,,,C
+C    **  C
+C @ B    C
+C B      C
+C   bb   C
+C        C
+C   X    C
+C   X  1 C
+C*  Xb   C
 CCCCCCCCCC
 
 background: ,

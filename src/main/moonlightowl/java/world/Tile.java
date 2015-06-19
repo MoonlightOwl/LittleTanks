@@ -1,13 +1,13 @@
 package main.moonlightowl.java.world;
 
-// Simple tiles for battle field
+/** Simple tiles for battle field */
 
 public class Tile {
     public static final int GRASS = 0, WALL = 1, BOX = 2,
         HOLE = 3, SANDSTONE = 4, METAL = 5, GRID = 6, BARREL = 7,
         CONCRETE = 8, SAND = 9, SPAWN = 10, BUSH = 11, DOOR = 12,
         SAFE = 13, PLATE = 14, TURRET = 15, FLOORTILES = 16,
-        COBBLESTONE = 17, SNOW = 18, RUSTBLOCK = 19;
+        COBBLESTONE = 17, SNOW = 18, RUSTBLOCK = 19, TEXT = 20;
 
     private int type;
     private boolean passable = false, flyable = false, castshadow = false;
@@ -21,29 +21,33 @@ public class Tile {
         create(type);
     }
     public Tile(char ch){
-        switch(ch){
-            case '.': create(GRASS);break;
-            case 'B': create(BOX); break;
-            case 'b': create(BARREL); break;
-            case '#': create(WALL); break;
-            case '+': create(SANDSTONE); break;
-            case 'O': create(HOLE); break;
-            case 'M': create(METAL); break;
-            case 'X': create(GRID); break;
-            case 'C': create(CONCRETE); break;
-            case ',': create(SAND); break;
-            case '*': create(BUSH); break;
-            case 'D': create(DOOR); break;
-            case 'S': create(SAFE); break;
-            case '=': create(PLATE); break;
-            case 'T': create(TURRET); break;
-            case '_': create(FLOORTILES); break;
-            case '~': create(COBBLESTONE); break;
-            case '-': create(SNOW); break;
-            case 'R': create(RUSTBLOCK); break;
-            case '@': case '&': case '%': case '$': case '?': create(SPAWN); break;
-            default: create(GRASS);
-        }
+        if(ch >= '1' && ch <= '4')
+            create(SPAWN);
+        else
+            switch(ch){
+                case '.': create(GRASS);break;
+                case 'B': create(BOX); break;
+                case 'b': create(BARREL); break;
+                case '#': create(WALL); break;
+                case '+': create(SANDSTONE); break;
+                case 'O': create(HOLE); break;
+                case 'M': create(METAL); break;
+                case 'X': create(GRID); break;
+                case 'C': create(CONCRETE); break;
+                case ',': create(SAND); break;
+                case '*': create(BUSH); break;
+                case 'D': create(DOOR); break;
+                case 'S': create(SAFE); break;
+                case '=': create(PLATE); break;
+                case 'T': create(TURRET); break;
+                case '_': create(FLOORTILES); break;
+                case '~': create(COBBLESTONE); break;
+                case '-': create(SNOW); break;
+                case 'R': create(RUSTBLOCK); break;
+                case '?': create(TEXT); break;
+                case '@': create(SPAWN); break;
+                default: create(GRASS);
+            }
     }
     private void create(int type){
         this.type = type;

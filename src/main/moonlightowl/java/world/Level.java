@@ -115,6 +115,10 @@ public class Level {
                 if(GMath.rand.nextInt(12) == 1) g.drawImage(Assets.idrygrass, x, y, null);
                 break;
             case Tile.RUSTBLOCK: g.drawImage(Assets.irustblock, x, y, null); break;
+            case Tile.TEXT:
+                drawTile(g, x, y, BACK);
+                g.drawImage(Assets.iquestion, x, y, null);
+                break;
             case Tile.SPAWN:
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.ispawn, x, y, null);
