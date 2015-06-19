@@ -23,6 +23,7 @@ public class LaserBeam {
         if((x-tx) != 0) horizontally = true;
         // array
         int length = Math.max(Math.abs(x - tx), Math.abs(y-ty));
+        if(length < 1) length = 1;
         ray = new Point[length-1];
         for(int i=0; i<length-1; i++){
             if(x < tx) x++;
