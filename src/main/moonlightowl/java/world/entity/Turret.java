@@ -13,12 +13,14 @@ import java.awt.geom.AffineTransform;
  */
 
 public class Turret {
+    private static int FIRE_DELAY = 10;
     private static double IDLE_TURN = 0.01, ACTIVE_TURN = 0.05;
     public static int INIT_LIFE = 6, DETECT_RADIUS = Const.TILE_SIZE*4;
 
     private int x, y, life, mapx, mapy;
     private double angle;
     private AffineTransform at;
+    private int fire;
 
     public Turret(int x, int y){
         this.x = x; this.y = y;
@@ -26,6 +28,7 @@ public class Turret {
         life = INIT_LIFE;
         angle = 0;
         at = new AffineTransform();
+        fire = 0;
     }
 
     // getters
@@ -38,6 +41,7 @@ public class Turret {
 
     // setters
     public void changeLife(int amount){ life = life+amount > 0 ? life+amount : 0; }
+    public void fire(boolean rifle){ fire = FIRE_DELAY * (rifle ? -1: 1); }
 
     public void update(boolean active){
         if(active) angle += ACTIVE_TURN;
@@ -50,5 +54,17 @@ public class Turret {
         at.translate(x - camera.x + 10, y - camera.y - 12);
         at.rotate(angle, 20, 40);
         g.drawImage(Assets.iturret_tower, at, null);
+        if(fire != 0){ drawFire(g, camera); fire += (fire < 0 ? 1: -1); }
+    }
+    public void drawFire(Graphics2D g, Point camera){
+        at.setToIdentity();
+        if(fire < 0) {
+            at.translate(x - camera.x + 12, y - camera.y - 28);
+            at.rotate(angle, 18, 56);
+        } else {
+            at.translate(x - camera.x + 36, y - camera.y - 28);
+            at.rotate(angle, -6, 56);
+        }
+        g.drawImage(Assets.iturret_fire, at, null);
     }
 }

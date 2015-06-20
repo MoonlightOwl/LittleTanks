@@ -26,7 +26,7 @@ public class Assets {
         irocket, iconcrete, isand, ibush, ikey, ibarrelside,
         ishadowLS, ishadowLB, ishadowRS, ishadowRB, isnow, irustblock,
         icandy, iturret_base, iturret_tower, ifloor_tiles, icobblestone,
-        itankshadow, ibeamh, ibeamv, idrygrass, iquestion;
+        itankshadow, ibeamh, ibeamv, idrygrass, iquestion, iturret_fire;
     public static BufferedImage[] iexplosion = new BufferedImage[4],
         isandstone = new BufferedImage[6], ibullet = new BufferedImage[3],
         itank = new BufferedImage[5], ismoke = new BufferedImage[4],
@@ -93,6 +93,7 @@ public class Assets {
             icandy = ImageIO.read(new File("resources/images/candy.png"));
             iturret_base = ImageIO.read(new File("resources/images/turret_base.png"));
             iturret_tower = ImageIO.read(new File("resources/images/turret_tower.png"));
+            iturret_fire = ImageIO.read(new File("resources/images/turret_fire.png"));
             ifloor_tiles = ImageIO.read(new File("resources/images/plates0.png"));
             icobblestone = ImageIO.read(new File("resources/images/stone.png"));
             isnow = ImageIO.read(new File("resources/images/snow.png"));

@@ -679,13 +679,14 @@ public class GameScreen extends Screen {
                         t.update(true);
                         if (GMath.rand.nextInt(4) == 1) {
                             synchronized (world.newBullet) {
-                                double rifle = GMath.rand.nextBoolean() ? -0.3 : 0.3,
+                                double rifle = GMath.rand.nextBoolean() ? -0.25 : 0.25,
                                         dx = Math.cos(t.getAngle() - Math.PI / 2 + rifle) * 40,
                                         dy = Math.sin(t.getAngle() - Math.PI / 2 + rifle) * 40;
                                 world.newBullet.add(
                                         new Bullet(t.getX() + Const.HALF_TILE + (int) dx,
                                                 t.getY() + Const.HALF_TILE + (int) dy,
                                                 (float) (dx / 20), (float) (dy / 20)));
+                                t.fire(rifle < 0);
                             }
                         }
                     } else t.update(false);
