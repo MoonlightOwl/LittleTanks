@@ -15,7 +15,7 @@ public class SoundManager implements Runnable{
         play(null);
     }
 
-    public void mute(){
+    public void toggle(){
         mute = !mute;
     }
     public boolean muted(){ return mute; }
@@ -24,7 +24,7 @@ public class SoundManager implements Runnable{
         if(!mute || sound == null) {
             synchronized (lock) {
                 toPlay = sound;
-                lock.notify();
+                lock.notifyAll();
             }
         }
     }
@@ -41,18 +41,4 @@ public class SoundManager implements Runnable{
             }
         }
     }
-
-    /*private final ExecutorService executor = Executors.newSingleThreadExecutor();
-
-    public void play(final Sound sound) {
-        executor.execute(new Runnable(){
-            public void run(){
-                sound.play();
-            }
-        });
-    }
-
-    public void close() {
-        executor.shutdown();
-    }*/
 }

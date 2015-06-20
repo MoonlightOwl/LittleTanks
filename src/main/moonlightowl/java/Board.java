@@ -152,7 +152,7 @@ public class Board extends JPanel implements ActionListener{
             // processing some global key codes
             switch(e.getKeyCode()){
                 case KeyEvent.VK_OPEN_BRACKET:
-                    soundManager.mute(); break;
+                    soundManager.toggle(); break;
                 case KeyEvent.VK_CLOSE_BRACKET:
                     playMusic = !playMusic;
                     if(playMusic) music.play();
