@@ -114,14 +114,17 @@ public class Assets {
             Sound.init();
 
         } catch(NullPointerException e){
-            System.out.print("Error =(\n");
+            Logger.error("NPE when loading game assets. WTF?");
+            Logger.stackTrace(e);
         } catch(FileNotFoundException e){
-            System.out.print("Error!\n");
-            e.printStackTrace();
+            Logger.error("Asset file not found!");
+            Logger.stackTrace(e);
         } catch(FontFormatException e){
-            System.out.print("Font format error!\n");
+            Logger.error("Font format error!");
+            Logger.stackTrace(e);
         } catch(IOException e){
-            System.out.print("IO error!\n");
+            Logger.error("IO error!");
+            Logger.stackTrace(e);
         }
     }
 
@@ -134,7 +137,7 @@ public class Assets {
                 array[i] = ImageIO.read(new File("resources/images/"+filename+Integer.toString(i)+".png"));
             }
         } catch(IOException e){
-            System.out.print("IO error when filling array '"+filename+"'!\n");
+            Logger.error("IO error when loading texture array '"+filename+"'!");
         }
     }
     private static BufferedImage getScaledInstance(BufferedImage image, float sx, float sy){

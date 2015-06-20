@@ -1,5 +1,7 @@
 package main.moonlightowl.java.io;
 
+/** Simple XOR cipher for "protected" game data */
+
 public class Crypter {
     public static byte[] encrypt(String text, String keyWord) {
         byte[] arr = text.getBytes();

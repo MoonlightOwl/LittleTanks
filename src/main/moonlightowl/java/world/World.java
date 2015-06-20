@@ -1,6 +1,7 @@
 package main.moonlightowl.java.world;
 
 import main.moonlightowl.java.Const;
+import main.moonlightowl.java.Logger;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.world.entity.*;
@@ -53,7 +54,7 @@ public class World {
             return Integer.parseInt(string);
         }
         catch(NumberFormatException e){
-            System.out.println("[ERROR] "+error);
+            Logger.error(error);
             return 0;
         }
     }
@@ -127,7 +128,7 @@ public class World {
                         level.addLink(coord[0], coord[1], coord[2], coord[3]);
                     }
                     catch(NumberFormatException e){
-                        System.out.println("[ERROR] '"+filename+"': wrong link coords.");
+                        Logger.error("'" + filename + "': wrong link coords.");
                     }
                 } else if(data[0].equals("snowy")) {
                     if(data[1].equals("true")) level.setSnowy(true);
@@ -160,12 +161,12 @@ public class World {
             // set initial player state
             level.setStartState(startState);
         } catch(Exception e) {
-            System.out.println("[ERROR] Something went wrong, when loading '" + filename + "' level map...");
+            Logger.error("Something went wrong, when loading '" + filename + "' level map...");
             e.printStackTrace();
         } finally {
             try {
                 if(reader != null) reader.close();
-            } catch(Exception e) { e.printStackTrace(); }
+            } catch(Exception e) { Logger.stackTrace(e); }
 
             level.render();
 

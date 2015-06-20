@@ -1,5 +1,7 @@
 package main.moonlightowl.java.sound;
 
+import main.moonlightowl.java.Logger;
+
 public class SoundManager implements Runnable{
     private final Object lock;
     private Sound toPlay;
@@ -37,7 +39,10 @@ public class SoundManager implements Runnable{
                     if(toPlay != null)
                         toPlay.play();
                     else break;
-                } catch(InterruptedException e){ break; }
+                } catch(InterruptedException e) {
+                    Logger.warning("Sound manager thread was interrupted");
+                    break;
+                }
             }
         }
     }

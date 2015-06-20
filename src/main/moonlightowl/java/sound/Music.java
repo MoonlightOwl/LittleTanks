@@ -2,6 +2,7 @@ package main.moonlightowl.java.sound;
 
 import javazoom.jl.player.advanced.*;
 import javazoom.jl.decoder.JavaLayerException;
+import main.moonlightowl.java.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -56,7 +57,9 @@ public class Music {
                 playerThread = new Thread(this);
                 this.playerThread.start();
             }
-            catch(Exception e){ e.printStackTrace(); }
+            catch(Exception e) {
+                Logger.stackTrace(e);
+            }
         }
 
         public void stop(){
@@ -79,7 +82,9 @@ public class Music {
             playing = true;
             try{
                 player.play();
-            } catch(JavaLayerException e){ e.printStackTrace(); }
+            } catch(JavaLayerException e){
+                Logger.stackTrace(e);
+            }
         }
     }
 }
