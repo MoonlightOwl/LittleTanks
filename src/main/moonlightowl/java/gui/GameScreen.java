@@ -8,6 +8,7 @@ import main.moonlightowl.java.gui.component.Popup;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.script.Script;
+import main.moonlightowl.java.script.entity.TankSI;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
 import main.moonlightowl.java.world.FX;
@@ -47,6 +48,8 @@ public class GameScreen extends Screen {
     // levels
     private Mission mission;
     private int currentLevel = 0;
+    // scripts
+    private TankSI tankSInterface;
 
     public GameScreen(World world, Camera camera){
         super();
@@ -54,6 +57,7 @@ public class GameScreen extends Screen {
         setCamera(camera);
 
         // init game
+        tankSInterface = new TankSI(this);
         player = new Tank();
         score = 0;
         hud = new HUD(player);
@@ -176,7 +180,7 @@ public class GameScreen extends Screen {
 
 
     /** Actions */
-    private void moveTank(Tank tank, int x, int y){
+    public void moveTank(Tank tank, int x, int y){
         if(tank.isIdle()){
             int mx = GMath.toMap(x), my = GMath.toMap(y);
             // move if possible
@@ -217,7 +221,7 @@ public class GameScreen extends Screen {
             }
         }
     }
-    private boolean fireTank(Tank tank){
+    public boolean fireTank(Tank tank){
         if(tank.isIdle()){
             if(tank.getAmmo()>0){
                 int x = tank.getX()+Const.HALF_TILE, y = tank.getY()+Const.HALF_TILE;
@@ -465,21 +469,14 @@ public class GameScreen extends Screen {
                     pcx = t.getMapX(); pcy = t.getMapY();
                     t.update();
                     world.level.setCollision(t.getMapX(), t.getMapY(), true);
-                    if(pcx != t.getMapX() || pcy != t.getMapY())
+                    // if tank moved to an another tile
+                    if(pcx != t.getMapX() || pcy != t.getMapY()) {
                         world.level.setCollision(pcx, pcy, false);
-                    // random movement
+                    }
+                    // scripted tank update
                     if (t.isIdle()) {
-                        int action = GMath.rand.nextInt(effectFreeze == 0 ? 10 : 100);
-                        if (action == 0) {
-                            int dx = 0, dy = 0;
-                            if (GMath.rand.nextBoolean()) dx = Const.TILE_SIZE * (GMath.rand.nextBoolean() ? -1 : 1);
-                            else dy = Const.TILE_SIZE * (GMath.rand.nextBoolean() ? -1 : 1);
-                            moveTank(t, t.getX() + dx, t.getY() + dy);
-                            if (dx < 0) t.turn(Math.PI);
-                            else if (dy < 0) t.turn(Math.PI+Math.PI/2);
-                            else if (dx > 0) t.turn(0.0);
-                            else if (dy > 0) t.turn(Math.PI/2);
-                        } else if (action == 2) fireTank(t);
+                        tankSInterface.setTank(t);
+                        Script.runUpdateTank(tankSInterface);
                     }
                     // bullet collision
                     synchronized (world.bullets) {

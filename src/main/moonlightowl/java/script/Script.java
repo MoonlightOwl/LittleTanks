@@ -1,8 +1,9 @@
 package main.moonlightowl.java.script;
 
+import main.moonlightowl.java.Const;
 import main.moonlightowl.java.Logger;
+import main.moonlightowl.java.script.entity.TankSI;
 import main.moonlightowl.java.world.World;
-import main.moonlightowl.java.world.entity.Tank;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
@@ -22,6 +23,9 @@ public class Script {
 
     public static void init(){
         globals = JsePlatform.standardGlobals();
+        globals.set("Const", CoerceJavaToLua.coerce(new Object(){
+            public int WIDTH = Const.WIDTH, HEIGHT = Const.HEIGHT, TILE = Const.TILE_SIZE;
+        }));
     }
 
     public static boolean canExecute(){
@@ -30,8 +34,10 @@ public class Script {
 
     public static void loadScript(String filename){
         if(globals == null) init();
-        chunk = globals.loadfile(filename);
-        chunk.call();
+        try {
+            chunk = globals.loadfile(filename);
+            chunk.call();
+        } catch(LuaError e){ log(e.getMessage()); }
     }
     public static void unloadScript(){
         globals = null;
@@ -47,7 +53,7 @@ public class Script {
             }
         }
     }
-    public static void runUpdateTank(Tank tank){
+    public static void runUpdateTank(TankSI tank){
         if(canExecute()){
             try {
                 globals.get("updateTank").invoke(new LuaValue[]{CoerceJavaToLua.coerce(tank)});
