@@ -6,6 +6,7 @@ package main.moonlightowl.java;
 
 import main.moonlightowl.java.gui.*;
 import main.moonlightowl.java.gui.component.Label;
+import main.moonlightowl.java.script.Script;
 import main.moonlightowl.java.sound.Music;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
@@ -43,6 +44,9 @@ public class Board extends JPanel implements ActionListener{
     public Board(){
         // load resources
         Assets.load(this);
+
+        // scripts
+        Script.loadScript("./levels/script/default.lua");
 
         // set event listeners
         addKeyListener(new KAdapter());
@@ -95,6 +99,9 @@ public class Board extends JPanel implements ActionListener{
         Timer timer = new Timer(20, this);
         timer.setInitialDelay(500);
         timer.start();
+
+        //
+        Script.runInit(world);
     }
 
     public void addNotify() {
