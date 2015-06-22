@@ -7,6 +7,7 @@ import main.moonlightowl.java.Ruleset;
 import main.moonlightowl.java.gui.component.Popup;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
+import main.moonlightowl.java.script.Script;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
 import main.moonlightowl.java.world.FX;
@@ -41,7 +42,7 @@ public class GameScreen extends Screen {
     private int score;
     private int effectFreeze = 0;
     private int track_frequency = 20;
-    private long enemyRespawnTime = 0;
+    private long enemySpawnTime = 0;
     private boolean paused = false;
     // levels
     private Mission mission;
@@ -94,9 +95,16 @@ public class GameScreen extends Screen {
         world.reset();
         world.loadLevel(mission.getLevel(currentLevel));
 
+        // load scripts if available
+        String scriptfile = mission.getScript(currentLevel);
+        if(scriptfile != null){
+            Script.loadScript(scriptfile);
+            Script.runInit(world);
+        }
+
         // parameters
         track_frequency = world.level.isSnowy() ? 5 : 20;
-        enemyRespawnTime = System.currentTimeMillis();
+        enemySpawnTime = System.currentTimeMillis();
 
         // place player in the world
         player.reset();
@@ -395,12 +403,12 @@ public class GameScreen extends Screen {
             }
             // spawn reinforcements
             if(world.level.enemyRespawnEnabled()){
-                if(System.currentTimeMillis() - enemyRespawnTime > world.level.getEnemyRespawnTime()){
+                if(System.currentTimeMillis() - enemySpawnTime > world.level.getEnemyRespawnTime()){
                     int n = GMath.rand.nextInt(world.spawners.size());
                     Point3D spawner = world.spawners.get(n);
                     world.spawnRandomTank(GMath.toPixel(spawner.x),
                                           GMath.toPixel(spawner.y), spawner.z);
-                    enemyRespawnTime = System.currentTimeMillis();
+                    enemySpawnTime = System.currentTimeMillis();
                 }
             }
             // update player

@@ -13,12 +13,12 @@ import java.io.FileFilter;
 public class Mission {
     public static final int MAXIMAL = 100;
 
-    private File root;
+    private File root, sourceroot;
     private String name;
     private int len;
 
     public Mission(String path){
-        root = new File(path);
+        root = new File(path); sourceroot = new File(root, "script");
         name = ""; len = 0;
     }
 
@@ -31,6 +31,19 @@ public class Mission {
     public String getName(){ return name; }
     public String getLevel(int index){
         return new File(root, name + index + ".dat").getPath();
+    }
+    public String getScript(int index){
+        File script;
+        if(index > 0)
+            script = new File(sourceroot, name + index + ".lua");
+        else
+            script = new File(sourceroot, "default.lua");
+        if(script.exists())
+            return script.getPath();
+        else if(index > 0)
+            return getScript(0);
+        else
+            return null;
     }
 
     public String[] missionList(){

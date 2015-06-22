@@ -2,6 +2,7 @@ package main.moonlightowl.java.script;
 
 import main.moonlightowl.java.Logger;
 import main.moonlightowl.java.world.World;
+import main.moonlightowl.java.world.entity.Tank;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
@@ -32,11 +33,24 @@ public class Script {
         chunk = globals.loadfile(filename);
         chunk.call();
     }
+    public static void unloadScript(){
+        globals = null;
+        chunk = null;
+    }
 
     public static void runInit(World world){
         if(canExecute()){
             try {
                 globals.get("init").invoke(new LuaValue[]{CoerceJavaToLua.coerce(world)});
+            } catch(LuaError e){
+                log(e.getMessage());
+            }
+        }
+    }
+    public static void runUpdateTank(Tank tank){
+        if(canExecute()){
+            try {
+                globals.get("updateTank").invoke(new LuaValue[]{CoerceJavaToLua.coerce(tank)});
             } catch(LuaError e){
                 log(e.getMessage());
             }

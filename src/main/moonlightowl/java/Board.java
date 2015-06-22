@@ -45,9 +45,6 @@ public class Board extends JPanel implements ActionListener{
         // load resources
         Assets.load(this);
 
-        // scripts
-        Script.loadScript("./levels/script/default.lua");
-
         // set event listeners
         addKeyListener(new KAdapter());
         addMouseListener(new MAdapter());
@@ -99,9 +96,6 @@ public class Board extends JPanel implements ActionListener{
         Timer timer = new Timer(20, this);
         timer.setInitialDelay(500);
         timer.start();
-
-        //
-        Script.runInit(world);
     }
 
     public void addNotify() {
