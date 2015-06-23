@@ -93,7 +93,10 @@ public class Level {
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.iconcrete, x, y, null);
                 break;
-            case Tile.SAND: g.drawImage(Assets.isand, x, y, null); break;
+            case Tile.SAND:
+                g.drawImage(Assets.isand, x, y, null);
+                if(GMath.rand.nextInt(15) == 1) g.drawImage(Assets.icactus, x, y, null);
+                break;
             case Tile.BUSH:
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.ibush, x, y, null);
