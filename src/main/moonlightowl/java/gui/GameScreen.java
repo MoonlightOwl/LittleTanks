@@ -536,7 +536,10 @@ public class GameScreen extends Screen {
                     // explosion
                     if (t.getLife() <= 0) {
                         world.level.setCollision(t.getMapX(), t.getMapY(), false);
-                        world.level.drawSplash(Assets.iexpldec, t.getX() - 20, t.getY() - 20);
+                        //world.level.drawSplash(Assets.iexpldec, t.getX() - 20, t.getY() - 20);
+                        AffineTransform at = t.getTransform();
+                        at.rotate(GMath.rand.nextDouble() * Math.PI * 2.0, 50, 50);
+                        world.level.drawSplash(Assets.iexpldec, at);
                         world.fx.add(t.getX() - 20, t.getY() - 20, FX.EXPLOSION);
                         // score points
                         int bonus = Ruleset.score(Ruleset.KILL_SCORE) * t.getLevel() + 10;
@@ -588,7 +591,12 @@ public class GameScreen extends Screen {
                             minusLife(b.getLevel());
                             soundManager.play(Sound.HIT);
                         }
-                        if (player.getLife() <= 0) world.fx.add(player.getX() - 20, player.getY() - 20, FX.EXPLOSION);
+                        if (player.getLife() <= 0){
+                            world.fx.add(player.getX() - 20, player.getY() - 20, FX.EXPLOSION);
+                            AffineTransform at = player.getTransform();
+                            at.rotate(GMath.rand.nextDouble() * Math.PI * 2.0, 50, 50);
+                            world.level.drawSplash(Assets.iexpldec, at);
+                        }
                     }
                     // check level collision
                     else {
