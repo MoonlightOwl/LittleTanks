@@ -8,7 +8,6 @@ import main.moonlightowl.java.gui.component.Popup;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.math.Point3D;
 import main.moonlightowl.java.script.Script;
-import main.moonlightowl.java.script.entity.TankSI;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;
 import main.moonlightowl.java.world.FX;
@@ -48,16 +47,16 @@ public class GameScreen extends Screen {
     // levels
     private Mission mission;
     private int currentLevel = 0;
-    // scripts
-    private TankSI tankSInterface;
 
     public GameScreen(World world, Camera camera){
         super();
         setWorld(world);
         setCamera(camera);
 
+        // init sripting system
+        Script.init(this);
+
         // init game
-        tankSInterface = new TankSI(this);
         player = new Tank();
         score = 0;
         hud = new HUD(player);
@@ -103,7 +102,7 @@ public class GameScreen extends Screen {
         String scriptfile = mission.getScript(currentLevel);
         if(scriptfile != null){
             Script.loadScript(scriptfile);
-            Script.runInit(world);
+            Script.runInit();
         }
 
         // parameters
@@ -475,8 +474,7 @@ public class GameScreen extends Screen {
                     }
                     // scripted tank update
                     if (t.isIdle()) {
-                        tankSInterface.setTank(t);
-                        Script.runUpdateTank(tankSInterface);
+                        Script.runUpdateTank(t);
                     }
                     // bullet collision
                     synchronized (world.bullets) {

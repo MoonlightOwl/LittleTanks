@@ -2,8 +2,11 @@ package main.moonlightowl.java.script;
 
 import main.moonlightowl.java.Const;
 import main.moonlightowl.java.Logger;
+import main.moonlightowl.java.gui.GameScreen;
 import main.moonlightowl.java.script.entity.TankSI;
+import main.moonlightowl.java.script.entity.WorldSI;
 import main.moonlightowl.java.world.World;
+import main.moonlightowl.java.world.entity.Tank;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
@@ -20,12 +23,19 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 public class Script {
     private static Globals globals;
     private static LuaValue chunk;
+    private static TankSI tankSI;
+    private static WorldSI worldSI;
+    private static GameScreen gScreen;
 
-    public static void init(){
+    public static void init(GameScreen gameScreen){
+        gScreen = gameScreen;
         globals = JsePlatform.standardGlobals();
         globals.set("Const", CoerceJavaToLua.coerce(new Object(){
             public int WIDTH = Const.WIDTH, HEIGHT = Const.HEIGHT, TILE = Const.TILE_SIZE;
         }));
+        tankSI = new TankSI(gScreen);
+        worldSI = new WorldSI(gScreen);
+        worldSI.setWorld(gameScreen.getWorld());
     }
 
     public static boolean canExecute(){
@@ -33,7 +43,6 @@ public class Script {
     }
 
     public static void loadScript(String filename){
-        if(globals == null) init();
         try {
             chunk = globals.loadfile(filename);
             chunk.call();
@@ -44,19 +53,20 @@ public class Script {
         chunk = null;
     }
 
-    public static void runInit(World world){
+    public static void runInit(){
         if(canExecute()){
             try {
-                globals.get("init").invoke(new LuaValue[]{CoerceJavaToLua.coerce(world)});
+                globals.get("init").invoke(new LuaValue[]{CoerceJavaToLua.coerce(worldSI)});
             } catch(LuaError e){
                 log(e.getMessage());
             }
         }
     }
-    public static void runUpdateTank(TankSI tank){
+    public static void runUpdateTank(Tank tank){
         if(canExecute()){
             try {
-                globals.get("updateTank").invoke(new LuaValue[]{CoerceJavaToLua.coerce(tank)});
+                tankSI.setTank(tank);
+                globals.get("updateTank").invoke(new LuaValue[]{CoerceJavaToLua.coerce(tankSI)});
             } catch(LuaError e){
                 log(e.getMessage());
             }
