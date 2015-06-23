@@ -102,7 +102,6 @@ public class GameScreen extends Screen {
         String scriptfile = mission.getScript(currentLevel);
         if(scriptfile != null){
             Script.loadScript(scriptfile);
-            Script.runInit();
         }
 
         // parameters
@@ -119,6 +118,9 @@ public class GameScreen extends Screen {
 
         // check if there was text message for us
         checkTextTrigger();
+
+        // run script
+        Script.runInit();
 
         // move camera to player
         int width = world.level.getPxWidth(), height = world.level.getPxHeight();
@@ -172,11 +174,15 @@ public class GameScreen extends Screen {
         hud.setShieldCounter(player.getShield());
     }
     private void minusLife(int amount){
-        changeScore(-50*amount, "hit!");
+        changeScore(-50 * amount, "hit!");
         changeLife(-amount);
 
         if(player.getLife() <= 0) setVisible(false);
         else hud.minusLife();
+    }
+    public void gameOver(){
+        player.setLife(0);
+        this.setVisible(false);
     }
 
 
@@ -334,12 +340,15 @@ public class GameScreen extends Screen {
                 break;
         }
     }
+    public void popupMessage(String text){
+        textTrigger.setMessage(text);
+        textTrigger.setVisible(true);
+    }
     private void checkTextTrigger(){
         textTrigger.setVisible(false);
         for(PopupMessage popup: world.messages){
             if(popup.compareXY(player.getMapX(), player.getMapY())){
-                textTrigger.setMessage(popup.getText());
-                textTrigger.setVisible(true);
+                popupMessage(popup.getText());
                 break;
             }
         }

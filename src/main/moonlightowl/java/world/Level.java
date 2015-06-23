@@ -233,6 +233,8 @@ public class Level {
     public int getStage(int x, int y){ return get(x, y).getStage(); }
     public Point getStartPoint(){ return startPoint; }
     public Tank.State getStartState(){ return startState; }
+    public int getWidth(){ return width; }
+    public int getHeight(){ return height; }
     public int getPxWidth(){ return pxwidth; }
     public int getPxHeight(){ return pxheight; }
     public boolean isFlyable(int x, int y){
