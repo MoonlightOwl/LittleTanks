@@ -263,6 +263,8 @@ public class GameScreen extends Screen {
                 }
                 // decrease ammo
                 tank.changeAmmo(-1);
+                // gun kick
+                tank.fire();
             } else return false;
         }
         return true;

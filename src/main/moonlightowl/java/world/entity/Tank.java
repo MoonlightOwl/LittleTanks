@@ -125,6 +125,13 @@ public class Tank {
         state.moveSpeed = State.MOVE_SPEED;
         state.turnSpeed = State.TURN_SPEED;
     }
+    public void fire(){
+        if(state.level == GUNFIGHTER || state.level == BIGCALIBRE){
+            int nx = getX() + (int)(Math.cos(getAngle() + Math.PI) * 3);
+            int ny = getY() + (int)(Math.sin(getAngle() + Math.PI) * 3);
+            position.x = nx; position.y = ny;
+        }
+    }
 
 
     // math
