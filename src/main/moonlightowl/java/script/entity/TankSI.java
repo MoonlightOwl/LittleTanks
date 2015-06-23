@@ -22,11 +22,17 @@ public class TankSI {
     public Tank getTank(){ return tank; }
     public void setTank(Tank tank){ this.tank = tank; }
 
+    public int getX(){ return tank.getMapX(); }
+    public int getY(){ return tank.getMapY(); }
+    public double getAngle(){ return tank.getAngle(); }
     public int getAmmo(){ return tank.getAmmo(); }
     public int getBombs(){ return tank.getBombs(); }
     public int getLifes(){ return tank.getLife(); }
     public int getShield(){ return tank.getShield(); }
 
+    public void turn(double angle){
+        tank.turn(angle);
+    }
     public void move(int dx, int dy){
         gameScreen.moveTank(tank, tank.getX() + GMath.toPixel(dx),
                                   tank.getY() + GMath.toPixel(dy));

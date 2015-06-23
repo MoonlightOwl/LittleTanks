@@ -1,6 +1,7 @@
 package main.moonlightowl.java.script.entity;
 
 import main.moonlightowl.java.gui.GameScreen;
+import main.moonlightowl.java.world.Tile;
 import main.moonlightowl.java.world.World;
 
 /**
@@ -20,6 +21,12 @@ public class WorldSI {
 
     public World getWorld(){ return world; }
     public void setWorld(World world){ this.world = world; }
+
+    public Tile getTile(int x, int y){
+        return world.level.get(x, y);
+    }
+    public boolean isPassable(int x, int y){ return getTile(x, y).isPassable(); }
+    public boolean isFlyable(int x, int y){ return getTile(x, y).isFlyable(); }
 
     public int getScore(){ return gameScreen.getScore(); }
 }
