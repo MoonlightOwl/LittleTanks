@@ -92,7 +92,7 @@ public class GameScreen extends Screen {
         else return false;
     }
     public void nextLevel(){
-        interfaceReset();
+        effectFreeze = 0;
 
         currentLevel++;
         world.reset();
@@ -125,6 +125,9 @@ public class GameScreen extends Screen {
         camera.setBounds(width, height);
         camera.setPosition(width/2, height/2);
 
+        // update counters
+        interfaceReset();
+
         // bonus points
         if(currentLevel > 1) {
             score += 10;
@@ -141,7 +144,6 @@ public class GameScreen extends Screen {
     /** Processing interface */
     public void interfaceReset(){
         hud.reset();
-        effectFreeze = 0;
         hud.setLifeCounter(player.getLife());
         hud.setShieldCounter(player.getShield());
         hud.setAmmoCounter(player.getAmmo());
@@ -487,8 +489,8 @@ public class GameScreen extends Screen {
                     // heavily damaged tank smokes
                     if(t.isDamaged()){
                         if(GMath.rand.nextInt(20) == 0)
-                            world.fx.add(t.getX()-20+GMath.rand.nextInt(Const.TILE_SIZE),
-                                         t.getY()-20+GMath.rand.nextInt(Const.TILE_SIZE), FX.SMOKE);
+                            world.fx.add(t.getX() - 20 + GMath.rand.nextInt(Const.TILE_SIZE),
+                                         t.getY() - 20 + GMath.rand.nextInt(Const.TILE_SIZE), FX.SMOKE);
                     }
                     // bullet collision
                     synchronized (world.bullets) {
