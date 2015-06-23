@@ -20,6 +20,7 @@ public class Tank {
     private double angle, targetangle;
     private State state;
     private AffineTransform at;
+    private int damage;
 
     public LinkedList<Item> inventory = new LinkedList<Item>();
 
@@ -30,6 +31,7 @@ public class Tank {
         targetposition = new Point(0, 0);
         at = new AffineTransform();
         setAngle(Math.PI/2);
+        damage = 0;
     }
     public Tank(int x, int y){
         this();
@@ -50,6 +52,7 @@ public class Tank {
         setAngle(0.0);
         state.setTo(DEFAULT_STATE);
         inventory.clear();
+        damage = 0;
     }
 
     // getters
@@ -75,6 +78,7 @@ public class Tank {
         }
         return false;
     }
+    public boolean isDamaged(){ return damage > state.life; }
 
     // setters
     public void setPosition(int x, int y){ 
@@ -108,7 +112,7 @@ public class Tank {
 
     public boolean hit(int damage){
         if(getShield() > 0){ changeShield(-damage); return false; }
-        else{ changeLife(-damage); return true; }
+        else{ changeLife(-damage); this.damage += damage; return true; }
     }
     public void move(int dx, int dy){
         targetposition.x = dx;

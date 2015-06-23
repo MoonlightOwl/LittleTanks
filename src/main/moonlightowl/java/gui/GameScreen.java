@@ -484,6 +484,12 @@ public class GameScreen extends Screen {
                     if (t.isIdle()) {
                         Script.runUpdateTank(t);
                     }
+                    // heavily damaged tank smokes
+                    if(t.isDamaged()){
+                        if(GMath.rand.nextInt(20) == 0)
+                            world.fx.add(t.getX()-20+GMath.rand.nextInt(Const.TILE_SIZE),
+                                         t.getY()-20+GMath.rand.nextInt(Const.TILE_SIZE), FX.SMOKE);
+                    }
                     // bullet collision
                     synchronized (world.bullets) {
                         Iterator<Bullet> itbullets = world.bullets.iterator();
