@@ -36,10 +36,12 @@ public class TankSI {
     public void move(int dx, int dy){
         gameScreen.moveTank(tank, tank.getX() + GMath.toPixel(dx),
                                   tank.getY() + GMath.toPixel(dy));
-        if (dx < 0) tank.turn(Math.PI);
-        else if (dy < 0) tank.turn(Math.PI+Math.PI/2);
-        else if (dx > 0) tank.turn(0.0);
-        else if (dy > 0) tank.turn(Math.PI/2);
+        tank.turn(Math.atan2(dy, dx));
+    }
+    public void moveTo(int x, int y){
+        gameScreen.moveTank(tank, GMath.toPixel(x), GMath.toPixel(y));
+        tank.turn(Math.atan2(tank.getY() - GMath.toPixel(y),
+                             tank.getX() - GMath.toPixel(x)) + Math.PI);
     }
     public void fire(){
         gameScreen.fireTank(tank);

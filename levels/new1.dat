@@ -1,21 +1,19 @@
-12
-12
-MMMMMMMMMMMM
-#          M
-#  4       M
-#        4 M
-#          M
-#          M
-####  @  BBM
-#        BBM
-#          M
-#  T       M
-#bBBB      M
-MMMMMMMMMMMM
+11
+11
+###########
+#         #
+# 1     2 #
+#         #
+#         #
+#    @    #
+#         #
+#         #
+# 3     4 #
+#         #
+###########
 
-background: -
-snowy: true
-ammo: 10
+background: ,
+ammo: 100
 life: 6
 bombs: 2
 shield: 1

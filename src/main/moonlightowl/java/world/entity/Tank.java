@@ -116,6 +116,8 @@ public class Tank {
     }
     public void turn(double angle){
         targetangle = angle;
+        if(targetangle < 0.0) targetangle += GMath.PI2;
+        else if(targetangle >= GMath.PI2) targetangle -= GMath.PI2;
     }
     public void freeze(double coef){
         state.moveSpeed *= coef;
@@ -145,8 +147,9 @@ public class Tank {
         return new Point(a.x+b.x, a.y+b.y);
     }
     private Point normalize(Point a){
-        return new Point(a.x == 0? 0 : (int)Math.signum(a.x)*state.moveSpeed,
-                         a.y == 0? 0 : (int)Math.signum(a.y)*state.moveSpeed);
+        double normal = len(a) / state.moveSpeed;
+        return new Point(a.x == 0? 0 : (int)(a.x/normal),
+                         a.y == 0? 0 : (int)(a.y/normal));
     }
 
 

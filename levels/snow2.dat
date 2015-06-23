@@ -1,0 +1,23 @@
+12
+12
+MMMMMMMMMMMM
+#          M
+#  4       M
+#        4 M
+#          M
+#          M
+####  @  BBM
+#        BBM
+#          M
+#  T       M
+#bBBB      M
+MMMMMMMMMMMM
+
+background: -
+snowy: true
+ammo: 10
+life: 6
+bombs: 2
+shield: 1
+enemy_respawn: 10
+friendly_fire: true

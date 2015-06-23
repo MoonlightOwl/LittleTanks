@@ -2,7 +2,7 @@ function init(world)
   math.randomseed(os.time())
 end
 
-function randomBool()
+local function randomBool()
   return math.random(0,1) == 1
 end
 
