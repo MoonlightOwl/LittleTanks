@@ -5,6 +5,10 @@ local function generatePoint(angle)
 end
 
 function updateTank(tank)
-    local angle = math.atan2(tank:getY() - 5.5, tank:getX() - 5.5) + math.pi/6
-    tank:moveTo(generatePoint(angle))
+    if math.random(0,1) == 1 then
+        local angle = math.atan2(tank:getY() - 5.5, tank:getX() - 5.5) + math.pi/6
+        tank:moveTo(generatePoint(angle))
+    else
+        tank:fire()
+    end
 end

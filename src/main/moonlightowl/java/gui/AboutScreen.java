@@ -34,7 +34,7 @@ public class AboutScreen extends Screen {
 
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()){
-            case KeyEvent.VK_ESCAPE:
+            case KeyEvent.VK_ESCAPE: case KeyEvent.VK_ENTER: case KeyEvent.VK_SPACE:
                 setVisible(false); break;
         }
     }
