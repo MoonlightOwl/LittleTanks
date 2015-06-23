@@ -80,8 +80,8 @@ public class Tank {
     public void setPosition(int x, int y){ 
         position.x = x; position.y = y;
         targetposition.x = x; targetposition.y = y;
-        mappos.x = GMath.toMap(x);
-        mappos.y = GMath.toMap(y);
+        mappos.x = GMath.toMap(x+Const.HALF_TILE);
+        mappos.y = GMath.toMap(y+Const.HALF_TILE);
     }
     public void setAngle(double angle){
         this.angle = angle;
@@ -117,6 +117,15 @@ public class Tank {
     public void turn(double angle){
         targetangle = angle;
     }
+    public void freeze(double coef){
+        state.moveSpeed *= coef;
+        state.turnSpeed *= coef;
+    }
+    public void unfreeze(){
+        state.moveSpeed = State.MOVE_SPEED;
+        state.turnSpeed = State.TURN_SPEED;
+    }
+
 
     // math
     private Point minus(Point a, Point b){
@@ -161,8 +170,8 @@ public class Tank {
             }
         }
 
-        mappos.x = GMath.toMap(position.x);
-        mappos.y = GMath.toMap(position.y);
+        mappos.x = GMath.toMap(position.x+Const.HALF_TILE);
+        mappos.y = GMath.toMap(position.y+Const.HALF_TILE);
     }
 
     // render

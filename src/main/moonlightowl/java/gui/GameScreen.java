@@ -431,6 +431,12 @@ public class GameScreen extends Screen {
             if(effectFreeze > 0) {
                 effectFreeze--;
                 hud.setFreezeCounter(effectFreeze);
+                // unfreeze all the enemies
+                if(effectFreeze == 0){
+                    synchronized (world.enemies){
+                        for(Tank tank: world.enemies) tank.unfreeze();
+                    }
+                }
             }
             // tracks =)
             if(!player.isIdle() && GMath.rand.nextInt(track_frequency) == 0) {
@@ -637,6 +643,10 @@ public class GameScreen extends Screen {
                                 effectFreeze += Ruleset.BONUS_FREEZE;
                                 hud.addMessage("slow down");
                                 soundManager.play(Sound.FREEZE);
+                                // freeze all the enemies
+                                synchronized (world.enemies) {
+                                    for (Tank tank : world.enemies) tank.freeze(Ruleset.FREEZE_COEF);
+                                }
                                 break;
                             case Bonus.POWER:
                                 int level;
