@@ -151,6 +151,8 @@ public class World {
                         message += data[c] + " ";
                     }
                     messages.add(new PopupMessage(x, y, message));
+                } else if(data[0].equals("weapon")){
+                    startState.level = parseInt(data[1], "Wrong player weapon.");
                 }
             }
             // arrangement of the tanks
