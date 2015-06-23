@@ -35,7 +35,9 @@ Score table for any level pack, can be found in `/scores/` directory. Just remov
 You can easily build game sources by yourself.
 
 Create a project in your favorite IDE, and download sources from this Git.
+
 Attach JLayer library (http://www.javazoom.net/javalayer/javalayer.html).
+And LuaJ SE library (for LittleTanks 1.5+) (http://www.luaj.org/luaj/3.0/README.html).
 
 Set root project folder as working directory, and then launch game from `LittleTanks` class. 
 
