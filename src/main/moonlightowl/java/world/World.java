@@ -49,12 +49,15 @@ public class World {
 
     /** Loading game objects from file */
     private int parseInt(String string, String error){
+        return parseInt(string, error, 0);
+    }
+    private int parseInt(String string, String error, int def){
         try {
             return Integer.parseInt(string);
         }
         catch(NumberFormatException e){
             Logger.error(error);
-            return 0;
+            return def;
         }
     }
     public synchronized void loadLevel(String filename){
@@ -153,6 +156,7 @@ public class World {
                     messages.add(new PopupMessage(x, y, message));
                 } else if(data[0].equals("weapon")){
                     startState.level = parseInt(data[1], "Wrong player weapon.");
+                    if(startState.level < 1 || startState.level > Tank.MAX_LEVEL) startState.level = 1;
                 }
             }
             // arrangement of the tanks
