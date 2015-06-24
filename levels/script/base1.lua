@@ -9,8 +9,8 @@ local function randomBool()
     return math.random(0, 1) == 1
 end
 local function baseContains(x, y)
-    if x>3 and x<9 then
-        if y>3 and y<9 then
+    if x>2 and x<8 then
+        if y>2 and y<8 then
             return true
         end
     end

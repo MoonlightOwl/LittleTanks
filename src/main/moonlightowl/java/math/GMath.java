@@ -17,7 +17,7 @@ public class GMath {
     public static final double PI2 = Math.PI*2;
 
     public static int toMap(int coord){
-        return coord / Const.TILE_SIZE;
+        return (int)Math.floor(coord / Const.TILE_SIZE);
     }
     public static int toPixel(int coord){
         return coord * Const.TILE_SIZE;
