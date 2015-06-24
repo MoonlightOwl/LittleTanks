@@ -7,7 +7,8 @@ public class Tile {
         HOLE = 3, SANDSTONE = 4, METAL = 5, GRID = 6, BARREL = 7,
         CONCRETE = 8, SAND = 9, SPAWN = 10, BUSH = 11, DOOR = 12,
         SAFE = 13, PLATE = 14, TURRET = 15, FLOORTILES = 16,
-        COBBLESTONE = 17, SNOW = 18, RUSTBLOCK = 19, TEXT = 20;
+        COBBLESTONE = 17, SNOW = 18, RUSTBLOCK = 19, TEXT = 20,
+        PLASTIC = 21;
 
     private int type;
     private boolean passable = false, flyable = false, castshadow = false;
@@ -29,7 +30,7 @@ public class Tile {
                 case 'B': create(BOX); break;
                 case 'b': create(BARREL); break;
                 case '#': create(WALL); break;
-                case '+': create(SANDSTONE); break;
+                case 'A': create(SANDSTONE); break;
                 case 'O': create(HOLE); break;
                 case 'M': create(METAL); break;
                 case 'X': create(GRID); break;
@@ -45,6 +46,7 @@ public class Tile {
                 case '-': create(SNOW); break;
                 case 'R': create(RUSTBLOCK); break;
                 case '?': create(TEXT); break;
+                case '+': create(PLASTIC); break;
                 case '@': create(SPAWN); break;
                 default: create(GRASS);
             }

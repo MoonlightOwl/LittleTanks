@@ -122,6 +122,7 @@ public class Level {
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.iquestion, x, y, null);
                 break;
+            case Tile.PLASTIC: g.drawImage(Assets.iplastic, x, y, null); break;
             case Tile.SPAWN:
                 drawTile(g, x, y, BACK);
                 g.drawImage(Assets.ispawn, x, y, null);
