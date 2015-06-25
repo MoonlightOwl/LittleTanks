@@ -42,7 +42,7 @@ public class Tile {
                 case '=': create(PLATE); break;
                 case 'T': create(TURRET); break;
                 case '_': create(FLOORTILES); break;
-                case '~': create(COBBLESTONE); break;
+                case 'N': create(COBBLESTONE); break;
                 case '-': create(SNOW); break;
                 case 'R': create(RUSTBLOCK); break;
                 case '?': create(TEXT); break;
@@ -68,6 +68,7 @@ public class Tile {
             case PLATE: flyable = true; passable = true; stage = 0; break;
             case TURRET: flyable = true; break;
             case RUSTBLOCK: castshadow = true; break;
+            case COBBLESTONE: castshadow = true; break;
             default: flyable = true; passable = true;
         }
     }
