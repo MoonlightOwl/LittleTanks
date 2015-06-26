@@ -22,3 +22,5 @@ function updateTank(tank)
     tank:fire()
   end
 end
+
+function updateWorld(world) end

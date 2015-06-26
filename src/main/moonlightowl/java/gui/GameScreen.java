@@ -417,6 +417,8 @@ public class GameScreen extends Screen {
                             GMath.rand.nextInt(Const.HEIGHT), FX.SNOWFLAKE);
                 }
             }
+            // update world from level script
+            Script.runUpdateWorld();
             // spawn reinforcements
             if(world.level.enemyRespawnEnabled()){
                 if(System.currentTimeMillis() - enemySpawnTime > world.level.getEnemyRespawnTime()){

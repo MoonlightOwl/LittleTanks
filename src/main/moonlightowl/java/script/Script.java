@@ -53,24 +53,26 @@ public class Script {
         chunk = null;
     }
 
-    public static void runInit(){
+    public static boolean run(String method, Object arg){
         if(canExecute()){
             try {
-                globals.get("init").invoke(new LuaValue[]{CoerceJavaToLua.coerce(worldSI)});
+                globals.get(method).invoke(new LuaValue[]{CoerceJavaToLua.coerce(arg)});
+                return true;
             } catch(LuaError e){
                 log(e.getMessage());
             }
         }
+        return false;
+    }
+    public static void runInit(){
+        run("init", worldSI);
     }
     public static void runUpdateTank(Tank tank){
-        if(canExecute()){
-            try {
-                tankSI.setTank(tank);
-                globals.get("updateTank").invoke(new LuaValue[]{CoerceJavaToLua.coerce(tankSI)});
-            } catch(LuaError e){
-                log(e.getMessage());
-            }
-        }
+        tankSI.setTank(tank);
+        run("updateTank", tankSI);
+    }
+    public static void runUpdateWorld(){
+        run("updateWorld", worldSI);
     }
 
     public static void log(String message){
