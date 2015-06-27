@@ -24,7 +24,7 @@ public class MenuScreen extends Screen {
     public MenuScreen(World world, Camera camera, Label title) {
         super(world, camera, title);
         menu = new Menu(Assets.fmenu, Assets.fmmenu, Const.HALFWIDTH, Const.HALFHEIGHT-60, 70);
-        menu.addItem("[ level ]");
+        menu.addItem("[ mission ]");
         menu.addItem("Fight!");
         menu.addItem("Scores");
         menu.addItem("About");
