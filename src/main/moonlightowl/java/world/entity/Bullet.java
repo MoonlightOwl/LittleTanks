@@ -8,22 +8,22 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class Bullet {
-    private int level = 1;
-    private double angle;
-    private AffineTransform at;
-    private Point2D.Float position, direction;
-    private float speed = 6.0f;
-    private boolean fromPlayer = false;
+    protected int damage = 1, type = 1;
+    protected double angle;
+    protected AffineTransform at;
+    protected Point2D.Float position, direction;
+    protected float speed = 6.0f;
+    protected boolean fromPlayer = false;
 
     public Bullet(int x, int y, float dx, float dy){
         this(x, y, dx, dy, 1);
     }
-    public Bullet(int x, int y, float dx, float dy, int level){
+    public Bullet(int x, int y, float dx, float dy, int type){
         position = new Point2D.Float(x, y);
         direction = new Point2D.Float(dx, dy);
-        setLevel(level);
+        setType(type); setDamage(type);
         angle = Math.atan2(dy, dx) + Math.PI/2;
-        if(level == 3){
+        if(damage == 3){
             at = AffineTransform.getTranslateInstance(x, y);
             at.rotate(angle);
             speed = 8.0f;
@@ -33,7 +33,8 @@ public class Bullet {
     // getters
     public float getX(){ return position.x; }
     public float getY(){ return position.y; }
-    public int getLevel(){ return level; }
+    public int getDamage(){ return damage; }
+    public int getType(){ return type; }
     public float getDx(){ return direction.x; }
     public float getDy(){ return direction.y; }
     public double getAngle(){ return angle; }
@@ -41,7 +42,8 @@ public class Bullet {
 
     // setters
     public void setPosition(int x, int y){ position.x = x; position.y = y; }
-    public void setLevel(int level){ this.level = level; }
+    public void setDamage(int damage){ this.damage = damage; }
+    public void setType(int type){ this.type = type; }
     public void setFromPlayer(boolean fromPlayer){ this.fromPlayer = fromPlayer; }
 
     // processing
@@ -50,15 +52,7 @@ public class Bullet {
         position.y += direction.y * speed;
     }
     public void draw(Graphics2D g, Point camera){
-        // bullets
-        if(level < 3) g.drawImage(Assets.ibullet[level],
+        g.drawImage(Assets.ibullet[damage],
             (int)(position.x-camera.x)-30, (int)(position.y-camera.y)-30, null);
-        // rockets
-        else if(level == 3){
-            at.setToIdentity();
-            at.translate(position.x - camera.x - 5, position.y - camera.y - 25);
-            at.rotate(angle, 5, 22);
-            g.drawImage(Assets.irocket, at, null);
-        }
     }
 }

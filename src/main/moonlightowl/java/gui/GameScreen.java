@@ -235,25 +235,35 @@ public class GameScreen extends Screen {
                 Point2D.Float delta = GMath.getVector(tank.getAngle());
                 int dx = (int)(delta.x * Const.HALF_TILE),
                     dy = (int)(delta.y * Const.HALF_TILE);
-                if(tank.getLevel() < Tank.LASER) {
-                    Bullet bullet = new Bullet(x + dx, y + dy, delta.x, delta.y, tank.getLevel());
-                    bullet.setFromPlayer(tank == player);
-                    world.newBullet.add(bullet);
-                }
-                else if(tank.getLevel() == Tank.LASER){
-                    // calculate target point
-                    int tx = tank.getMapX(), ty = tank.getMapY();
-                    while(world.level.isFlyable(tx, ty)){
-                        tx += Math.signum(dx);
-                        ty += Math.signum(dy);
-                    }
-                    activateMapTile(tx, ty);
-                    LaserBeam beam = new LaserBeam(tank.getMapX(), tank.getMapY(), tx, ty);
-                    beam.setFromPlayer(tank == player);
-                    world.beams.add(beam);
-                    for(int i=0; i<4; i++)
-                        world.fx.add(tx*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
-                                     ty*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
+                switch(tank.getLevel()){
+                    case Tank.LASER:
+                        // calculate target point
+                        int tx = tank.getMapX(), ty = tank.getMapY();
+                        while(world.level.isFlyable(tx, ty)){
+                            tx += Math.signum(dx);
+                            ty += Math.signum(dy);
+                        }
+                        activateMapTile(tx, ty);
+                        LaserBeam beam = new LaserBeam(tank.getMapX(), tank.getMapY(), tx, ty);
+                        beam.setFromPlayer(tank == player);
+                        world.beams.add(beam);
+                        for(int i=0; i<4; i++)
+                            world.fx.add(tx*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
+                                    ty*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);
+                        break;
+                    case Tank.LAUNCHER:
+                        // launch smoke
+                        for(int i=0; i<GMath.rand.nextInt(4); i++)
+                            world.fx.add(x-dx-40+GMath.rand.nextInt(10),
+                                    y-dy-40+GMath.rand.nextInt(10), FX.SMOKE);
+                        Bullet rocket = new Rocket(x + dx, y + dy, delta.x, delta.y);
+                        rocket.setFromPlayer(tank == player);
+                        world.newBullet.add(rocket);
+                        break;
+                    default:
+                        Bullet bullet = new Bullet(x + dx, y + dy, delta.x, delta.y, tank.getLevel());
+                        bullet.setFromPlayer(tank == player);
+                        world.newBullet.add(bullet);
                 }
                 // play sound
                 if(tank == player || GMath.rand.nextBoolean()){
@@ -261,11 +271,7 @@ public class GameScreen extends Screen {
                         case Tank.GUNFIGHTER: case Tank.BIGCALIBRE:
                             soundManager.play(Sound.SHOOT); break;
                         case Tank.LAUNCHER:
-                            soundManager.play(Sound.LAUNCH);
-                            for(int i=0; i<3; i++)
-                                world.fx.add(x-dx-40+GMath.rand.nextInt(10),
-                                             y-dy-40+GMath.rand.nextInt(10), FX.SMOKE);
-                            break;
+                            soundManager.play(Sound.LAUNCH); break;
                         case Tank.LASER: soundManager.play(Sound.LASER); break;
                     }
                 }
@@ -511,7 +517,7 @@ public class GameScreen extends Screen {
                             if (world.level.getCollision((int) (b.getX() / Const.TILE_SIZE), (int) (b.getY() / Const.TILE_SIZE))) {
                                 if (world.level.friendlyFireEnabled() || b.isFromPlayer())
                                     if (GMath.distance(b.getX(), b.getY(), t.getX() + 30, t.getY() + 30) < 25) {
-                                        if (t.hit(b.getLevel())){
+                                        if (t.hit(b.getDamage())){
                                             soundManager.play(Sound.HIT);
                                             changeScore(Ruleset.score(Ruleset.HIT_SCORE));
                                         }
@@ -593,7 +599,7 @@ public class GameScreen extends Screen {
                     Bullet b = itbullets.next();
 
                     // rocket smoke trail
-                    if (b.getLevel() == Tank.LAUNCHER && GMath.rand.nextBoolean())
+                    if (b.getType() == Tank.LAUNCHER && GMath.rand.nextBoolean())
                         world.fx.add((int) b.getX() - 50 + GMath.rand.nextInt(40),
                                 (int) b.getY() - 50 + GMath.rand.nextInt(40), FX.SMOKE);
 
@@ -605,9 +611,9 @@ public class GameScreen extends Screen {
                             player.getY() + Const.HALF_TILE) < Const.HALF_TILE) {
                         itbullets.remove();
 
-                        if (player.getShield() > 0) changeShield(-b.getLevel());
+                        if (player.getShield() > 0) changeShield(-b.getDamage());
                         else {
-                            minusLife(b.getLevel());
+                            minusLife(b.getDamage());
                             soundManager.play(Sound.HIT);
                         }
                         if (player.getLife() <= 0){
@@ -622,11 +628,11 @@ public class GameScreen extends Screen {
                         int x = GMath.toMap((int) b.getX()), y = GMath.toMap((int) b.getY());
                         if (!world.level.isFlyable(x, y)) {
                             // crush! destroy! swag!
-                            activateMapTile(x, y, b.getLevel());
+                            activateMapTile(x, y, b.getDamage());
                             // bullet/rocket gone in sparkles/explosion
                             int px = x * Const.TILE_SIZE,
                                 py = y * Const.TILE_SIZE;
-                            switch (b.getLevel()) {
+                            switch (b.getDamage()) {
                                 case 1:
                                 case 2:
                                     world.fx.add(px - (int) Math.sin(b.getAngle()) * Const.HALF_TILE,
