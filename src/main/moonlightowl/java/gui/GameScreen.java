@@ -238,15 +238,20 @@ public class GameScreen extends Screen {
                 switch(tank.getLevel()){
                     case Tank.LASER:
                         // calculate target point
-                        int tx = tank.getMapX(), ty = tank.getMapY();
-                        while(world.level.isFlyable(tx, ty)){
-                            tx += Math.signum(dx);
-                            ty += Math.signum(dy);
-                        }
+                        int length = 0, tx = tank.getMapX(), ty = tank.getMapY();
+                        dx *= 2; dy *= 2;  // we need 1-tile length vector
+                        // calculate beam length
+                        while(world.level.isFlyable(tx + GMath.toMap(dx*length),
+                                                    ty + GMath.toMap(dy*length))) length++;
+                        tx += GMath.toMap(dx*length); ty += GMath.toMap(dy*length);
+                        // activate target tile
                         activateMapTile(tx, ty);
-                        LaserBeam beam = new LaserBeam(tank.getMapX(), tank.getMapY(), tx, ty);
+                        // create beam
+                        LaserBeam beam = new LaserBeam(tank.getX()+Const.HALF_TILE, tank.getY()+Const.HALF_TILE,
+                                length, tank.getAngle()-GMath.HALFPI);
                         beam.setFromPlayer(tank == player);
                         world.beams.add(beam);
+                        // gun smokes
                         for(int i=0; i<4; i++)
                             world.fx.add(tx*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE),
                                     ty*Const.TILE_SIZE-10+GMath.rand.nextInt(Const.HALF_TILE), FX.SMOKE);

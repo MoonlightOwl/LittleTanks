@@ -14,7 +14,7 @@ import java.util.Random;
 
 public class GMath {
     public static final Random rand = new Random(System.currentTimeMillis());
-    public static final double PI2 = Math.PI*2;
+    public static final double PI2 = Math.PI*2, HALFPI = Math.PI/2;
 
     public static int toMap(int coord){
         return (int)Math.floor(coord / Const.TILE_SIZE);

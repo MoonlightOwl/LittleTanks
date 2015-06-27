@@ -5,6 +5,7 @@ import main.moonlightowl.java.Const;
 import main.moonlightowl.java.math.GMath;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 
 /**
  * LittleTanks.LaserBeam
@@ -15,28 +16,25 @@ import java.awt.*;
 
 public class LaserBeam {
     private Point[] ray;
-    private boolean horizontally = false, fromPlayer = false;
-    private int time, offx, offy;
+    private boolean fromPlayer;
+    private int time, x, y;
+    private double angle;
+    private AffineTransform at;
 
-    public LaserBeam(int x, int y, int tx, int ty){
-        // allign
-        if((x-tx) != 0) horizontally = true;
-        // array
-        int length = Math.max(Math.abs(x - tx), Math.abs(y-ty));
-        if(length < 1) length = 1;
-        ray = new Point[length-1];
-        for(int i=0; i<length-1; i++){
-            if(x < tx) x++;
-            else if(x > tx) x--;
-            if(y < ty) y++;
-            else if(y > ty) y--;
-            ray[i] = new Point(x, y);
+    public LaserBeam(int x, int y, int length, double angle){
+        // init
+        this.angle = angle; fromPlayer = false; time = 10;
+        this.x = x; this.y = y;
+
+        // generate "ray"
+        at = AffineTransform.getTranslateInstance(GMath.toMap(x), GMath.toMap(y));
+        at.rotate(angle);
+        if(length < 0) length = 0;
+        ray = new Point[length];
+        for(int c=0; c<length; c++){
+            at.translate(0, 1);
+            ray[c] = new Point((int)at.getTranslateX(), (int)at.getTranslateY());
         }
-        // time of life
-        time = 10;
-        // offset for image
-        offx = Const.HALF_TILE - Assets.ibeamv.getWidth()/2;
-        offy = Const.HALF_TILE - Assets.ibeamv.getHeight()/2;
     }
 
 
@@ -60,13 +58,13 @@ public class LaserBeam {
     }
 
     public void draw(Graphics2D g, Point camera){
-        for(Point point: ray) {
-            if (horizontally)
-                g.drawImage(Assets.ibeamh, point.x*Const.TILE_SIZE - camera.x + offy,
-                                           point.y*Const.TILE_SIZE - camera.y + offx, null);
-            else
-                g.drawImage(Assets.ibeamv, point.x*Const.TILE_SIZE - camera.x + offx,
-                                           point.y*Const.TILE_SIZE - camera.y + offy, null);
+        at.setToIdentity();
+        at.translate(x - camera.x - 15, y - camera.y - 42);
+        at.rotate(angle, 15, 42);
+
+        for (Point point : ray) {
+            at.translate(0, Const.TILE_SIZE);
+            g.drawImage(Assets.ibeamv, at, null);
         }
     }
 }
