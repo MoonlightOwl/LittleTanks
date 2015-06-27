@@ -12,3 +12,9 @@ function updateTank(tank)
         tank:fire()
     end
 end
+
+function updateWorld(world)
+    if math.random(1, 800) == 1 then
+        world:bonus(math.random(1, 9), math.random(1, 9))
+    end
+end
