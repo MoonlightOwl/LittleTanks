@@ -1,6 +1,5 @@
 package main.moonlightowl.java.script.entity;
 
-import main.moonlightowl.java.Const;
 import main.moonlightowl.java.gui.GameScreen;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.world.Tile;
@@ -47,10 +46,7 @@ public class WorldSI {
         world.spawnRandomTank(GMath.toPixel(x), GMath.toPixel(y), level);
     }
     public void bonus(int x, int y){ bonus(x, y, GMath.rand.nextInt(Bonus.COUNT)); }
-    public void bonus(int x, int y, int type){
-        world.bonuses.add(new Bonus(GMath.toPixel(x)+ Const.HALF_TILE,
-                                    GMath.toPixel(y)+ Const.HALF_TILE, type));
-    }
+    public void bonus(int x, int y, int type){ world.spawnBonus(x, y, type); }
 
     public int getScore(){ return gameScreen.getScore(); }
 }

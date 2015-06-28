@@ -157,6 +157,11 @@ public class World {
                 } else if(data[0].equals("weapon")){
                     startState.level = parseInt(data[1], "Wrong player weapon.");
                     if(startState.level < 1 || startState.level > Tank.MAX_LEVEL) startState.level = 1;
+                } else if(data[0].equals("bonus")){
+                    int x = parseInt(data[1], "Wrong bonus X coord."),
+                        y = parseInt(data[2], "Wrong bonus Y coord."),
+                        type = parseInt(data[3], "Wrong bonus type.");
+                    spawnBonus(x, y ,type);
                 }
             }
             // arrangement of the tanks
@@ -181,7 +186,7 @@ public class World {
         }
     }
 
-    /** Random tanks for your fun! */
+    /** Random tanks & bonuses for your fun! */
     public void spawnRandomTank(int x, int y, int level){
         Tank enemy = new Tank(x, y, level);
         // weapon and shields
@@ -190,6 +195,10 @@ public class World {
         if(GMath.rand.nextInt(10) == 1) enemy.setShield(GMath.rand.nextInt(10));
         // go!
         synchronized(newEnemies) { newEnemies.add(enemy); }
+    }
+    public void spawnBonus(int x, int y, int type){
+        bonuses.add(new Bonus(GMath.toPixel(x)+ Const.HALF_TILE,
+                GMath.toPixel(y)+ Const.HALF_TILE, type));
     }
 
     /** Unloading all objects, and clear lists */
