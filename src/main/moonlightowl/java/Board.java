@@ -105,7 +105,7 @@ public class Board extends JPanel implements ActionListener{
     public void initGame(){
 
     }
-    private void quitGame(){
+    public void quitGame(){
         // save game data
         scoresScreen.save();
         // unload resources

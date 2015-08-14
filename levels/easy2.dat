@@ -1,0 +1,29 @@
+15
+12
+MMMRRMMRRRRMMMR
+R k         S M
+R     @    SSSM
+RDDDM   MMDDDMM
+M   M   M     R
+M   M   M     R
+M1  M   M    1R
+RDDDM   MMDDDMM
+M             R
+RDDDD      CCCM
+MBBBD      DBBR
+MRRRMMMMMRRMRRR
+
+background: -
+snowy: true
+ammo: 100
+bombs: 20
+shield: 15
+life: 100
+
+
+
+
+
+
+
+
