@@ -24,7 +24,7 @@ Key | Action
 ## Levels
 Game contains a few test levels. They form "level packs" (or "missions"). All files can be found in `/levels/` directory.
 
-You need to click first menu item (in square brackets) to change "package".
+You need to click first menu item (in square brackets) to change current "package".
 
 For example: "_level_", "_metal_", "_maze_" or "_test_".
 
@@ -40,6 +40,10 @@ Attach JLayer library (http://www.javazoom.net/javalayer/javalayer.html).
 And LuaJ SE library (for LittleTanks 1.5+) (http://www.luaj.org/luaj/3.0/README.html).
 
 Set root project folder as working directory, and then launch game from `LittleTanks` class. 
+
+
+## Links
+[Tileset Map (rus)](http://pastebin.com/eW1PTzUB)
 
 
 ## Credits

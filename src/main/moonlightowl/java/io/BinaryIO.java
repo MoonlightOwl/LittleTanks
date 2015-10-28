@@ -52,7 +52,7 @@ public final class BinaryIO {
             Logger.error("File `" + aInputFileName + "` not found.");
         }
         catch (IOException ex) {
-            Logger.stackTrace(ex);
+            Logger.trace(ex);
         }
         return result;
     }
@@ -77,7 +77,7 @@ public final class BinaryIO {
             Logger.error("File not found.");
         }
         catch(IOException ex){
-            Logger.stackTrace(ex);
+            Logger.trace(ex);
         }
     }
 
@@ -90,7 +90,7 @@ public final class BinaryIO {
             result = readAndClose(input);
         }
         catch (FileNotFoundException ex){
-            Logger.stackTrace(ex);
+            Logger.trace(ex);
         }
         return result;
     }
@@ -124,7 +124,7 @@ public final class BinaryIO {
             }
         }
         catch (IOException ex){
-            Logger.stackTrace(ex);
+            Logger.trace(ex);
         }
         finally {
             if(result == null) result = new ByteArrayOutputStream();

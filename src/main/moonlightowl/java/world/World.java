@@ -176,7 +176,7 @@ public class World {
         } finally {
             try {
                 if(reader != null) reader.close();
-            } catch(Exception e) { Logger.stackTrace(e); }
+            } catch(Exception e) { Logger.trace(e); }
 
             level.render();
 

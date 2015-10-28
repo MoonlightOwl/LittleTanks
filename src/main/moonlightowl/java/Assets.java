@@ -35,35 +35,46 @@ public class Assets {
         isafe = new BufferedImage[2], ibutton = new BufferedImage[2],
         isnowcap = new BufferedImage[2], isnowflake = new BufferedImage[2];
 
+    // resource paths
+    public static File imagesPath = new File("resources/images/");
+    public static File fontsPath = new File("resources/fonts/");
+
     // load resourses
+    public static BufferedImage loadImage(String filename) throws IOException {
+        return ImageIO.read(new File(imagesPath, filename));
+    }
+    public static Font loadFont(String filename, float size) throws IOException, FontFormatException {
+        return Font.createFont(Font.TRUETYPE_FONT, new File(fontsPath, filename)).deriveFont(size);
+    }
+
     public static void load(JPanel board){
         try{
             // fonts
-            ftitle = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Rockwell.ttf")).deriveFont(120.0f);
+            ftitle = loadFont("Rockwell.ttf", 120.0f);
             fmtitle = board.getFontMetrics(ftitle);
-            fmenu = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/SVBasicManual.ttf")).deriveFont(60.0f);
+            fmenu = loadFont("SVBasicManual.ttf", 60.0f);
             fmmenu = board.getFontMetrics(fmenu);
-            fgui = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/secrcode.ttf")).deriveFont(40.0f);
+            fgui = loadFont("secrcode.ttf", 40.0f);
             fmgui = board.getFontMetrics(fgui);
-            fsmall = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/SVBasicManual.ttf")).deriveFont(40.0f);
+            fsmall = loadFont("SVBasicManual.ttf", 40.0f);
             fmsmall = board.getFontMetrics(fsmall);
 
             // images
-            igrass = ImageIO.read(new File("resources/images/grass.png"));
-            iwall = ImageIO.read(new File("resources/images/wall.png"));
-            ibox = ImageIO.read(new File("resources/images/box.png"));
-            ihole = ImageIO.read(new File("resources/images/hole.png"));
-            itrack = ImageIO.read(new File("resources/images/track.png"));
-            ispawn = ImageIO.read(new File("resources/images/spawn.png"));
-            imetal = ImageIO.read(new File("resources/images/metal.png"));
-            igrid = ImageIO.read(new File("resources/images/grid.png"));
-            iexpldec = ImageIO.read(new File("resources/images/explosiondec.png"));
-            isplash_text = ImageIO.read(new File("resources/images/splash_text.png"));
-            ibomb_on = ImageIO.read(new File("resources/images/bomb_on.png"));
-            ibomb_off = ImageIO.read(new File("resources/images/bomb_off.png"));
-            ishadowr = ImageIO.read(new File("resources/images/shadowr.png"));
-            ishadowd = ImageIO.read(new File("resources/images/shadowd.png"));
-            itankshadow = ImageIO.read(new File("resources/images/tankshadow.png"));
+            igrass = loadImage("grass.png");
+            iwall = loadImage("wall.png");
+            ibox = loadImage("box.png");
+            ihole = loadImage("hole.png");
+            itrack = loadImage("track.png");
+            ispawn = loadImage("spawn.png");
+            imetal = loadImage("metal.png");
+            igrid = loadImage("grid.png");
+            iexpldec = loadImage("explosiondec.png");
+            isplash_text = loadImage("splash_text.png");
+            ibomb_on = loadImage("bomb_on.png");
+            ibomb_off = loadImage("bomb_off.png");
+            ishadowr = loadImage("shadowr.png");
+            ishadowd = loadImage("shadowd.png");
+            itankshadow = loadImage("tankshadow.png");
 
             fillArray(iexplosion, "expl");
             fillArray(ismoke, "smoke");
@@ -77,30 +88,30 @@ public class Assets {
             fillArray(isnowcap, "snowcap");
             fillArray(isnowflake, "snowflake");
 
-            ibarrel = ImageIO.read(new File("resources/images/barrel.png"));
-            ibarrelside = ImageIO.read(new File("resources/images/barrel2.png"));
-            ishield = ImageIO.read(new File("resources/images/shield2.png"));
-            irocket = ImageIO.read(new File("resources/images/rocket.png"));
-            iconcrete = ImageIO.read(new File("resources/images/concrete.png"));
-            isand = ImageIO.read(new File("resources/images/sand.png"));
-            ibush = ImageIO.read(new File("resources/images/bush.png"));
-            ikey = ImageIO.read(new File("resources/images/key.png"));
+            ibarrel = loadImage("barrel.png");
+            ibarrelside = loadImage("barrel2.png");
+            ishield = loadImage("shield2.png");
+            irocket = loadImage("rocket.png");
+            iconcrete = loadImage("concrete.png");
+            isand = loadImage("sand.png");
+            ibush = loadImage("bush.png");
+            ikey = loadImage("key.png");
 
-            ishadowLS = ImageIO.read(new File("resources/images/shadowback.png"));
+            ishadowLS = loadImage("shadowback.png");
             ishadowRS = getScaledInstance(ishadowLS, -1, 1);
             ishadowLB = getScaledInstance(ishadowLS, 1, 2);
             ishadowRB = getScaledInstance(ishadowLB, -1, 1);
 
-            icandy = ImageIO.read(new File("resources/images/candy.png"));
-            iturret_base = ImageIO.read(new File("resources/images/turret_base.png"));
-            iturret_tower = ImageIO.read(new File("resources/images/turret_tower.png"));
-            iturret_fire = ImageIO.read(new File("resources/images/turret_fire.png"));
-            ifloor_tiles = ImageIO.read(new File("resources/images/plates0.png"));
-            icobblestone = ImageIO.read(new File("resources/images/stone.png"));
-            isnow = ImageIO.read(new File("resources/images/snow.png"));
-            irustblock = ImageIO.read(new File("resources/images/rustblock.png"));
+            icandy = loadImage("candy.png");
+            iturret_base = loadImage("turret_base.png");
+            iturret_tower = loadImage("turret_tower.png");
+            iturret_fire = loadImage("turret_fire.png");
+            ifloor_tiles = loadImage("plates0.png");
+            icobblestone = loadImage("stone.png");
+            isnow = loadImage("snow.png");
+            irustblock = loadImage("rustblock.png");
 
-            ibeamv = ImageIO.read(new File("resources/images/beam.png"));
+            ibeamv = loadImage("beam.png");
             ibeamh = new BufferedImage(ibeamv.getHeight(), ibeamv.getWidth(),
                     BufferedImage.TYPE_INT_ARGB);
             Graphics2D g = ibeamh.createGraphics();
@@ -108,26 +119,22 @@ public class Assets {
             g.drawImage(ibeamv, -ibeamv.getWidth(), 0, null);
             g.dispose();
 
-            idrygrass = ImageIO.read(new File("resources/images/drygrass.png"));
-            iquestion = ImageIO.read(new File("resources/images/question.png"));
-            icactus = ImageIO.read(new File("resources/images/cactus.png"));
-            iplastic = ImageIO.read(new File("resources/images/plastic.png"));
+            idrygrass = loadImage("drygrass.png");
+            iquestion = loadImage("question.png");
+            icactus = loadImage("cactus.png");
+            iplastic = loadImage("plastic.png");
 
             // sounds
             Sound.init();
 
         } catch(NullPointerException e){
-            Logger.error("NPE when loading game assets. WTF?");
-            Logger.stackTrace(e);
+            Logger.error("NPE when loading game assets. WTF?", e);
         } catch(FileNotFoundException e){
-            Logger.error("Asset file not found!");
-            Logger.stackTrace(e);
+            Logger.error("Asset file not found!", e);
         } catch(FontFormatException e){
-            Logger.error("Font format error!");
-            Logger.stackTrace(e);
+            Logger.error("Font format error!", e);
         } catch(IOException e){
-            Logger.error("IO error!");
-            Logger.stackTrace(e);
+            Logger.error("IO error in Assets.load!", e);
         }
     }
 
@@ -137,7 +144,7 @@ public class Assets {
     private static void fillArray(BufferedImage[] array, String filename, int first, int last){
         try {
             for(int i = first; i < last; i++){
-                array[i] = ImageIO.read(new File("resources/images/"+filename+Integer.toString(i)+".png"));
+                array[i] = loadImage(filename + Integer.toString(i) + ".png");
             }
         } catch(IOException e){
             Logger.error("IO error when loading texture array '"+filename+"'!");

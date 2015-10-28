@@ -3,7 +3,6 @@ package main.moonlightowl.java.sound;
 import main.moonlightowl.java.Logger;
 
 import java.io.*;
-import java.net.URL;
 import javax.sound.sampled.*;
 
 public enum Sound {
@@ -38,7 +37,7 @@ public enum Sound {
             clip.open(ais);
         }
         catch(Exception e){     // pokemon exception handling, yeah, yeah, i know =)
-            Logger.stackTrace(e);
+            Logger.trace(e);
         }
     }
 

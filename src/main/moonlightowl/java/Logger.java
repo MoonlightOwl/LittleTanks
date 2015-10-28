@@ -12,15 +12,19 @@ public class Logger {
         System.err.println(message);
     }
 
+    public static void trace(Exception e){
+        e.printStackTrace(System.err);
+    }
+
     public static void error(String message){
         log("[ERROR] " + message);
+    }
+    public static void error(String message, Exception e){
+        error(message);
+        trace(e);
     }
 
     public static void warning(String message){
         log("[WARN] " + message);
-    }
-
-    public static void stackTrace(Exception e){
-        e.printStackTrace(System.err);
     }
 }

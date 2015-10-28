@@ -58,7 +58,7 @@ public class Music {
                 this.playerThread.start();
             }
             catch(Exception e) {
-                Logger.stackTrace(e);
+                Logger.trace(e);
             }
         }
 
@@ -83,7 +83,7 @@ public class Music {
             try{
                 player.play();
             } catch(JavaLayerException e){
-                Logger.stackTrace(e);
+                Logger.trace(e);
             }
         }
     }
