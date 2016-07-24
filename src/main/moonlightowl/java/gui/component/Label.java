@@ -8,7 +8,7 @@ public class Label{
     private Font font;
     private FontMetrics fm;
     private Color color, shadowColor = Color.BLACK;
-    boolean shadow = false, centered = false;
+    private boolean shadow = false, centered = false;
 
     public Label(String text, int x, int y, Font font, FontMetrics fm, Color color){
         name = text; this.x = x; this.y = y;
@@ -48,7 +48,7 @@ public class Label{
     public int getX(){ return x; }
     public int getY(){ return y; }
     public String getText(){ return name; }
-    public int lenght(){ return name.length(); }
+    public int length(){ return name.length(); }
     public int width(){ return fm.stringWidth(name); }
     public int height(){ return font.getSize(); }
 

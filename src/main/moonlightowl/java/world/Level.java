@@ -9,14 +9,9 @@ import main.moonlightowl.java.Const;
 import main.moonlightowl.java.math.GMath;
 import main.moonlightowl.java.world.entity.Tank;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
-
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.HashSet;
 

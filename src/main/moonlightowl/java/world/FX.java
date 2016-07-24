@@ -3,11 +3,8 @@ package main.moonlightowl.java.world;
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.math.GMath;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 

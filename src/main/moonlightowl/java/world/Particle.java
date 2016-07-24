@@ -1,6 +1,6 @@
 package main.moonlightowl.java.world;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Particle {

@@ -3,8 +3,7 @@ package main.moonlightowl.java.world;
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
 
-import java.awt.Point;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Item {

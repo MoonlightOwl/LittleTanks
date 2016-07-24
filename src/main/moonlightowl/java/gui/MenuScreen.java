@@ -2,8 +2,8 @@ package main.moonlightowl.java.gui;
 
 import main.moonlightowl.java.Assets;
 import main.moonlightowl.java.Const;
-import main.moonlightowl.java.gui.component.Menu;
 import main.moonlightowl.java.gui.component.Label;
+import main.moonlightowl.java.gui.component.Menu;
 import main.moonlightowl.java.world.World;
 
 import java.awt.*;

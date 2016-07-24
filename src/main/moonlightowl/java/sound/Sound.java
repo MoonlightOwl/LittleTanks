@@ -2,8 +2,8 @@ package main.moonlightowl.java.sound;
 
 import main.moonlightowl.java.Logger;
 
-import java.io.*;
 import javax.sound.sampled.*;
+import java.io.File;
 
 public enum Sound {
     EXPLODE("resources/sounds/explosion.wav"),
@@ -33,7 +33,9 @@ public enum Sound {
             //URL url = this.getClass().getClassLoader().getResource(filename);
             File url = new File(filename);
             AudioInputStream ais = AudioSystem.getAudioInputStream(url);
-            clip = AudioSystem.getClip();
+            AudioFormat format = ais.getFormat();
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            clip = (Clip)AudioSystem.getLine(info);
             clip.open(ais);
         }
         catch(Exception e){     // pokemon exception handling, yeah, yeah, i know =)

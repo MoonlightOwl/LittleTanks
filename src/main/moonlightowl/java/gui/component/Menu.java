@@ -7,13 +7,11 @@ package main.moonlightowl.java.gui.component;
 import main.moonlightowl.java.Const;
 
 import java.awt.*;
-
-import java.util.List;
-import java.util.Iterator;
-import java.util.ArrayList;
-
-import java.awt.event.MouseEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Menu {
     public static final int NOTHING = -1, MAX_LENGTH = 20;
@@ -21,7 +19,7 @@ public class Menu {
     private Font font;
     private FontMetrics metr;
     private Iterator it;
-    public List<Item> items = new ArrayList<Item>();
+    private List<Item> items = new ArrayList<Item>();
     private int x, y, interval;
     private Item pointer;
 
@@ -35,28 +33,28 @@ public class Menu {
 
     // classes
     private class Item extends SubItem{
-        public List<SubItem> subItems = new ArrayList<SubItem>();
+        List<SubItem> subItems = new ArrayList<SubItem>();
         boolean expand = false;
 
-        public Item(String name) {
+        Item(String name) {
             super(name);
         }
-        public void addSubItem(String name){
+        void addSubItem(String name){
             subItems.add(new SubItem(name));
         }
-        public boolean isSelected(){ return selected; }
+        boolean isSelected(){ return selected; }
     }
     private class SubItem{
-        public String name;
-        public Rectangle rect;
-        public boolean selected;
+        String name;
+        Rectangle rect;
+        boolean selected;
 
-        public SubItem(String name){
+        SubItem(String name){
             init(name);
             this.rect = new Rectangle(x-metr.stringWidth(name)/2,
                     y+items.size()*interval-font.getSize()+10, metr.stringWidth(name), font.getSize());
         }
-        public SubItem(String name, int num, int offset){
+        SubItem(String name, int num, int offset){
             init(name);
             this.rect = new Rectangle(x-metr.stringWidth(name)/2+offset*300-150,
                     y+num*interval-font.getSize(), metr.stringWidth(name), font.getSize());
@@ -125,20 +123,20 @@ public class Menu {
                 for(SubItem subItem: pointer.subItems){
                     if(subItem.selected) g.setColor(Const.MENU_SELECTED_COLOR);
                     g.drawString(subItem.name,
-                            x-metr.stringWidth(pointer.name)/2-150+j*250, y+i*interval);
+                            x - metr.stringWidth(pointer.name)/2 - 150 + j*250, y + i*interval);
                     if(subItem.selected) g.setColor(Const.MENU_COLOR);
                     j++;
                 }
             }
             else{
                 g.setColor(Const.MENU_SHADOW_COLOR);
-                g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval+2);
+                g.drawString(pointer.name, x - metr.stringWidth(pointer.name)/2, y + i*interval + 2);
                 if(pointer.selected){
                     g.setColor(Const.MENU_SELECTED_COLOR);
-                    g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval);
+                    g.drawString(pointer.name, x - metr.stringWidth(pointer.name)/2, y + i*interval);
                 } else {
                     g.setColor(Const.MENU_COLOR);
-                    g.drawString(pointer.name, x-metr.stringWidth(pointer.name)/2, y+i*interval);
+                    g.drawString(pointer.name, x - metr.stringWidth(pointer.name)/2, y + i*interval);
                 }
             }
             i++;
@@ -166,12 +164,12 @@ public class Menu {
             case KeyEvent.VK_UP:
                 int active1 = getSelected();
                 if(active1 != -1) items.get(active1).selected = false;
-                items.get((active1+items.size()-1)%items.size()).selected = true;
+                items.get((active1 + items.size() - 1) % items.size()).selected = true;
                 break;
             case KeyEvent.VK_DOWN:
                 int active2 = getSelected();
                 if(active2 != -1) items.get(active2).selected = false;
-                items.get((active2+1)%items.size()).selected = true;
+                items.get((active2 + 1) % items.size()).selected = true;
                 break;
         }
     }

@@ -1,13 +1,14 @@
 package main.moonlightowl.java.sound;
 
-import javazoom.jl.player.advanced.*;
 import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
+import javazoom.jl.player.advanced.PlaybackEvent;
+import javazoom.jl.player.advanced.PlaybackListener;
 import main.moonlightowl.java.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-
 import java.util.Random;
 
 public class Music {
@@ -22,7 +23,7 @@ public class Music {
             }
         };
         filelist = new File(dir).listFiles(filter);
-        if(filelist.length > 0)
+        if(filelist != null && filelist.length > 0)
             player = new Layer(filelist[rand.nextInt(filelist.length)]);
     }
 
@@ -46,11 +47,11 @@ public class Music {
         private Thread playerThread;
         private boolean playing = false;
 
-        public Layer(File file) {
+        Layer(File file) {
             this.file = file;
         }
 
-        public void play() {
+        void play() {
             try {
                 player = new AdvancedPlayer(new FileInputStream(file));
                 player.setPlayBackListener(this);
@@ -62,7 +63,7 @@ public class Music {
             }
         }
 
-        public void stop(){
+        void stop(){
             if(playing){
                 playing = false;
                 player.stop();

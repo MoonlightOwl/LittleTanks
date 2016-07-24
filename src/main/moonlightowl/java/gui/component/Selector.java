@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
  * LittleTanks.Selector
  * Created by MoonlightOwl on 6/4/15.
  * ---
- * Let you switch between many variants.
+ * Allow you to select one of many variants.
  */
 
 public class Selector {

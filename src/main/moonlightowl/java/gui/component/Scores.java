@@ -1,34 +1,37 @@
 package main.moonlightowl.java.gui.component;
 
+import main.moonlightowl.java.Const;
+import main.moonlightowl.java.Logger;
+import main.moonlightowl.java.io.BinaryIO;
+import main.moonlightowl.java.io.Crypter;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * LineBreak  ~  v.0.2  ~  NightOwl  ~  Scoreboard code.
  */
 
-import main.moonlightowl.java.io.BinaryIO;
-import main.moonlightowl.java.Const;
-import main.moonlightowl.java.io.Crypter;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-
 public class Scores {
-    public static final String key = "verysecretkey";
+    private static final String key = "verysecretkey";
 
     private Iterator it;
     private List<Item> table;
     private Item pointer;
-    private boolean visible = false;
     private Font font;
     private FontMetrics fm;
     private Rectangle rect;
     private String filename;
-    private Item active;
+    private Item active;       // highlighted item (last record, for example)
 
     public Scores(String filename, Font font, FontMetrics fm){
         this.font = font; this.fm = fm;
         loadScores(filename);
-        rect = new Rectangle(0, 220, Const.WIDTH, Const.SCOREBOARD_SIZE*font.getSize()+20);
+        rect = new Rectangle(0, 220, Const.WIDTH, Const.SCOREBOARD_SIZE*font.getSize() + 20);
     }
     private void initTable(){
         table = new ArrayList<Item>();
@@ -43,7 +46,7 @@ public class Scores {
         it = table.iterator();
         while(it.hasNext()){
             pointer = (Item)it.next();
-            if(pointer.score<score){
+            if(pointer.score < score){
                 Item item = new Item(nickname, score);
                 table.add(table.indexOf(pointer), item);
                 active = item;
@@ -51,28 +54,23 @@ public class Scores {
             }
         }
         if(table.size()>Const.SCOREBOARD_SIZE){
-            table.remove(table.size()-1);
+            table.remove(table.size() - 1);
         }
     }
 
     // getters & setters
-    public void setVisible(boolean visible){
-        this.visible = visible;
-        if(!visible) active = null;
-    }
-    public boolean isVisible(){ return visible; }
-    public int worst(){ return table.get(table.size()-1).score; }
+    public int worst(){ return table.get(table.size() - 1).score; }
 
     // classes
     private class Item{
-        public String name;
-        public int score;
+        String name;
+        int score;
         private String text;
 
-        public Item(String name, int score){
+        Item(String name, int score){
             this.name = name;
             this.score = score;
-            text = name+"  "+Integer.toString(score);
+            text = name + "  " + Integer.toString(score);
         }
     }
 
@@ -88,7 +86,9 @@ public class Scores {
                 g.setColor(Color.ORANGE);
             else
                 g.setColor(Color.WHITE);
-            g.drawString(pointer.text, Const.WIDTH/2-fm.stringWidth(pointer.text)/2, 260+font.getSize()*table.indexOf(pointer));
+            g.drawString(pointer.text,
+                    Const.WIDTH/2 - fm.stringWidth(pointer.text)/2,
+                    260 + font.getSize() * table.indexOf(pointer));
         }
     }
 
@@ -96,15 +96,20 @@ public class Scores {
         this.filename = filename;
         initTable();
 
-        byte[] array = Crypter.decrypt(BinaryIO.read(filename), key);
-        String[] tokens = new String(array).split("\n");
-        if(tokens.length >= 2){
-            for(int c=0; c<tokens.length; c+=2){
-                String name = tokens[c];
-                int score = Integer.parseInt(tokens[c+1]);
-                addRecord(name, score);
+        try {
+            byte[] array = Crypter.decrypt(BinaryIO.read(filename), key);
+            String[] tokens = new String(array).split("\n");
+            if (tokens.length >= 2) {
+                for (int c = 0; c < tokens.length; c += 2) {
+                    String name = tokens[c];
+                    int score = Integer.parseInt(tokens[c + 1]);
+                    addRecord(name, score);
+                }
             }
+        } catch(IOException ex) {
+            Logger.warning("Cannot read " + filename + " score file.");
         }
+
         active = null;
     }
 
@@ -115,6 +120,16 @@ public class Scores {
             pointer = (Item)it.next();
             data = data + pointer.name + "\n" + pointer.score + "\n";
         }
-        BinaryIO.write(Crypter.encrypt(data, key), filename);
+        try {
+            File target = new File(filename);
+            if(!target.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                target.getParentFile().mkdirs();
+            }
+            BinaryIO.write(Crypter.encrypt(data, key), filename);
+        } catch(IOException ex) {
+            Logger.error("Cannot write score table to file " + filename);
+            Logger.trace(ex);
+        }
     }
 }

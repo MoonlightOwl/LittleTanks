@@ -2,16 +2,7 @@ package main.moonlightowl.java.io;
 
 import main.moonlightowl.java.Logger;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  <P>Reads binary data into memory, and writes it back to disk.
@@ -22,38 +13,32 @@ import java.io.OutputStream;
 
 public final class BinaryIO {
     /** Read the given binary file, and return its contents as a byte array.*/
-    public static byte[] read(String aInputFileName){
+    public static byte[] read(String aInputFileName) throws IOException {
         File file = new File(aInputFileName);
         byte[] result = new byte[(int)file.length()];
+
+        InputStream input = null;
         try {
-            InputStream input = null;
-            try {
-                int totalBytesRead = 0;
-                input = new BufferedInputStream(new FileInputStream(file));
-                while(totalBytesRead < result.length){
-                    int bytesRemaining = result.length - totalBytesRead;
-                    //input.read() returns -1, 0, or more:
-                    int bytesRead = input.read(result, totalBytesRead, bytesRemaining);
-                    if (bytesRead > 0){
-                        totalBytesRead = totalBytesRead + bytesRead;
-                    }
+            int totalBytesRead = 0;
+            input = new BufferedInputStream(new FileInputStream(file));
+            while(totalBytesRead < result.length){
+                int bytesRemaining = result.length - totalBytesRead;
+                //input.read() returns -1, 0, or more:
+                int bytesRead = input.read(result, totalBytesRead, bytesRemaining);
+                if (bytesRead > 0){
+                    totalBytesRead = totalBytesRead + bytesRead;
                 }
-                /*
-                 the above style is a bit tricky: it places bytes into the 'result' array;
-                 'result' is an output parameter;
-                 the while loop usually has a single iteration only.
-                */
             }
-            finally {
-                if(input != null) input.close();
-            }
+            /*
+             the above style is a bit tricky: it places bytes into the 'result' array;
+             'result' is an output parameter;
+             the while loop usually has a single iteration only.
+            */
         }
-        catch (FileNotFoundException ex) {
-            Logger.error("File `" + aInputFileName + "` not found.");
+        finally {
+            if(input != null) input.close();
         }
-        catch (IOException ex) {
-            Logger.trace(ex);
-        }
+
         return result;
     }
 
@@ -61,23 +46,14 @@ public final class BinaryIO {
      Write a byte array to the given file.
      Writing binary data is significantly simpler than reading it.
      */
-    public static void write(byte[] aInput, String aOutputFileName){
-        //log("Writing binary file...");
+    public static void write(byte[] aInput, String aOutputFileName) throws IOException {
+        OutputStream output = null;
         try {
-            OutputStream output = null;
-            try {
-                output = new BufferedOutputStream(new FileOutputStream(aOutputFileName));
-                output.write(aInput);
-            }
-            finally {
-                if(output != null) output.close();
-            }
+            output = new BufferedOutputStream(new FileOutputStream(aOutputFileName));
+            output.write(aInput);
         }
-        catch(FileNotFoundException ex){
-            Logger.error("File not found.");
-        }
-        catch(IOException ex){
-            Logger.trace(ex);
+        finally {
+            if(output != null) output.close();
         }
     }
 

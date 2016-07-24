@@ -2,9 +2,7 @@ package main.moonlightowl.java.world.entity;
 
 import main.moonlightowl.java.Assets;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 
 public class Bomb {
     public int x, y;

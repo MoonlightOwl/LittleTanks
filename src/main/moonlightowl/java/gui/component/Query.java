@@ -1,14 +1,8 @@
 package main.moonlightowl.java.gui.component;
 
 import main.moonlightowl.java.Const;
-import main.moonlightowl.java.gui.component.Label;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Query {
@@ -35,13 +29,13 @@ public class Query {
     public void keyPressed(KeyEvent e){
         switch(e.getKeyCode()){
             case KeyEvent.VK_BACK_SPACE:
-                if(nickname.lenght()>0){
-                    nickname.changeText(nickname.getText().substring(0,nickname.lenght()-1));
+                if(nickname.length()>0){
+                    nickname.changeText(nickname.getText().substring(0,nickname.length()-1));
                 }
                 break;
             default:
                 if(e.getKeyChar()>='0' && e.getKeyChar()<='z'){
-                    if(nickname.lenght()<Const.NICKNAME_LEN){
+                    if(nickname.length()<Const.NICKNAME_LEN){
                         nickname.changeText(nickname.getText()+e.getKeyChar());
                     }
                 }

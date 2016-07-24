@@ -1,6 +1,6 @@
 package main.moonlightowl.java.math;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Primitive {
     private int x,y;

@@ -7,9 +7,8 @@ import main.moonlightowl.java.world.Item;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-
-import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 public class Tank {
     public static final int MAX_LEVEL = 4;

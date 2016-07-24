@@ -1,6 +1,6 @@
 package main.moonlightowl.java.gui.component;
 
-import main.moonlightowl.java.*;
+import main.moonlightowl.java.Const;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -8,17 +8,11 @@ import java.util.List;
 
 public class About {
     private List<Label> text;
-    private boolean visible;
     private Rectangle rect;
 
     public About() {
         text = new ArrayList<Label>();
-        visible = false;
     }
-
-    // getters & setters
-    public void setVisible(boolean visible){ this.visible = visible; }
-    public boolean isVisible(){ return visible; }
 
     public void addLine(String text, int x, int y, Font font, FontMetrics fm,
                         Color color, boolean centered, boolean shadow){

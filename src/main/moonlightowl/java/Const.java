@@ -6,7 +6,7 @@ package main.moonlightowl.java;
  * Constants and parameters collection
  */
 
-import java.awt.Color;
+import java.awt.*;
 
 public final class Const {
     public final static int WIDTH = 800, HEIGHT = 600, HALFWIDTH = WIDTH/2, HALFHEIGHT = HEIGHT/2,

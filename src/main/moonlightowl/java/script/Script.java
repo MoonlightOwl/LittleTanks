@@ -5,7 +5,6 @@ import main.moonlightowl.java.Logger;
 import main.moonlightowl.java.gui.GameScreen;
 import main.moonlightowl.java.script.entity.TankSI;
 import main.moonlightowl.java.script.entity.WorldSI;
-import main.moonlightowl.java.world.World;
 import main.moonlightowl.java.world.entity.Tank;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;

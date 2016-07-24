@@ -6,7 +6,6 @@ package main.moonlightowl.java;
 
 import main.moonlightowl.java.gui.*;
 import main.moonlightowl.java.gui.component.Label;
-import main.moonlightowl.java.script.Script;
 import main.moonlightowl.java.sound.Music;
 import main.moonlightowl.java.sound.Sound;
 import main.moonlightowl.java.sound.SoundManager;

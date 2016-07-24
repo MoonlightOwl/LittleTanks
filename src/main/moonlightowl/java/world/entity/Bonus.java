@@ -4,10 +4,7 @@ import main.moonlightowl.java.Const;
 import main.moonlightowl.java.math.Primitive;
 import main.moonlightowl.java.math.Triangle;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public class Bonus extends Primitive {
     public static final int COUNT = 7;

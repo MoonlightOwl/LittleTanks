@@ -4,17 +4,15 @@ package main.moonlightowl.java;
 
 import main.moonlightowl.java.sound.Sound;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.AffineTransformOp;
-
-import javax.swing.JPanel;
 import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Assets {
     public static Font ftitle, fmenu, fgui, fsmall;
