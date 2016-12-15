@@ -3,7 +3,7 @@ This is a small game about, eh... tanks.
 
 Written on holidays, at my spare time, in Java + Swing, just for fun.
 
-All that I had in my notebook was only Java 6, text editor and Terminal for compiling. 
+All tools that I had in my notebook was Java 6 SDK, text editor and Terminal.
 Therefore, source codes are a bit.. frightening. But I promise to improve it. =)
 
 ![Little Tanks Screenshot]
@@ -15,31 +15,31 @@ Key | Action
 `Arrows` | Select menu / move tank
 `Space` | Fire!
 `C` | Place bomb (if any)
-`[` | Mute sound
-`]` | Mute music
+`[` | Toggle sound
+`]` | Toggle music
 `\` | Next music track 
 `P` | Pause game
 `Escape` | Return to menu / Exit
 
 ## Levels
-Game contains a few test levels. They form "level packs" (or "missions"). All files can be found in `/levels/` directory.
+The game contains few test levels. They form so-called "level packs" (or "missions"). All files can be found in `/levels/` directory.
 
-You need to click first menu item (in square brackets) to change current "package".
+The first item in main game menu is level selector. You need to click the selector to change current "level pack".
 
-For example: "_level_", "_metal_", "_maze_" or "_test_".
+Example of level pack names: "_level_", "_metal_", "_maze_" or "_test_".
 
-Score table for any level pack, can be found in `/scores/` directory. Just remove corresponding file, to clear the table. 
+Score table for any "level pack", can be found in `/scores/` directory. To clear a table - just remove corresponding file. 
 
 
 ## Sources building
-You can easily build game sources by yourself.
+You can easily build the game from sources by yourself.
 
-Create a project in your favorite IDE, and download sources from this Git.
+Create an empty project in your favorite IDE, and download sources from this Git.
 
-Attach JLayer library (http://www.javazoom.net/javalayer/javalayer.html).
-And LuaJ SE library (for LittleTanks 1.5+) (http://www.luaj.org/luaj/3.0/README.html).
+Attach JLayer library (http://www.javazoom.net/javalayer/javalayer.html),
+аnd LuaJ SE library (for LittleTanks 1.5+) (http://www.luaj.org/luaj/3.0/README.html).
 
-Set root project folder as working directory, and then launch game from `LittleTanks` class. 
+Set the root folder of the project as working directory, and then launch the game from `LittleTanks` class. 
 
 
 ## Links
@@ -51,6 +51,6 @@ Set root project folder as working directory, and then launch game from `LittleT
 
 **Beta Tester**: Polina
 
-**Art**: MoonlightOwl
+**Art**: Totoro
 
 **Sounds**: http://freesound.org/
