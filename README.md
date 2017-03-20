@@ -6,8 +6,7 @@ Written on holidays, at my spare time, in Java + Swing, just for fun.
 All tools that I had in my notebook were Java 6 SDK, text editor and Terminal.
 Therefore, source codes are a bit.. frightening. But I promise to improve it. =)
 
-![Little Tanks Screenshot]
-(https://lh3.googleusercontent.com/-kmn32RDGYBw/VW1mtFNHLnI/AAAAAAAABBw/ybVxFgG7hBo/s806/littleTanks4.png)
+![Little Tanks Screenshot](https://lh3.googleusercontent.com/-kmn32RDGYBw/VW1mtFNHLnI/AAAAAAAABBw/ybVxFgG7hBo/s806/littleTanks4.png)
 
 ## Controls
 Key | Action
